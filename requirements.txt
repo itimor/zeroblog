@@ -1,0 +1,13 @@
+asgiref==3.2.10
+Django==3.1.2
+django-haystack==3.0
+django-mdeditor==0.1.18
+django-pure-pagination==0.3.0
+django-simpleui==2020.9.26
+jieba==0.42.1
+Markdown==3.3.1
+Pillow==7.2.0
+pytz==2020.1
+six==1.15.0
+sqlparse==0.4.1
+Whoosh==2.7.4
