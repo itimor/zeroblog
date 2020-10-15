@@ -10,11 +10,11 @@ from blog.settings import HAYSTACK_SEARCH_RESULTS_PER_PAGE
 from myblog.models import Blog, Category, Tag, Comment, Counts
 from myblog.forms import CommentForm
 
-md = markdown.Markdown(extras=[
+md = markdown.Markdown(extensions=[
     'markdown.extensions.extra',
     'markdown.extensions.toc',
-    'markdown.extensions.headerid',
     'markdown.extensions.codehilite',
+    'markdown.extensions.fenced_code',
 ])
 
 

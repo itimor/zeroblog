@@ -21,10 +21,20 @@
 */
 /* .markdown-here-wrapper[data-md-url*="mail.yahoo."] ul { color: red; } */
 
-pre, code {
+pre,.highlight {
+  overflow: auto;
+  margin: 20px 0;
+  padding: 0;
+  font-size: 13px;
+  color: #4d4d4c;
+  background: #d7d7d7;
+  line-height: 1.6;
+  border-radius: 5px;
+}
+pre,code {
   font-size: 14px;
-  font-family: Roboto, 'Courier New', Consolas, Inconsolata, Courier, monospace;
   margin: auto 5px;
+  font-family: consolas, Menlo, "PingFang SC", "Microsoft YaHei", monospace;
 }
 
 code {
