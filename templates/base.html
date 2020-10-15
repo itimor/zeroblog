@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 {% load static %}
-<!-- saved from url=(0023)http://www.geerniya.cn/ -->
 <html class="theme-next pisces use-motion" lang="zh-Hans"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 
@@ -11,15 +10,14 @@
 <meta name="keywords" content="博客，股票，熊叔，星辰大海">
 <meta name="description" content="零度股票，熊叔的星辰大海">
 
-    <link href="/static/css/chinese-markdown-css.css" rel="stylesheet" type="text/css">
     <link href="/static/css/jquery.fancybox.css" rel="stylesheet" type="text/css">
     <link href="/static/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="/static/css/main.css" rel="stylesheet" type="text/css">
     <link href="/static/css/extra.css" rel="stylesheet" type="text/css">
 
-    <!--<link rel="alternate" href="http://www.geerniya.cn/rss" title="熊叔的星辰大海" type="application/atom+xml">-->
+    <!--<link rel="alternate" href="/rss" title="熊叔的星辰大海" type="application/atom+xml">-->
     <link rel="shortcut icon" type="image/x-icon" href="/static/image/logo.ico">
-    <link rel="canonical" href="http://www.geerniya.cn/">
+    <link rel="canonical" href="/">
 
 <!--搜索关键词高亮-->
 <style>
@@ -82,13 +80,13 @@
             <div class="header-inner">
                 <div class="site-meta ">
                     <div class="custom-logo-site-title">
-                        <a href="http://www.geerniya.cn/" class="brand" rel="start" style="opacity: 1;">
+                        <a href="/" class="brand" rel="start" style="opacity: 1;">
                             <span class="logo-line-before"><i></i></span>
                             <span class="site-title" style="opacity: 1; top: 0px;">零度股票</span>
                             <span class="logo-line-after"><i></i></span>
                         </a>
                     </div>
-                    <p class="site-subtitle" style="opacity: 1; top: 0px; color: #2ab6b6; font-size: 1rem;">熊叔的星辰大海</p>
+                    <p class="site-subtitle">熊叔的星辰大海</p>
                  </div>
 
                 <div class="site-nav-toggle">
@@ -142,7 +140,7 @@
 
                         <li class="menu-item menu-item-archives" style="opacity: 1; transform: translateY(0px);">
 
-                             <a href="http://www.geerniya.cn/#search" id="search" rel="section">
+                             <a href="/#search" id="search" rel="section">
                               <i class="menu-item-icon fa fa-search"></i>
                              </a>
 
@@ -232,11 +230,11 @@
                                 <ul class="links-of-blogroll-list">
 
                                     <li class="links-of-blogroll-item">
-                                        <a href="http://www.geerniya.cn/" title="往事如烟的博客" target="_blank">往事如烟的博客</a>
+                                        <a href="/" title="往事如烟的博客" target="_blank">往事如烟的博客</a>
                                     </li>
 
                                     <li class="links-of-blogroll-item">
-                                        <a href="https://www.zmrenwu.com/" title="追梦人物的博客" target="_blank">追梦人物的博客</a>
+                                        <a href="/" title="追梦人物的博客" target="_blank">追梦人物的博客</a>
                                     </li>
 
                                 </ul>
@@ -258,18 +256,18 @@
         <footer id="footer" class="footer">
             <div class="footer-inner">
                 <div class="copyright">
-                     ©  2017 -
-                    <span itemprop="copyrightYear">2018</span>
+                     ©  2017 ~
+                    <span id="endyear" itemprop="copyrightYear">2018</span>
                     <span class="with-love">
-                        <i class="fa fa-heart"></i>
+                        <i class="fa fa-heart" style="color: red"></i>
                     </span>
-                    <span class="author" itemprop="copyrightHolder">geerniya</span>
+                    <span class="author" itemprop="copyrightHolder">熊叔</span>
                 </div>
                 <div class="powered-by">
-                    豫ICP备18002345号-1
+                    沪ICP备18002345号-1
                 </div>
                 <div class="theme-info">
-                    Supported by <a href="https://www.aliyun.com/">阿里云</a>
+                    Supported by <a href="https://www.sanxing.com/">三星云</a>
                 </div>
             </div>
         </footer>
@@ -316,6 +314,11 @@
         }
         var s = document.getElementsByTagName("script")[0];
         s.parentNode.insertBefore(bp, s);
+    })();
+    (function(){
+        var date=new Date;
+        var year=date.getFullYear();
+        document.getElementById('endyear').innerText = year;
     })();
     </script>
 
