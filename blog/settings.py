@@ -142,7 +142,7 @@ HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 ## simple ui 配置
 # 标题
-admin_title = '博客后台管理'
+admin_title = '一起去冒险吧！勇士'
 # logo
 SIMPLEUI_LOGO = '/static/image/logo.png'
 # 不收集分析信息不收集分析信息

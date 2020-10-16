@@ -24,7 +24,7 @@ class IndexView(View):
     """
 
     def get(self, request):
-        all_blog = Blog.objects.all().order_by('-id')
+        all_blog = Blog.objects.filter(published=True).order_by('-id')
         # 博客、标签、分类数目统计
         count_nums = Counts.objects.get(id=1)
         blog_nums = count_nums.blog_nums
@@ -58,7 +58,7 @@ class ArichiveView(View):
     """
 
     def get(self, request):
-        all_blog = Blog.objects.all().order_by('-create_time')
+        all_blog = Blog.objects.filter(published=True).order_by('-create_time')
         # 博客、标签、分类数目统计
         count_nums = Counts.objects.get(id=1)
         blog_nums = count_nums.blog_nums

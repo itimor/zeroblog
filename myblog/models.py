@@ -1,14 +1,19 @@
 from django.db import models
-from django.utils import timezone
 from mdeditor.fields import MDTextField
-import datetime
+from django.utils import timezone
+
+from utils.db import BaseModel
 
 
-class Category(models.Model):
+class Category(BaseModel):
     """
     博客分类
     """
+    parent = models.ForeignKey('self', default=0, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='父级',
+                               limit_choices_to={'is_root': True})
+    is_root = models.BooleanField(default=False, verbose_name='是否是一级分类')
     name = models.CharField(verbose_name='博客类别', max_length=20)
+    code = models.CharField(verbose_name='code', max_length=20)
     number = models.IntegerField(verbose_name='分类数目', default=1)
 
     class Meta:
@@ -19,11 +24,12 @@ class Category(models.Model):
         return self.name
 
 
-class Tag(models.Model):
+class Tag(BaseModel):
     """
     博客标签
     """
     name = models.CharField(verbose_name='博客标签', max_length=20)
+    code = models.CharField(verbose_name='code', max_length=20)
     number = models.IntegerField(verbose_name='标签数目', default=1)
 
     class Meta:
@@ -34,15 +40,13 @@ class Tag(models.Model):
         return self.name
 
 
-class Blog(models.Model):
+class Blog(BaseModel):
     """
     博客
     """
     title = models.CharField(verbose_name='标题', max_length=100)
     content = MDTextField(verbose_name='正文', default='')
     excerpt = models.TextField(u'摘要', )
-    create_time = models.DateTimeField(verbose_name='创建时间', default=timezone.now)
-    modify_time = models.DateTimeField(verbose_name='修改时间', auto_now=True)
     click_nums = models.IntegerField(verbose_name='热度', default=0)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='博客类别')
     tag = models.ManyToManyField(Tag, verbose_name='博客标签')
@@ -61,10 +65,10 @@ class Blog(models.Model):
     def save(self, *args, **kwargs):
         modified = kwargs.pop("modified", True)
         if modified:
-            self.modify_time = datetime.datetime.utcnow()
+            self.update_time = timezone.now()
 
         if self.published and not self.publish_time:
-            self.publish_time = datetime.datetime.utcnow()
+            self.publish_time = timezone.now()
 
         # 生成摘要
         # 获取readmore位置
@@ -76,7 +80,7 @@ class Blog(models.Model):
         super(Blog, self).save(*args, **kwargs)
 
 
-class Comment(models.Model):
+class Comment(BaseModel):
     """
     博客评论
     """
@@ -93,7 +97,7 @@ class Comment(models.Model):
         return self.content[:10]
 
 
-class Counts(models.Model):
+class Counts(BaseModel):
     """
     统计博客、分类和标签的数目
     """

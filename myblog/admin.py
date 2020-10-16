@@ -6,7 +6,7 @@ from myblog.models import Blog, Category, Tag, Comment, Counts
 
 
 class BlogAdmin(admin.ModelAdmin):
-    list_display = ['title', 'click_nums', 'category', 'create_time', 'modify_time']
+    list_display = ['title', 'click_nums', 'category', 'published', 'is_top', 'allow_comments', 'create_time', 'update_time']
     list_filter = ('published', 'is_top', 'publish_time', 'click_nums')
     fields = ('title', 'content', 'category', 'published', 'is_top', 'tag', 'allow_comments')
     # readonly_fields = ('excerpt',)
@@ -20,17 +20,17 @@ class BlogAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.save()
-        #统计博客数目
-        blog_nums = Blog.objects.count()
+        # 统计博客数目
+        blog_nums = Blog.objects.filter(published=True).count()
         count_nums = Counts.objects.get(id=1)
         count_nums.blog_nums = blog_nums
         count_nums.save()
-        #博客分类数目统计
+        # 博客分类数目统计
         obj_category = obj.category
         category_number = obj_category.blog_set.count()
         obj_category.number = category_number
         obj_category.save()
-        #博客标签数目统计
+        # 博客标签数目统计
         obj_tag_list = obj.tag.all()
         for obj_tag in obj_tag_list:
             tag_number = obj_tag.blog_set.count()
@@ -57,9 +57,8 @@ class BlogAdmin(admin.ModelAdmin):
         obj.delete()
 
 
-
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name', 'number']
+    list_display = ['name', 'code', 'number', 'parent', 'is_root']
 
     def save_model(self, request, obj, form, change):
         obj.save()
@@ -77,7 +76,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class TagAdmin(admin.ModelAdmin):
-    list_display = ['name', 'number']
+    list_display = ['name', 'code', 'number']
 
     def save_model(self, request, obj, form, change):
         obj.save()
