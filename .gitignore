@@ -8,3 +8,4 @@ node_modules/
 package-lock.json
 .vscode/
 venv/
+whoosh_index/*.seg
