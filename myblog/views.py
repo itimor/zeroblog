@@ -203,6 +203,26 @@ class AddCommentView(View):
             return HttpResponse('{"status": "fail"}', content_type='application/json')
 
 
+class CategoryView(View):
+    """
+    分类
+    """
+
+    def get(self, request):
+        all_category = Category.objects.all()
+        # 博客、标签、分类数目统计
+        count_nums = Counts.objects.get(id=1)
+        blog_nums = count_nums.blog_nums
+        cate_nums = count_nums.category_nums
+        tag_nums = count_nums.tag_nums
+        return render(request, 'categorys.html', {
+            'all_category': all_category,
+            'blog_nums': blog_nums,
+            'cate_nums': cate_nums,
+            'tag_nums': tag_nums,
+        })
+
+
 class CategoryDetaiView(View):
     """
     博客分类

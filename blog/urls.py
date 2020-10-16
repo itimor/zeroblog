@@ -19,7 +19,7 @@ from django.views.static import serve
 from django.conf.urls.static import static
 
 from myblog.views import IndexView, ArichiveView, TagView, TagDetailView, BlogDetailView
-from myblog.views import AddCommentView, CategoryDetaiView, MySearchView
+from myblog.views import AddCommentView, CategoryView, CategoryDetaiView, MySearchView
 from myblog.feeds import BlogRssFeed
 from blog import settings
 
@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^blog/(?P<blog_id>\d+)$', BlogDetailView.as_view(), name='blog_id'),
     url(r'^add_comment/$', AddCommentView.as_view(), name='add_comment'),
     url(r'^rss/$', BlogRssFeed(), name='rss'),
+    url(r'^categorys/$', CategoryView.as_view(), name='categorys'),
     url(r'^category/(?P<category_name>\w+)/$', CategoryDetaiView.as_view(), name='category_name'),
     url(r'^search/', MySearchView(), name='haystack_search'),
     # 添加静态文件的访问处理函数

@@ -137,6 +137,19 @@
                           </a>
                         </li>
 
+                        <li
+                            {% if request.path|slice:"5" == '/categorys' %}
+                            class="menu-item menu-item-home menu-item-active"
+                            {% else %}
+                            class="menu-item menu-item-active"
+                            {% endif %}
+                            style="opacity: 1; transform: translateY(0px);">
+                          <a href="{% url 'categorys' %}" rel="section">
+                              <i class="menu-item-icon fa fa-fw fa-folder-o"></i> <br>
+                            分类
+                          </a>
+                        </li>
+
                         <li class="menu-item menu-item-archives" style="opacity: 1; transform: translateY(0px);">
 
                              <a href="/#search" id="search" rel="section">
@@ -182,7 +195,7 @@
                                 </div>
 
                                 <div class="site-state-item site-state-categories">
-                                    <a href="/archive">
+                                    <a href="/categorys">
                                         <span class="site-state-item-count">{{ cate_nums }}</span>
                                         <span class="site-state-item-name">分类</span>
                                     </a>
