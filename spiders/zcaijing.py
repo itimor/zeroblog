@@ -94,6 +94,7 @@ def get_category_blog(dt=None):
                     print(f"有相同的博客code {same_blog[0]}")
                 else:
                     new_blog_url_list.append(full_blog_url)
+                category.number += len(new_blog_url_list)
 
             page_li = etree_html.xpath('//ul[@class="pagination"]/li[@class="page-item"]')
             page_nums = len(page_li)
@@ -102,7 +103,7 @@ def get_category_blog(dt=None):
                     url = base_url + f"/{category.code}/p-{page}"
                     new_list = get_signle_category(all_blog, url)
                     new_blog_url_list += new_list
-        category.number += len(new_blog_url_list)
+                category.number = len(new_blog_url_list)
         category.save()
     return new_blog_url_list
 

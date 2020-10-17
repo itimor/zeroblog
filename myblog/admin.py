@@ -6,7 +6,8 @@ from myblog.models import Article, Category, Tag, Comment, Counts
 
 
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ['title', 'click_nums', 'category', 'published', 'is_top', 'allow_comments', 'create_time', 'update_time']
+    list_display = ['title', 'click_nums', 'category', 'published', 'is_top', 'allow_comments', 'create_time',
+                    'update_time']
     list_filter = ('published', 'is_top', 'publish_time', 'click_nums')
     fields = ('title', 'code', 'content', 'category', 'published', 'is_top', 'tags', 'allow_comments')
     # readonly_fields = ('click_nums',)
@@ -59,6 +60,7 @@ class ArticleAdmin(admin.ModelAdmin):
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'code', 'number', 'parent', 'is_root']
+    search_fields = ('name', 'code')
 
     def save_model(self, request, obj, form, change):
         obj.save()
@@ -77,6 +79,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class TagAdmin(admin.ModelAdmin):
     list_display = ['name', 'code', 'number']
+    search_fields = ('name', 'code')
 
     def save_model(self, request, obj, form, change):
         obj.save()
@@ -95,6 +98,7 @@ class TagAdmin(admin.ModelAdmin):
 
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['name', 'blog', 'content', 'create_time']
+    search_fields = ('blog', 'content')
 
 
 class CountsAdmin(admin.ModelAdmin):
