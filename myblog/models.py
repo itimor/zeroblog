@@ -12,8 +12,8 @@ class Category(BaseModel):
     parent = models.ForeignKey('self', default=0, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='父级',
                                limit_choices_to={'is_root': True})
     is_root = models.BooleanField(default=False, verbose_name='是否是一级分类')
-    name = models.CharField(verbose_name='博客类别', max_length=20)
-    code = models.CharField(verbose_name='code', max_length=20)
+    name = models.CharField(verbose_name='博客类别', unique=True, max_length=20)
+    code = models.CharField(verbose_name='code', unique=True, max_length=20)
     number = models.IntegerField(verbose_name='分类数目', default=1)
 
     class Meta:
@@ -28,8 +28,8 @@ class Tag(BaseModel):
     """
     博客标签
     """
-    name = models.CharField(verbose_name='博客标签', max_length=20)
-    code = models.CharField(verbose_name='code', max_length=20)
+    name = models.CharField(verbose_name='博客标签', unique=True, max_length=20)
+    code = models.CharField(verbose_name='code', unique=True, max_length=20)
     number = models.IntegerField(verbose_name='标签数目', default=1)
 
     class Meta:
@@ -44,7 +44,8 @@ class Blog(BaseModel):
     """
     博客
     """
-    title = models.CharField(verbose_name='标题', max_length=100)
+    title = models.CharField(verbose_name='标题', unique=True, max_length=100)
+    code = models.CharField(verbose_name='code', unique=True, max_length=20)
     content = MDTextField(verbose_name='正文', default='')
     excerpt = models.TextField(u'摘要', )
     click_nums = models.IntegerField(verbose_name='热度', default=0)
@@ -71,11 +72,14 @@ class Blog(BaseModel):
             self.publish_time = timezone.now()
 
         # 生成摘要
-        # 获取readmore位置
-        readmore_index = self.content.find('<!--more-->')
+        try:
+            # 获取readmore位置
+            readmore_index = self.content.find('<!--more-->')
 
-        # 截取readmore前的字符串作为摘要并用markdown渲染
-        self.excerpt = self.content[:readmore_index]
+            # 截取readmore前的字符串作为摘要并用markdown渲染
+            self.excerpt = self.content[:readmore_index]
+        except:
+            self.excerpt = self.content[:100]
 
         super(Blog, self).save(*args, **kwargs)
 

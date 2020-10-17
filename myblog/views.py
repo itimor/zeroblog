@@ -108,8 +108,8 @@ class TagDetailView(View):
         标签下的所有博客
         """
 
-    def get(self, request, tag_name):
-        tag = get_object_or_404(Tag, name=tag_name)
+    def get(self, request, tag_code):
+        tag = get_object_or_404(Tag, code=tag_code)
         tag_blogs = tag.blog_set.all()
         # 博客、标签、分类数目统计
         count_nums = Counts.objects.get(id=1)
@@ -127,7 +127,7 @@ class TagDetailView(View):
         tag_blogs = p.page(page)
         return render(request, 'tag-detail.html', {
             'tag_blogs': tag_blogs,
-            'tag_name': tag_name,
+            'tag_code': tag_code,
             'blog_nums': blog_nums,
             'cate_nums': cate_nums,
             'tag_nums': tag_nums,
@@ -140,8 +140,8 @@ class BlogDetailView(View):
     博客详情页
     """
 
-    def get(self, request, blog_id):
-        blog = get_object_or_404(Blog, pk=blog_id)
+    def get(self, request, blog_code):
+        blog = get_object_or_404(Blog, code=blog_code)
         # 博客、标签、分类数目统计
         count_nums = Counts.objects.get(id=1)
         blog_nums = count_nums.blog_nums
@@ -151,14 +151,14 @@ class BlogDetailView(View):
         blog.click_nums += 1
         blog.save()
         # 获取评论内容
-        all_comment = Comment.objects.filter(blog_id=blog_id)
+        all_comment = Comment.objects.filter(blog_id=blog.id)
         comment_nums = all_comment.count()
         # 将博客内容用markdown显示出来
         blog.content = md.convert(blog.content)
         # 实现博客上一篇与下一篇功能
         has_prev = False
         has_next = False
-        id_prev = id_next = int(blog_id)
+        id_prev = id_next = int(blog.id)
         blog_id_max = Blog.objects.all().order_by('-id').first()
         id_max = blog_id_max.id
         while not has_prev and id_prev >= 1:
@@ -172,7 +172,7 @@ class BlogDetailView(View):
             if not blog_next:
                 id_next += 1
             else:
-                has_next = True;
+                has_next = True
 
         return render(request, 'blog-detail.html', {
             'blog': blog,
@@ -228,8 +228,8 @@ class CategoryDetaiView(View):
     博客分类
     """
 
-    def get(self, request, category_name):
-        category = get_object_or_404(Category, name=category_name)
+    def get(self, request, category_code):
+        category = get_object_or_404(Category, code=category_code)
         cate_blogs = category.blog_set.all()
         # 博客、标签、分类数目统计
         count_nums = Counts.objects.get(id=1)
@@ -248,7 +248,7 @@ class CategoryDetaiView(View):
 
         return render(request, 'category-detail.html', {
             'cate_blogs': cate_blogs,
-            'category_name': category_name,
+            'category_code': category.code,
             'blog_nums': blog_nums,
             'cate_nums': cate_nums,
             'tag_nums': tag_nums,

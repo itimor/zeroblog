@@ -8,7 +8,7 @@ from myblog.models import Blog, Category, Tag, Comment, Counts
 class BlogAdmin(admin.ModelAdmin):
     list_display = ['title', 'click_nums', 'category', 'published', 'is_top', 'allow_comments', 'create_time', 'update_time']
     list_filter = ('published', 'is_top', 'publish_time', 'click_nums')
-    fields = ('title', 'content', 'category', 'published', 'is_top', 'tag', 'allow_comments')
+    fields = ('title', 'code', 'content', 'category', 'published', 'is_top', 'tag', 'allow_comments')
     # readonly_fields = ('excerpt',)
     exclude = ('publish_time',)
     search_fields = ('name', 'slug')

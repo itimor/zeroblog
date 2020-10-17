@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 # author: itimor
 
-for i in range(1, 7):
-    print(i)
+a = 'https://www.zcaijing.com/cgzh/198088.html'
+
+import os
+
+b = os.path.basename(a)
+print(b)
