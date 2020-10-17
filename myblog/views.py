@@ -97,7 +97,7 @@ class TagDetailView(View):
 
     def get(self, request, tag_code):
         tag = get_object_or_404(Tag, code=tag_code)
-        tag_blogs = tag.blog_set.all()
+        tag_blogs = tag.article_set.all()
         # 博客、标签、分类数目统计
         count_nums = Counts.objects.get(id=1)
         blog_nums = count_nums.blog_nums
@@ -215,7 +215,7 @@ class CategoryDetaiView(View):
 
     def get(self, request, category_code):
         category = get_object_or_404(Category, code=category_code)
-        cate_blogs = category.blog_set.all()
+        cate_blogs = category.article_set.all()
         # 博客、标签、分类数目统计
         count_nums = Counts.objects.get(id=1)
         blog_nums = count_nums.blog_nums
