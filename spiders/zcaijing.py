@@ -117,20 +117,24 @@ def get_blog(url):
         category = Category.objects.get(code=category_code)
     except:
         raise Exception(f"{category} 没有创建")
-    content = etree_html.xpath('//div[@id="content"]')
-    content_html = html.tostring(content[0]).decode("utf-8")
-    content = markdownify(content_html, heading_style="ATX")
-    try:
-        blog = Article.objects.create(title=title, code=code, content=content, published=True, category=category)
-    except:
-        pass
-    tags = footer_info[:-2]
-    for item in tags:
-        code = item.xpath('./@href')[0].strip('/')
-        name = item.xpath('./text()')[0]
-        tag, s = Tag.objects.get_or_create(name=name, defaults={"code": code})
-        if s:
-            blog.tags.add(tag)
+    content = etree_html.xpath('//div[@id="content"]')[0]
+    content_imgs = content.xpath('./p/img/@src')
+    for img_url in content_imgs:
+        full_img_url = base_url + img_url
+        print(full_img_url)
+    # content_html = html.tostring(content).decode("utf-8")
+    # content = markdownify(content_html, heading_style="ATX")
+    # try:
+    #     blog = Article.objects.create(title=title, code=code, content=content, published=True, category=category)
+    # except:
+    #     pass
+    # tags = footer_info[:-2]
+    # for item in tags:
+    #     code = item.xpath('./@href')[0].strip('/')
+    #     name = item.xpath('./text()')[0]
+    #     tag, s = Tag.objects.get_or_create(name=name, defaults={"code": code})
+    #     if s:
+    #         blog.tags.add(tag)
 
 
 if __name__ == '__main__':
@@ -141,13 +145,13 @@ if __name__ == '__main__':
     # 获取所有分类
     # get_category()
     # 获取单个文章
-    # blog_url = 'https://www.zcaijing.com/cgzh/198088.html'
-    # get_blog(blog_url)
+    blog_url = 'https://www.zcaijing.com/cgzh/198088.html'
+    get_blog(blog_url)
     # 获取所有文章
-    all_url = get_category_blog()
-    print(len(all_url))
-    for blog_url in all_url:
-        get_blog(blog_url)
+    # all_url = get_category_blog()
+    # print(len(all_url))
+    # for blog_url in all_url:
+    #     get_blog(blog_url)
     # 获得当天日志
     # cur_date = time.strftime('%Y-%m-%d')
     # all_url = get_category_blog(cur_date)
