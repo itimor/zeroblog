@@ -12,7 +12,7 @@ from markdownify import markdownify
 os.environ['DJANGO_SETTINGS_MODULE'] = 'blog.settings'
 django.setup()
 
-from myblog.models import Category, Tag, Article
+from myblog.models import Category, Tag, Article, Counts
 
 base_url = "https://www.zcaijing.com"
 
@@ -68,6 +68,7 @@ def get_category_blog(dt=None):
 
     for category in all_category:
         print(category)
+        category_list = []
         url = base_url + f"/{category.code}/"
         r = requests.get(url).text
         etree_html = etree.HTML(r)
@@ -83,7 +84,7 @@ def get_category_blog(dt=None):
                     if len(same_blog) > 0:
                         print(f"有相同的博客code {same_blog[0]}")
                     else:
-                        new_blog_url_list.append(full_blog_url)
+                        category_list.append(full_blog_url)
         else:
             column_ul = etree_html.xpath('//div[@class="ml-4 juhe-ml-mobile"]')
             for item in column_ul:
@@ -93,8 +94,7 @@ def get_category_blog(dt=None):
                 if len(same_blog) > 0:
                     print(f"有相同的博客code {same_blog[0]}")
                 else:
-                    new_blog_url_list.append(full_blog_url)
-                category.number += len(new_blog_url_list)
+                    category_list.append(full_blog_url)
 
             page_li = etree_html.xpath('//ul[@class="pagination"]/li[@class="page-item"]')
             page_nums = len(page_li)
@@ -102,8 +102,10 @@ def get_category_blog(dt=None):
                 for page in range(1, page_nums):
                     url = base_url + f"/{category.code}/p-{page}"
                     new_list = get_signle_category(all_blog, url)
-                    new_blog_url_list += new_list
-                category.number = len(new_blog_url_list)
+                    category_list += new_list
+            print(len(category_list))
+            category.number += len(category_list)
+        new_blog_url_list += category_list
         category.save()
     return new_blog_url_list
 
@@ -146,6 +148,7 @@ def get_blog(url):
 
 
 if __name__ == '__main__':
+    count_nums = Counts.objects.get(id=1)
     # 获取单页分类
     # all_blog = Article.objects.all()
     # catagory_url = 'https://www.zcaijing.com/cgzh/'
@@ -166,3 +169,9 @@ if __name__ == '__main__':
     # print(len(all_url))
     # for blog_url in all_url:
     #     get_blog(blog_url)
+    cates = Category.objects.all()
+    tags = Tag.objects.all()
+    count_nums.blog_nums += len(all_url)
+    count_nums.category_nums += len(cates)
+    count_nums.tag_nums += len(tags)
+    count_nums.save()
