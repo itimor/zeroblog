@@ -112,16 +112,17 @@ def get_blog(url):
 
 
 if __name__ == '__main__':
-    # # 获取所有分类
-    # get_category()
     # # 获取单页分类
     # all_blog = Blog.objects.all()
     # catagory_url = 'https://www.zcaijing.com/cgzh/'
     # get_signle_category(all_blog, catagory_url)
     # 获取所有分类
+    get_category()
+    # 获取单个文章
+    # blog_url = 'https://www.zcaijing.com/cgzh/198088.html'
+    # get_blog(blog_url)
+    # 获取所有文章
     all_url = get_category_blog()
     for blog_url in all_url:
         print(blog_url)
-        # 获取单个文章
-        # blog_url = 'https://www.zcaijing.com/cgzh/198088.html'
         get_blog(blog_url)

@@ -2704,7 +2704,7 @@ a.search-result {
   margin-top: 10px;
   width: 700px;
   background: #fff;
-  min-height: 700px;
+  min-height: 20px;
   box-shadow: initial;
   border-radius: initial;
 }

@@ -144,7 +144,7 @@ HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 # 标题
 admin_title = '一起去冒险吧！勇士'
 # logo
-SIMPLEUI_LOGO = '/static/image/logo.png'
+SIMPLEUI_LOGO = '/static/image/logo.ico'
 # 不收集分析信息不收集分析信息
 SIMPLEUI_ANALYSIS = False
 # 不显示 SIMPLEUI_HOME_INFO
