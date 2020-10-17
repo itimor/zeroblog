@@ -2,16 +2,16 @@ from django.contrib import admin
 from django.db import models
 from mdeditor.widgets import MDEditorWidget
 from blog.settings import admin_title
-from myblog.models import Blog, Category, Tag, Comment, Counts
+from myblog.models import Article, Category, Tag, Comment, Counts
 
 
-class BlogAdmin(admin.ModelAdmin):
+class ArticleAdmin(admin.ModelAdmin):
     list_display = ['title', 'click_nums', 'category', 'published', 'is_top', 'allow_comments', 'create_time', 'update_time']
     list_filter = ('published', 'is_top', 'publish_time', 'click_nums')
-    fields = ('title', 'code', 'content', 'category', 'published', 'is_top', 'tag', 'allow_comments')
-    # readonly_fields = ('excerpt',)
+    fields = ('title', 'code', 'content', 'category', 'published', 'is_top', 'tags', 'allow_comments')
+    # readonly_fields = ('click_nums',)
     exclude = ('publish_time',)
-    search_fields = ('name', 'slug')
+    search_fields = ('name', 'code')
     ordering = ('-create_time', 'published', 'is_top', 'publish_time')
     list_per_page = 20
     formfield_overrides = {
@@ -21,7 +21,7 @@ class BlogAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.save()
         # 统计博客数目
-        blog_nums = Blog.objects.filter(published=True).count()
+        blog_nums = Article.objects.filter(published=True).count()
         count_nums = Counts.objects.get(id=1)
         count_nums.blog_nums = blog_nums
         count_nums.save()
@@ -31,7 +31,7 @@ class BlogAdmin(admin.ModelAdmin):
         obj_category.number = category_number
         obj_category.save()
         # 博客标签数目统计
-        obj_tag_list = obj.tag.all()
+        obj_tag_list = obj.tags.all()
         for obj_tag in obj_tag_list:
             tag_number = obj_tag.blog_set.count()
             obj_tag.number = tag_number
@@ -39,7 +39,7 @@ class BlogAdmin(admin.ModelAdmin):
 
     def delete_model(self, request, obj):
         # 统计博客数目
-        blog_nums = Blog.objects.count()
+        blog_nums = Article.objects.count()
         count_nums = Counts.objects.get(id=1)
         count_nums.blog_nums = blog_nums - 1
         count_nums.save()
@@ -49,7 +49,7 @@ class BlogAdmin(admin.ModelAdmin):
         obj_category.number = category_number - 1
         obj_category.save()
         # 博客标签数目统计
-        obj_tag_list = obj.tag.all()
+        obj_tag_list = obj.tags.all()
         for obj_tag in obj_tag_list:
             tag_number = obj_tag.blog_set.count()
             obj_tag.number = tag_number - 1
@@ -101,7 +101,7 @@ class CountsAdmin(admin.ModelAdmin):
     list_display = ['blog_nums', 'category_nums', 'tag_nums', 'visit_nums']
 
 
-admin.site.register(Blog, BlogAdmin)
+admin.site.register(Article, ArticleAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Comment, CommentAdmin)

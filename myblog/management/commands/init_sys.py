@@ -107,9 +107,9 @@ var foo = function (bar) {
 
 console.log(foo(5));
 ```"""
-        blog = Blog.objects.create(title='这是你的第一篇markdown文章', code='16886688', content=content, published=True,
+        blog = Article.objects.create(title='这是你的第一篇markdown文章', code='16886688', content=content, published=True,
                                    category=category)
-        blog.tag.add(tag)
+        blog.tags.add(tag)
 
         self.stdout.write(self.style.SUCCESS('############ 初始化博客统计 ###########'))
         Counts.objects.create(blog_nums=1, category_nums=1, tag_nums=1, visit_nums=0)

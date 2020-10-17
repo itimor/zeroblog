@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load custom_markdown %}
 {% block title %}
 零度股票，熊叔的星辰大海
 {% endblock %}
@@ -58,7 +58,7 @@
 
 
                 <div class="post-body" itemprop="articleBody">
-                    {{ blog.excerpt|safe }}
+                    {{ blog.content|custom_markdown_summary }}
                     <!--noindex-->
                     <div class="post-button text-center">
                         <a class="btn" href="{% url 'blog_code' blog.code %}" rel="contents">

@@ -40,17 +40,16 @@ class Tag(BaseModel):
         return self.name
 
 
-class Blog(BaseModel):
+class Article(BaseModel):
     """
     博客
     """
     title = models.CharField(verbose_name='标题', unique=True, max_length=100)
     code = models.CharField(verbose_name='code', unique=True, max_length=20)
     content = MDTextField(verbose_name='正文', default='')
-    excerpt = models.TextField(u'摘要', )
     click_nums = models.IntegerField(verbose_name='热度', default=0)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='博客类别')
-    tag = models.ManyToManyField(Tag, verbose_name='博客标签')
+    tags = models.ManyToManyField(Tag, verbose_name='博客标签')
     published = models.BooleanField(u'发布', default=True)
     is_top = models.BooleanField(u'置顶', default=False)
     publish_time = models.DateTimeField(u'发布时间', null=True)
@@ -71,17 +70,10 @@ class Blog(BaseModel):
         if self.published and not self.publish_time:
             self.publish_time = timezone.now()
 
-        # 生成摘要
-        try:
-            # 获取readmore位置
-            readmore_index = self.content.find('<!--more-->')
+        if self.code == '':
+            self.code = self.id
 
-            # 截取readmore前的字符串作为摘要并用markdown渲染
-            self.excerpt = self.content[:readmore_index]
-        except:
-            self.excerpt = self.content[:100]
-
-        super(Blog, self).save(*args, **kwargs)
+        super(Article, self).save(*args, **kwargs)
 
 
 class Comment(BaseModel):
@@ -91,7 +83,7 @@ class Comment(BaseModel):
     name = models.CharField(verbose_name='姓名', max_length=20, default='佚名')
     content = models.CharField(verbose_name='内容', max_length=300)
     create_time = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
-    blog = models.ForeignKey(Blog, on_delete=models.CASCADE, verbose_name='博客')
+    blog = models.ForeignKey(Article, on_delete=models.CASCADE, verbose_name='博客')
 
     class Meta:
         verbose_name = '博客评论'

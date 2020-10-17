@@ -18,9 +18,9 @@ from django.contrib import admin
 from django.views.static import serve
 from django.conf.urls.static import static
 
-from myblog.views import IndexView, ArichiveView, TagView, TagDetailView, BlogDetailView
+from myblog.views import IndexView, ArichiveView, TagView, TagDetailView, ArticleDetailView
 from myblog.views import AddCommentView, CategoryView, CategoryDetaiView, MySearchView
-from myblog.feeds import BlogRssFeed
+from myblog.feeds import ArticleRssFeed
 from blog import settings
 
 urlpatterns = [
@@ -29,9 +29,9 @@ urlpatterns = [
     url(r'^archive/$', ArichiveView.as_view(), name='archive'),
     url(r'^tags/$', TagView.as_view(), name='tags'),
     url(r'^tags/(?P<tag_code>\w+)$', TagDetailView.as_view(), name='tag_code'),
-    url(r'^blog/(?P<blog_code>\w+).html$', BlogDetailView.as_view(), name='blog_code'),
+    url(r'^blog/(?P<blog_code>\w+).html$', ArticleDetailView.as_view(), name='blog_code'),
     url(r'^add_comment/$', AddCommentView.as_view(), name='add_comment'),
-    url(r'^rss/$', BlogRssFeed(), name='rss'),
+    url(r'^rss/$', ArticleRssFeed(), name='rss'),
     url(r'^categorys/$', CategoryView.as_view(), name='categorys'),
     url(r'^category/(?P<category_code>\w+)/$', CategoryDetaiView.as_view(), name='category_code'),
     url(r'^search/', MySearchView(), name='haystack_search'),

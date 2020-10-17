@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load custom_markdown %}
 {% block title %}
 {{ blog.title }}
 {% endblock %}
@@ -60,7 +60,7 @@
                 </header>
 
                 <div class="post-body" itemprop="articleBody">
-                    {{ blog.content|safe }}
+                    {{ blog.content|custom_markdown }}
                 </div>
 
 
@@ -89,7 +89,7 @@
 
 
                     <div class="post-tags">
-                        {% for blog_tag in blog.tag.all %}
+                        {% for blog_tag in blog.tags.all %}
                         <a href="{% url 'tag_code' blog_tag.code %}" rel="tag"># {{ blog_tag.name }}</a>
                         {% endfor %}
                     </div>

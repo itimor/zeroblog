@@ -1,10 +1,10 @@
 from django.contrib.syndication.views import Feed
 from django.urls import reverse
 
-from myblog.models import Blog
+from myblog.models import Article
 
 
-class BlogRssFeed(Feed):
+class ArticleRssFeed(Feed):
     """
     创建一个rss源
     """
@@ -12,7 +12,7 @@ class BlogRssFeed(Feed):
     link = "/rss/"
 
     def items(self):
-        return Blog.objects.filter(published=True).all()
+        return Article.objects.filter(published=True).all()
 
     def item_title(self, item):
         return item.title
@@ -21,4 +21,4 @@ class BlogRssFeed(Feed):
         return item.content
 
     def item_link(self, item):
-        return reverse('blog_id', args=[item.id, ])
+        return reverse('blog_code', args=[item.code, ])

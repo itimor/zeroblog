@@ -1,5 +1,3 @@
-import markdown
-
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 from django.http import HttpResponse
@@ -7,15 +5,8 @@ from pure_pagination import PageNotAnInteger, Paginator
 from haystack.views import SearchView
 
 from blog.settings import HAYSTACK_SEARCH_RESULTS_PER_PAGE
-from myblog.models import Blog, Category, Tag, Comment, Counts
+from myblog.models import Article, Category, Tag, Comment, Counts
 from myblog.forms import CommentForm
-
-md = markdown.Markdown(extensions=[
-    'markdown.extensions.extra',
-    'markdown.extensions.toc',
-    'markdown.extensions.codehilite',
-    'markdown.extensions.fenced_code',
-])
 
 
 class IndexView(View):
@@ -24,17 +15,13 @@ class IndexView(View):
     """
 
     def get(self, request):
-        all_blog = Blog.objects.filter(published=True).order_by('-id')
+        all_blog = Article.objects.filter(published=True).order_by('-id')
         # 博客、标签、分类数目统计
         count_nums = Counts.objects.get(id=1)
         blog_nums = count_nums.blog_nums
         cate_nums = count_nums.category_nums
         tag_nums = count_nums.tag_nums
         count_nums.save()
-
-        for blog in all_blog:
-            blog.content = md.convert(blog.content)
-            blog.excerpt = md.convert(blog.excerpt)
 
         # 分页
         try:
@@ -58,7 +45,7 @@ class ArichiveView(View):
     """
 
     def get(self, request):
-        all_blog = Blog.objects.filter(published=True).order_by('-create_time')
+        all_blog = Article.objects.filter(published=True).order_by('-create_time')
         # 博客、标签、分类数目统计
         count_nums = Counts.objects.get(id=1)
         blog_nums = count_nums.blog_nums
@@ -135,13 +122,13 @@ class TagDetailView(View):
         })
 
 
-class BlogDetailView(View):
+class ArticleDetailView(View):
     """
     博客详情页
     """
 
     def get(self, request, blog_code):
-        blog = get_object_or_404(Blog, code=blog_code)
+        blog = get_object_or_404(Article, code=blog_code)
         # 博客、标签、分类数目统计
         count_nums = Counts.objects.get(id=1)
         blog_nums = count_nums.blog_nums
@@ -153,28 +140,26 @@ class BlogDetailView(View):
         # 获取评论内容
         all_comment = Comment.objects.filter(blog_id=blog.id)
         comment_nums = all_comment.count()
-        # 将博客内容用markdown显示出来
-        blog.content = md.convert(blog.content)
         # 实现博客上一篇与下一篇功能
         has_prev = False
         has_next = False
         id_prev = id_next = int(blog.id)
-        blog_id_max = Blog.objects.all().order_by('-id').first()
+        blog_id_max = Article.objects.all().order_by('-id').first()
         id_max = blog_id_max.id
         while not has_prev and id_prev >= 1:
-            blog_prev = Blog.objects.filter(id=id_prev - 1).first()
+            blog_prev = Article.objects.filter(id=id_prev - 1).first()
             if not blog_prev:
                 id_prev -= 1
             else:
                 has_prev = True
         while not has_next and id_next <= id_max:
-            blog_next = Blog.objects.filter(id=id_next + 1).first()
+            blog_next = Article.objects.filter(id=id_next + 1).first()
             if not blog_next:
                 id_next += 1
             else:
                 has_next = True
 
-        return render(request, 'blog-detail.html', {
+        return render(request, 'article-detail.html', {
             'blog': blog,
             'blog_prev': blog_prev,
             'blog_next': blog_next,
