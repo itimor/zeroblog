@@ -30,7 +30,7 @@ def custom_markdown(value):
 @stringfilter  # 希望字符串作为参数
 def custom_markdown_summary(value):
     # 截取readmore前的字符串作为摘要并用markdown渲染
-    readmore_index = finding_nemo(value, '\n', 5)
+    readmore_index = finding_nemo(value, '\n', 3)
     content = value[:readmore_index]
     return mark_safe(md.convert(content))
 

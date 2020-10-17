@@ -947,7 +947,7 @@ pre .javascript .function {
 }
 .tag-cloud a {
   display: inline-block;
-  margin: 10px;
+  margin: 5px;
 }
 .back-to-top {
   box-sizing: border-box;
@@ -3107,4 +3107,14 @@ rgba(255,255,255,0.6)
 #yun-tie-sdk-wrap .single-tie .tie-time {
   transition: border-width 0.3s linear 0.1s, color 0.2s linear 0.3s;
   cursor: pointer;
+}
+.category{
+  text-align: center;
+}
+.node_category {
+  margin: 0.2em;
+  display: inline-block;
+  margin: 5px;
+  font-size: 12.5px;
+  color: #999;
 }

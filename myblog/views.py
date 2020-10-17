@@ -77,17 +77,7 @@ class TagView(View):
 
     def get(self, request):
         all_tag = Tag.objects.all()
-        # 博客、标签、分类数目统计
-        count_nums = Counts.objects.get(id=1)
-        blog_nums = count_nums.blog_nums
-        cate_nums = count_nums.category_nums
-        tag_nums = count_nums.tag_nums
-        return render(request, 'tags.html', {
-            'all_tag': all_tag,
-            'blog_nums': blog_nums,
-            'cate_nums': cate_nums,
-            'tag_nums': tag_nums,
-        })
+        return render(request, 'tags.html', {'all_tag': all_tag})
 
 
 class TagDetailView(View):
@@ -98,11 +88,6 @@ class TagDetailView(View):
     def get(self, request, tag_code):
         tag = get_object_or_404(Tag, code=tag_code)
         tag_blogs = tag.article_set.all()
-        # 博客、标签、分类数目统计
-        count_nums = Counts.objects.get(id=1)
-        blog_nums = count_nums.blog_nums
-        cate_nums = count_nums.category_nums
-        tag_nums = count_nums.tag_nums
 
         # 分页
         try:
@@ -115,10 +100,6 @@ class TagDetailView(View):
         return render(request, 'tag-detail.html', {
             'tag_blogs': tag_blogs,
             'tag_name': tag.name,
-            'blog_nums': blog_nums,
-            'cate_nums': cate_nums,
-            'tag_nums': tag_nums,
-
         })
 
 
@@ -194,18 +175,8 @@ class CategoryView(View):
     """
 
     def get(self, request):
-        all_category = Category.objects.all()
-        # 博客、标签、分类数目统计
-        count_nums = Counts.objects.get(id=1)
-        blog_nums = count_nums.blog_nums
-        cate_nums = count_nums.category_nums
-        tag_nums = count_nums.tag_nums
-        return render(request, 'categorys.html', {
-            'all_category': all_category,
-            'blog_nums': blog_nums,
-            'cate_nums': cate_nums,
-            'tag_nums': tag_nums,
-        })
+        all_category = Category.objects.filter(is_root=True).order_by('-number')
+        return render(request, 'categorys.html', {'all_category': all_category})
 
 
 class CategoryDetaiView(View):
@@ -216,11 +187,6 @@ class CategoryDetaiView(View):
     def get(self, request, category_code):
         category = get_object_or_404(Category, code=category_code)
         cate_blogs = category.article_set.all()
-        # 博客、标签、分类数目统计
-        count_nums = Counts.objects.get(id=1)
-        blog_nums = count_nums.blog_nums
-        cate_nums = count_nums.category_nums
-        tag_nums = count_nums.tag_nums
 
         # 分页
         try:
@@ -234,10 +200,6 @@ class CategoryDetaiView(View):
         return render(request, 'category-detail.html', {
             'cate_blogs': cate_blogs,
             'category_name': category.name,
-            'blog_nums': blog_nums,
-            'cate_nums': cate_nums,
-            'tag_nums': tag_nums,
-
         })
 
 

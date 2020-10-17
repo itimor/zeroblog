@@ -15,7 +15,7 @@
 
             <div class="tag-cloud">
                 <div class="tag-cloud-title">
-                    目前共计 {{ tag_nums }} 个标签
+                    目前共计 {{ all_tag|length }} 个标签
                 </div>
                 <div class="tag-cloud-tags">
 
@@ -36,7 +36,10 @@
                                 style="font-size: 35px; color: #000"
                            {% endif %}>
 
-                            {{ tag.name }}</a>
+                        {{ tag.name }}
+
+                        <span>({{ tag.number }})</span>
+                    </a>
                     {% endfor %}
 
 

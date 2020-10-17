@@ -126,9 +126,11 @@ def get_blog(url):
     content_imgs = content.xpath('./p/img/@src')
     for img_url in content_imgs:
         full_img_url = base_url + img_url
-        r = requests.get(full_img_url)
-        with open(f'../{img_url}', 'wb') as file:
-            file.write(r.content)
+        a = os.path.split(img_url)
+        if a[0] == '/res':
+            r = requests.get(full_img_url)
+            with open(f'../res/{a[1]}', 'wb') as file:
+                file.write(r.content)
     content_html = html.tostring(content).decode("utf-8")
     content = markdownify(content_html, heading_style="ATX")
     try:

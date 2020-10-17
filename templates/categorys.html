@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load leaf_category %}
 {% block title %}
 文章分类
 {% endblock %}
@@ -13,33 +13,20 @@
                 <h2 class="post-title" itemprop="name headline">categorys</h2>
             </header>
 
-            <div class="tag-cloud">
+            <div class="category">
                 <div class="tag-cloud-title">
-                    目前共计 {{ cate_nums }} 个分类
+                    目前共计 {{ all_category|length }} 个主类
                 </div>
-                <div class="tag-cloud-tags">
-
+                <div class="category-item">
                     {% for category in all_category %}
-                        <a href="{% url 'category_code' category.code %}"
-
-                           {% if category.number <= 20 %}
-                                style="font-size: 12.5px; color: #999"
-                           {% elif category.number <= 50 %}
-                                style="font-size: 15px; color: #666"
-                           {% elif category.number <= 100 %}
-                                style="font-size: 18px; color: #444"
-                           {% elif category.number <= 200 %}
-                                style="font-size: 21px; color: #222"
-                           {% elif category.number <= 500 %}
-                                style="font-size: 24px; color: #111"
-                           {% else %}
-                                style="font-size: 28px; color: #000"
-                           {% endif %}>
-
-                            {{ category.name }}</a>
+                    <h3> <a href="{% url 'category_code' category.code %}">{{ category.name }}</a></h3>
+                        {% for node_category in category.id|leaf_category %}
+                            <a class="node_category" href="{% url 'category_code' node_category.code %}">
+                                {{ node_category.name }}
+                                <span>({{ node_category.number }})</span>
+                            </a>
+                        {% endfor %}
                     {% endfor %}
-
-
                 </div>
             </div>
         </div>
