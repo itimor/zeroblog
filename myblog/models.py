@@ -44,7 +44,7 @@ class Article(BaseModel):
     """
     博客
     """
-    title = models.CharField(verbose_name='标题', unique=True, max_length=100)
+    title = models.CharField(verbose_name='标题', max_length=100)
     code = models.CharField(verbose_name='code', unique=True, max_length=20)
     content = MDTextField(verbose_name='正文', default='')
     click_nums = models.IntegerField(verbose_name='热度', default=0)
