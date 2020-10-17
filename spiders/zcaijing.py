@@ -75,9 +75,9 @@ def get_category_blog(dt=None):
         if dt is not None:
             column_ul = etree_html.xpath('//div[@class="ml-4 juhe-ml-mobile"]')
             for item in column_ul:
-                code_date = item.xpath('./span[@class="juhe-page-right-div-time-span"]/text()')
+                code_date = item.xpath('./span[@class="juhe-page-right-div-time-span"]/text()')[0]
                 if code_date == dt:
-                    code_url = item.xpath('./a[@class="juhe-page-left-div-link"]/@href')
+                    code_url = item.xpath('./h2/a[@class="juhe-page-left-div-link"]/@href')[0]
                     full_blog_url = base_url + code_url
                     same_blog = [blog.code for blog in all_blog if blog.memo == full_blog_url]
                     if len(same_blog) > 0:
@@ -87,7 +87,7 @@ def get_category_blog(dt=None):
         else:
             column_ul = etree_html.xpath('//div[@class="ml-4 juhe-ml-mobile"]')
             for item in column_ul:
-                code_url = item.xpath('./a[@class="juhe-page-left-div-link"]/@href')
+                code_url = item.xpath('./h2/a[@class="juhe-page-left-div-link"]/@href')[0]
                 full_blog_url = base_url + code_url
                 same_blog = [blog.code for blog in all_blog if blog.memo == full_blog_url]
                 if len(same_blog) > 0:
@@ -139,15 +139,15 @@ if __name__ == '__main__':
     # catagory_url = 'https://www.zcaijing.com/cgzh/'
     # get_signle_category(all_blog, catagory_url)
     # 获取所有分类
-    get_category()
+    # get_category()
     # 获取单个文章
     # blog_url = 'https://www.zcaijing.com/cgzh/198088.html'
     # get_blog(blog_url)
     # 获取所有文章
-    # all_url = get_category_blog()
-    # print(len(all_url))
-    # for blog_url in all_url:
-    #     get_blog(blog_url)
+    all_url = get_category_blog()
+    print(len(all_url))
+    for blog_url in all_url:
+        get_blog(blog_url)
     # 获得当天日志
     # cur_date = time.strftime('%Y-%m-%d')
     # all_url = get_category_blog(cur_date)
