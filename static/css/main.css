@@ -212,18 +212,13 @@ h3,
 h4,
 h5,
 h6 {
-  margin: 0;
   padding: 0;
-  font-weight: bold;
+  margin: 1.5em 5px;
+  text-align: center;
   line-height: 1.5;
+  color: #009688;
+  font-weight: bold;
   font-family: 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
-}
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin: 20px 0 15px;
 }
 h1 {
   font-size: 22px;
@@ -501,15 +496,6 @@ pre,
   background: #f7f7f7;
   line-height: 1.6;
   border-radius: 5px;
-}
-h1, h2, h3, h4, h5, h6 {
-  margin: 20px 0 10px;
-  padding: 0;
-  font-style: bold !important;
-  color: #009688 !important;
-  text-align: center !important;
-  margin: 1.5em 5px !important;
-  padding: 0.5em 1em !important;
 }
 
 code {
@@ -1393,7 +1379,7 @@ pre .javascript .function {
   font-size: 16px;
 }
 .posts-expand .post-meta {
-  margin: 3px 0 60px 0;
+  margin: 3px 0 30px 0;
   color: #999;
   font-family: 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
   font-size: 12px;

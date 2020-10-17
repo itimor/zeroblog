@@ -11,7 +11,7 @@ from markdownify import markdownify
 os.environ['DJANGO_SETTINGS_MODULE'] = 'blog.settings'
 django.setup()
 
-from myblog.models import Category, Tag, Blog
+from myblog.models import Category, Tag, Article
 
 base_url = "https://www.zcaijing.com"
 
@@ -62,10 +62,11 @@ def get_signle_category(all_blog, url):
 
 def get_category_blog():
     all_category = Category.objects.filter(is_root=False)
-    all_blog = Blog.objects.all()
+    all_blog = Article.objects.all()
     new_blog_url_list = []
 
     for category in all_category:
+        print(category)
         url = base_url + f"/{category.code}/"
         r = requests.get(url).text
         etree_html = etree.HTML(r)
@@ -88,6 +89,7 @@ def get_category_blog():
 
 
 def get_blog(url):
+    print(url)
     r = requests.get(url).text
     etree_html = etree.HTML(r)
     title = etree_html.xpath('//div[@class="content-page-header-div d-md-none"]/h1/text()')[0]
@@ -101,28 +103,27 @@ def get_blog(url):
     content = etree_html.xpath('//div[@id="content"]')
     content_html = html.tostring(content[0]).decode("utf-8")
     content = markdownify(content_html, heading_style="ATX")
-    blog = Blog.objects.create(title=title, code=code, content=content, published=True, category=category)
+    blog = Article.objects.create(title=title, code=code, content=content, published=True, category=category)
     tags = footer_info[:-2]
     for item in tags:
         code = item.xpath('./@href')[0].strip('/')
         name = item.xpath('./text()')[0]
         tag, s = Tag.objects.get_or_create(name=name, defaults={"code": code})
         if s:
-            blog.tag.add(tag)
+            blog.tags.add(tag)
 
 
 if __name__ == '__main__':
     # # 获取单页分类
-    # all_blog = Blog.objects.all()
+    # all_blog = Article.objects.all()
     # catagory_url = 'https://www.zcaijing.com/cgzh/'
     # get_signle_category(all_blog, catagory_url)
     # 获取所有分类
-    get_category()
+    # get_category()
     # 获取单个文章
     # blog_url = 'https://www.zcaijing.com/cgzh/198088.html'
     # get_blog(blog_url)
     # 获取所有文章
     all_url = get_category_blog()
     for blog_url in all_url:
-        print(blog_url)
         get_blog(blog_url)
