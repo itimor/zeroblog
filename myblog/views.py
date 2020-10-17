@@ -46,11 +46,7 @@ class ArichiveView(View):
 
     def get(self, request):
         all_blog = Article.objects.filter(published=True).order_by('-create_time')
-        # 博客、标签、分类数目统计
-        count_nums = Counts.objects.get(id=1)
-        blog_nums = count_nums.blog_nums
-        cate_nums = count_nums.category_nums
-        tag_nums = count_nums.tag_nums
+        blog_nums = len(all_blog)
 
         # 分页
         try:
@@ -64,9 +60,6 @@ class ArichiveView(View):
         return render(request, 'archive.html', {
             'all_blog': all_blog,
             'blog_nums': blog_nums,
-            'cate_nums': cate_nums,
-            'tag_nums': tag_nums,
-
         })
 
 
