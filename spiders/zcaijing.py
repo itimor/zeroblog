@@ -102,6 +102,8 @@ def get_category_blog(dt=None):
                     url = base_url + f"/{category.code}/p-{page}"
                     new_list = get_signle_category(all_blog, url)
                     new_blog_url_list += new_list
+        category.number += len(new_blog_url_list)
+        category.save()
     return new_blog_url_list
 
 
@@ -124,19 +126,22 @@ def get_blog(url):
         r = requests.get(full_img_url)
         with open(f'../{img_url}', 'wb') as file:
             file.write(r.content)
-    # content_html = html.tostring(content).decode("utf-8")
-    # content = markdownify(content_html, heading_style="ATX")
-    # try:
-    #     blog = Article.objects.create(title=title, code=code, content=content, published=True, category=category)
-    # except:
-    #     pass
-    # tags = footer_info[:-2]
-    # for item in tags:
-    #     code = item.xpath('./@href')[0].strip('/')
-    #     name = item.xpath('./text()')[0]
-    #     tag, s = Tag.objects.get_or_create(name=name, defaults={"code": code})
-    #     if s:
-    #         blog.tags.add(tag)
+    content_html = html.tostring(content).decode("utf-8")
+    content = markdownify(content_html, heading_style="ATX")
+    try:
+        blog = Article.objects.create(title=title, code=code, content=content, published=True, category=category)
+    except:
+        pass
+    tags = footer_info[:-2]
+    for item in tags:
+        code = item.xpath('./@href')[0].strip('/')
+        name = item.xpath('./text()')[0]
+        obj_tag, s = Tag.objects.get_or_create(name=name, defaults={"code": code})
+        tag_number = obj_tag.article_set.count()
+        obj_tag.number = tag_number
+        obj_tag.save()
+        if s:
+            blog.tags.add(obj_tag)
 
 
 if __name__ == '__main__':
@@ -145,7 +150,7 @@ if __name__ == '__main__':
     # catagory_url = 'https://www.zcaijing.com/cgzh/'
     # get_signle_category(all_blog, catagory_url)
     # 获取所有分类
-    # get_category()
+    get_category()
     # 获取单个文章
     # blog_url = 'https://www.zcaijing.com/cgzh/198088.html'
     # get_blog(blog_url)
