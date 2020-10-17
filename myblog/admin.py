@@ -27,13 +27,13 @@ class ArticleAdmin(admin.ModelAdmin):
         count_nums.save()
         # 博客分类数目统计
         obj_category = obj.category
-        category_number = obj_category.blog_set.count()
+        category_number = obj_category.article_set.count()
         obj_category.number = category_number
         obj_category.save()
         # 博客标签数目统计
         obj_tag_list = obj.tags.all()
         for obj_tag in obj_tag_list:
-            tag_number = obj_tag.blog_set.count()
+            tag_number = obj_tag.article_set.count()
             obj_tag.number = tag_number
             obj_tag.save()
 

@@ -114,7 +114,7 @@ class TagDetailView(View):
         tag_blogs = p.page(page)
         return render(request, 'tag-detail.html', {
             'tag_blogs': tag_blogs,
-            'tag_code': tag_code,
+            'tag_name': tag.name,
             'blog_nums': blog_nums,
             'cate_nums': cate_nums,
             'tag_nums': tag_nums,
@@ -233,7 +233,7 @@ class CategoryDetaiView(View):
 
         return render(request, 'category-detail.html', {
             'cate_blogs': cate_blogs,
-            'category_code': category.code,
+            'category_name': category.name,
             'blog_nums': blog_nums,
             'cate_nums': cate_nums,
             'tag_nums': tag_nums,

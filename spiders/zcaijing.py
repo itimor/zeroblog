@@ -121,7 +121,9 @@ def get_blog(url):
     content_imgs = content.xpath('./p/img/@src')
     for img_url in content_imgs:
         full_img_url = base_url + img_url
-        print(full_img_url)
+        r = requests.get(full_img_url)
+        with open(f'../{img_url}', 'wb') as file:
+            file.write(r.content)
     # content_html = html.tostring(content).decode("utf-8")
     # content = markdownify(content_html, heading_style="ATX")
     # try:
@@ -138,20 +140,20 @@ def get_blog(url):
 
 
 if __name__ == '__main__':
-    # # 获取单页分类
+    # 获取单页分类
     # all_blog = Article.objects.all()
     # catagory_url = 'https://www.zcaijing.com/cgzh/'
     # get_signle_category(all_blog, catagory_url)
     # 获取所有分类
     # get_category()
     # 获取单个文章
-    blog_url = 'https://www.zcaijing.com/cgzh/198088.html'
-    get_blog(blog_url)
+    # blog_url = 'https://www.zcaijing.com/cgzh/198088.html'
+    # get_blog(blog_url)
     # 获取所有文章
-    # all_url = get_category_blog()
-    # print(len(all_url))
-    # for blog_url in all_url:
-    #     get_blog(blog_url)
+    all_url = get_category_blog()
+    print(len(all_url))
+    for blog_url in all_url:
+        get_blog(blog_url)
     # 获得当天日志
     # cur_date = time.strftime('%Y-%m-%d')
     # all_url = get_category_blog(cur_date)
