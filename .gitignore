@@ -10,3 +10,4 @@ package-lock.json
 venv/
 *.db
 res/
+whoosh_index/
