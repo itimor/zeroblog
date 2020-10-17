@@ -15,13 +15,12 @@ class IndexView(View):
     """
 
     def get(self, request):
-        all_blog = Article.objects.filter(published=True).order_by('-id')
-        # 博客、标签、分类数目统计
-        count_nums = Counts.objects.get(id=1)
-        blog_nums = count_nums.blog_nums
-        cate_nums = count_nums.category_nums
-        tag_nums = count_nums.tag_nums
-        count_nums.save()
+        all_blog = Article.objects.filter(published=True).order_by('is_top', '-id')
+        all_cate = Category.objects.all()
+        all_tag = Tag.objects.all()
+        blog_nums = len(all_blog)
+        cate_nums = len(all_cate)
+        tag_nums = len(all_tag)
 
         # 分页
         try:
@@ -80,7 +79,7 @@ class TagDetailView(View):
 
     def get(self, request, tag_code):
         tag = get_object_or_404(Tag, code=tag_code)
-        tag_blogs = tag.article_set.all()
+        tag_blogs = tag.article_set.all().order_by('is_top', '-id')
 
         # 分页
         try:
@@ -179,7 +178,7 @@ class CategoryDetaiView(View):
 
     def get(self, request, category_code):
         category = get_object_or_404(Category, code=category_code)
-        cate_blogs = category.article_set.all()
+        cate_blogs = category.article_set.all().order_by('is_top', '-id')
 
         # 分页
         try:
