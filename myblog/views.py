@@ -16,11 +16,6 @@ class IndexView(View):
 
     def get(self, request):
         all_blog = Article.objects.filter(published=True).order_by('is_top', '-id')
-        all_cate = Category.objects.all()
-        all_tag = Tag.objects.all()
-        blog_nums = len(all_blog)
-        cate_nums = len(all_cate)
-        tag_nums = len(all_tag)
 
         # 分页
         try:
@@ -30,12 +25,7 @@ class IndexView(View):
 
         p = Paginator(all_blog, 5, request=request)
         all_blog = p.page(page)
-        return render(request, 'index.html', {
-            'all_blog': all_blog,
-            'blog_nums': blog_nums,
-            'cate_nums': cate_nums,
-            'tag_nums': tag_nums,
-        })
+        return render(request, 'index.html', {'all_blog': all_blog})
 
 
 class ArichiveView(View):
@@ -53,13 +43,18 @@ class ArichiveView(View):
         except PageNotAnInteger:
             page = 1
 
-        p = Paginator(all_blog, 5, request=request)
+        if blog_nums < 50:
+            num = 5
+        elif blog_nums < 100:
+            num = 10
+        elif blog_nums < 500:
+            num = 20
+        else:
+            num = 30
+        p = Paginator(all_blog, num, request=request)
         all_blog = p.page(page)
 
-        return render(request, 'archive.html', {
-            'all_blog': all_blog,
-            'blog_nums': blog_nums,
-        })
+        return render(request, 'archive.html', {'all_blog': all_blog, 'blog_nums': blog_nums})
 
 
 class TagView(View):
@@ -102,11 +97,6 @@ class ArticleDetailView(View):
 
     def get(self, request, blog_code):
         blog = get_object_or_404(Article, code=blog_code)
-        # 博客、标签、分类数目统计
-        count_nums = Counts.objects.get(id=1)
-        blog_nums = count_nums.blog_nums
-        cate_nums = count_nums.category_nums
-        tag_nums = count_nums.tag_nums
         # 博客点击数+1, 评论数统计
         blog.click_nums += 1
         blog.save()
@@ -139,11 +129,7 @@ class ArticleDetailView(View):
             'has_prev': has_prev,
             'has_next': has_next,
             'all_comment': all_comment,
-            'comment_nums': comment_nums,
-            'blog_nums': blog_nums,
-            'cate_nums': cate_nums,
-            'tag_nums': tag_nums,
-
+            'comment_nums': comment_nums
         })
 
 
@@ -204,7 +190,6 @@ class MySearchView(SearchView):
         context = super(MySearchView, self).extra_context()
         # 博客、标签、分类数目统计
         count_nums = Counts.objects.get(id=1)
-
         context['cate_nums'] = count_nums.category_nums
         context['tag_nums'] = count_nums.tag_nums
         context['blog_nums'] = count_nums.blog_nums

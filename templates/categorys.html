@@ -10,7 +10,7 @@
 
         <div id="posts" class="posts-expand">
             <header class="post-header">
-                <h2 class="post-title" itemprop="name headline">categorys</h2>
+                <h2 class="post-title" itemprop="name headline">分类</h2>
             </header>
 
             <div class="category">
@@ -19,7 +19,7 @@
                 </div>
                 <div class="category-item">
                     {% for category in all_category %}
-                    <h3> <a href="{% url 'category_code' category.code %}">{{ category.name }}</a></h3>
+                    <h3> <a href="{% url 'category_code' category.code %}">{{ category.name }}</a>({{ category.number }})</h3>
                         {% for node_category in category.id|leaf_category %}
                             <a class="node_category" href="{% url 'category_code' node_category.code %}">
                                 {{ node_category.name }}

@@ -203,7 +203,7 @@ body {
 }
 @media (min-width: 1600px) {
   body {
-    font-size: 16px;
+    font-size: 15px;
   }
 }
 h1,
@@ -451,11 +451,6 @@ body {
   margin: 0 auto;
   padding: 100px 0 70px;
   width: 700px;
-}
-@media (min-width: 1600px) {
-  .container .header-inner {
-    width: 900px;
-  }
 }
 .main {
   padding-bottom: 150px;
