@@ -9,11 +9,9 @@ django-pure-pagination==0.3.0
 django-simpleui==2020.9.26
 idna==2.10
 jieba==0.42.1
-lxml==4.5.2
+lxml @ file:///D:/projects/zerostock/lxml-4.5.2-cp39-cp39-win_amd64.whl
 Markdown==3.3.1
 markdownify==0.5.3
-Pillow==7.2.0
-Pygments==2.7.1
 pytz==2020.1
 requests==2.24.0
 six==1.15.0
