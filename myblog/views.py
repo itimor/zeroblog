@@ -82,7 +82,7 @@ class TagDetailView(View):
         except PageNotAnInteger:
             page = 1
 
-        p = Paginator(tag_blogs, 5, request=request)
+        p = Paginator(tag_blogs, 20, request=request)
         tag_blogs = p.page(page)
         return render(request, 'tag-detail.html', {
             'tag_blogs': tag_blogs,
@@ -172,7 +172,7 @@ class CategoryDetaiView(View):
         except PageNotAnInteger:
             page = 1
 
-        p = Paginator(cate_blogs, 5, request=request)
+        p = Paginator(cate_blogs, 20, request=request)
         cate_blogs = p.page(page)
 
         return render(request, 'category-detail.html', {
