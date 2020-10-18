@@ -5,7 +5,6 @@
 import requests
 import os
 import django
-import time
 from lxml import etree, html
 from markdownify import markdownify
 
@@ -53,7 +52,7 @@ def get_signle_category(all_blog, url):
     column_ul = etree_html.xpath('//a[@class="juhe-page-left-div-link"]/@href')
     for code_url in column_ul:
         full_blog_url = base_url + code_url
-        same_blog = [blog.code for blog in all_blog if blog.memo == full_blog_url]
+        same_blog = [blog.code for blog in all_blog if blog.source == full_blog_url]
         if len(same_blog) > 0:
             print(f"有相同的博客code {same_blog[0]}")
         else:
@@ -134,19 +133,18 @@ def get_blog(url):
     content_html = html.tostring(content).decode("utf-8")
     content = markdownify(content_html, heading_style="ATX")
     try:
-        blog = Article.objects.create(title=title, code=code, content=content, published=True, category=category)
+        blog = Article.objects.create(title=title, code=code, content=content, published=True, category=category, source=url)
     except:
         pass
     tags = footer_info[:-2]
     for item in tags:
         code = item.xpath('./@href')[0].strip('/')
         name = item.xpath('./text()')[0]
-        obj_tag, s = Tag.objects.get_or_create(name=name, defaults={"code": code})
+        obj_tag, _ = Tag.objects.get_or_create(name=name, defaults={"code": code})
         tag_number = obj_tag.article_set.count()
         obj_tag.number = tag_number
         obj_tag.save()
-        if s:
-            blog.tags.add(obj_tag)
+        blog.tags.add(obj_tag)
 
 
 if __name__ == '__main__':
@@ -156,7 +154,7 @@ if __name__ == '__main__':
     # catagory_url = 'https://www.zcaijing.com/cgzh/'
     # get_signle_category(all_blog, catagory_url)
     # 获取所有分类
-    get_category()
+    # get_category()
     # 获取单个文章
     # blog_url = 'https://www.zcaijing.com/cgzh/198088.html'
     # get_blog(blog_url)

@@ -9,10 +9,10 @@ class ArticleAdmin(admin.ModelAdmin):
     list_display = ['title', 'click_nums', 'category', 'published', 'is_top', 'allow_comments', 'create_time',
                     'update_time']
     list_filter = ('published', 'is_top', 'publish_time', 'click_nums')
-    fields = ('title', 'code', 'content', 'category', 'published', 'is_top', 'tags', 'allow_comments')
-    # readonly_fields = ('click_nums',)
+    fields = ('title', 'code', 'content', 'category', 'published', 'is_top', 'tags', 'allow_comments', 'source')
+    readonly_fields = ('source',)
     exclude = ('publish_time',)
-    search_fields = ('name', 'code')
+    search_fields = ('title', 'code')
     ordering = ('-create_time', 'published', 'is_top', 'publish_time')
     list_per_page = 20
     formfield_overrides = {

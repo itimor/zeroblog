@@ -58,7 +58,10 @@
                     </div>
                 </header>
 
-                <div class="post-body" itemprop="articleBody">
+                <span class="post-body" itemprop="articleBody">
+                    {% if blog.source %}
+                    <span style="color: red;">来源地址:</span> <a href="{{ blog.source }}">{{ blog.source }}</a>
+                    {% endif %}
                     {{ blog.content|custom_markdown }}
                 </div>
 
@@ -128,10 +131,9 @@
 
         <div class="post-spread"></div>
     </div>
-</div>
-<div class="content-wrap-comment">
+    <div class="content-wrap-comment">
     {% if blog.allow_comments %}
-    <div id="comment">
+        <div id="comment">
         <form class="comment-form" id="jsStayForm">
             <div class="form-group">
                 <label class="name">名字: </label>
@@ -149,7 +151,7 @@
             <button class="btn" type="button" id="jsStayBtn" value="发表">发表</button>
         </form>
     </div>
-    <div class="#">
+        <div class="#">
         <ul class="comment-list">
             {% for comment in all_comment %}
             <li class="comment-item">
@@ -171,10 +173,10 @@
         </ul>
     </div>
     {% else %}
-    评论暂时被关闭
+        评论暂时被关闭
     {% endif %}
 </div>
-
+</div>
 {% endblock %}
 
 
@@ -205,17 +207,6 @@
             });
         });
     })
-
-
-
-
-
-
-
-
-
-
-
 </script>
 {% endblock %}
 

@@ -54,6 +54,7 @@ class Article(BaseModel):
     is_top = models.BooleanField(u'置顶', default=False)
     publish_time = models.DateTimeField(u'发布时间', null=True)
     allow_comments = models.BooleanField('开启评论', default=True)
+    source = models.CharField(verbose_name='来源地址', max_length=254, blank=True)
 
     class Meta:
         verbose_name = '博客文章'
