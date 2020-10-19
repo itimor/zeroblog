@@ -154,7 +154,7 @@ if __name__ == '__main__':
     # catagory_url = 'https://www.zcaijing.com/cgzh/'
     # get_signle_category(all_blog, catagory_url)
     # 获取所有分类
-    # get_category()
+    get_category()
     # 获取单个文章
     # blog_url = 'https://www.zcaijing.com/cgzh/198088.html'
     # get_blog(blog_url)

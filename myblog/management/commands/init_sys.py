@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # author: itimor
 
+import os
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
@@ -23,6 +24,12 @@ class Command(BaseCommand):
         tag = Tag.objects.create(name='其他', code='other', number=1)
 
         self.stdout.write(self.style.SUCCESS('############ 初始化博客文章 ###########'))
+
+        if not os.path.isdir('res'):
+            os.mkdir('res')
+        else:
+            print('res 目录已存在')
+
         content = """# h1 标题
 ## h2 标题
 ### h3 标题
