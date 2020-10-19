@@ -9,173 +9,152 @@
     <div id="content" class="content">
         <div id="posts" class="posts-expand">
             <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article" style="opacity: 1; display: block; transform: translateY(0px);">
-                <header class="post-header">
-                    <h1 class="post-title" itemprop="name headline">{{ blog.title }}</h1>
-                    <div class="post-meta">
-                        <span class="post-time">
-                            <span class="post-meta-item-icon">
-                                <i class="fa fa-calendar-o"></i>
-                            </span>
-                            <span class="post-meta-item-text">发表于</span>
-                            <time title="Post created" itemprop="dateCreated datePublished" datetime="#">
-                                {{ blog.create_time|date:"Y-m-d" }}
-                            </time>
-                        </span>
 
-                        <span class="post-category">
-                            <span class="post-meta-divider">|</span>
-                            <span class="post-meta-item-icon">
-                                <i class="fa fa-folder-o"></i>
-                            </span>
-                            <span class="post-meta-item-text">分类于</span>
-                            <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                                <a href="{% url 'category_code' blog.category.code %}" itemprop="url" rel="index">
-                                    <span itemprop="name">{{ blog.category.name }}</span>
-                                </a>
-                            </span>
-                        </span>
+            <header class="post-header">
 
-                        <span class="post-hot">
-                            <span class="post-meta-divider">|</span>
-                            <span class="post-meta-item-icon">
-                                <i class="fa fa-eye"></i>
-                            </span>
-                            <span class="post-meta-item-text">热度</span>
-                            <span itemprop="name">{{ blog.click_nums }}°C</span>
-                        </span>
+                <h1 class="post-title" itemprop="name headline">{{ blog.title }}</h1>
 
-                        {% if blog.allow_comments %}
-                        <span class="post-comments-count">
-                            <span class="post-meta-divider">|</span>
-                            <span class="post-meta-item-icon">
-                                <i class="fa fa-comment-o"></i>
-                            </span>
-                            <a class="cloud-tie-join-count" href="#comment" itemprop="discussionUrl">
-                                <span class="post-comments-count join-count" itemprop="commentCount"></span>
+                <div class="post-meta">
+                    <span class="post-time">
+                        <span class="post-meta-item-icon">
+                            <i class="fa fa-calendar-o"></i>
+                        </span>
+                        <span class="post-meta-item-text">发表于</span>
+                        <time title="Post created" itemprop="dateCreated datePublished" datetime="#">
+                            {{ blog.create_time|date:"Y-m-d" }}
+                        </time>
+                  </span>
+
+                    <span class="post-category">
+
+                        <span class="post-meta-divider">|</span>
+                        <span class="post-meta-item-icon">
+                            <i class="fa fa-folder-o"></i>
+                        </span>
+                        <span class="post-meta-item-text">分类于</span>
+                        <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                            <a href="{% url 'category_code' blog.category.code %}" itemprop="url" rel="index">
+                                <span itemprop="name">{{ blog.category.name }}</span>
                             </a>
                         </span>
+                    </span>
+
+                    <span class="post-comments-count">
+                        <span class="post-meta-divider">|</span>
+                        <span class="post-meta-item-icon">
+                            <i class="fa fa-comment-o"></i>
+                        </span>
+                        <a class="cloud-tie-join-count" href="#comment" itemprop="discussionUrl">
+                            <span class="post-comments-count join-count" itemprop="commentCount"></span>
+                        </a>
+                    </span>
+
+                </div>
+            </header>
+
+            <div class="post-body" itemprop="articleBody">
+
+                {{ blog.content|custom_markdown }}
+
+            </div>
+
+
+            <div>
+                <div style="padding: 10px 0; margin: 10px auto; width: 90%; text-align: center;">
+<!--                <div>觉得不错，支持一下！</div>-->
+<!--                <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById(&#39;QR&#39;); if (qr.style.display === &#39;none&#39;) {qr.style.display=&#39;block&#39;;} else {qr.style.display=&#39;none&#39;}">-->
+<!--                <span>👍</span>-->
+<!--                </button>-->
+<!--                    <div id="QR" style="display: none;">-->
+<!--                        <div id="wechat" style="display: inline-block">-->
+<!--                          <a href="/static/image/weixin.jpg" class="fancybox" rel="group"><img id="wechat_qr" src="/static/image/weixin.jpg" alt="geerniya WeChat Pay"></a>-->
+<!--                          <p>微信打赏</p>-->
+<!--                        </div>-->
+<!--                        <div id="alipay" style="display: inline-block">-->
+<!--                          <a href="/static/image/zhifubao.jpg" class="fancybox" rel="group"><img id="alipay_qr" src="/static/image/zhifubao.jpg" alt="geerniya Alipay"></a>-->
+<!--                          <p>支付宝打赏</p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+            </div>
+            </div>
+
+            <footer class="post-footer">
+
+                <div class="post-tags">
+                    {% for blog_tag in blog.tags.all %}
+                    <a href="{% url 'tag_code' blog_tag.code %}" rel="tag"># {{ blog_tag.name }}</a>
+                    {% endfor %}
+                </div>
+
+                <div class="post-nav">
+                    <div class="post-nav-next post-nav-item">
+                        {% if has_prev %}
+                        <a href="{% url 'blog_id' blog_prev.id %}" rel="prev" title="{{ blog_prev.title }}">
+                            <i class="fa fa-chevron-left"></i> {{ blog_prev.title }}
+                        </a>
                         {% endif %}
                     </div>
-                </header>
 
-                <span class="post-body" itemprop="articleBody">
-                    {% if blog.source %}
-                    <span style="color: red;">来源地址:</span> <a href="{{ blog.source }}">{{ blog.source }}</a>
-                    {% endif %}
-                    {{ blog.content|custom_markdown }}
-                </div>
+                    <span class="post-nav-divider"></span>
 
-
-                <div>
-                    <!--                    <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">-->
-                    <!--                        <div>觉得不错，支持一下！</div>-->
-                    <!--                        <button id="rewardButton" disable="enable"-->
-                    <!--                                onclick="var qr = document.getElementById(&#39;QR&#39;); if (qr.style.display === &#39;none&#39;) {qr.style.display=&#39;block&#39;;} else {qr.style.display=&#39;none&#39;}">-->
-                    <!--                            <span>赏</span>-->
-                    <!--                        </button>-->
-                    <!--                        <div id="QR" style="display: none;">-->
-                    <!--                            <div id="wechat" style="display: inline-block">-->
-                    <!--                                <a href="/static/image/weixin.jpg" class="fancybox" rel="group"><img id="wechat_qr" src="/static/image/weixin.jpg" alt="geerniya WeChat Pay"></a>-->
-                    <!--                                <p>微信打赏</p>-->
-                    <!--                            </div>-->
-                    <!--                            <div id="alipay" style="display: inline-block">-->
-                    <!--                                <a href="/static/image/zhifubao.jpg" class="fancybox" rel="group"><img id="alipay_qr" src="/static/image/zhifubao.jpg" alt="geerniya Alipay"></a>-->
-                    <!--                                <p>支付宝打赏</p>-->
-                    <!--                            </div>-->
-
-                    <!--                        </div>-->
-                    <!--                    </div>-->
-                </div>
-
-                <footer class="post-footer">
-
-
-                    <div class="post-tags">
-                        {% for blog_tag in blog.tags.all %}
-                        <a href="{% url 'tag_code' blog_tag.code %}" rel="tag"># {{ blog_tag.name }}</a>
-                        {% endfor %}
+                    <div class="post-nav-prev post-nav-item">
+                        {% if has_next %}
+                        <a href="{% url 'blog_id' blog_next.id %}" rel="next" title="{{ blog_next.title }}">
+                            {{ blog_next.title }} <i class="fa fa-chevron-right"></i>
+                        </a>
+                        {% endif %}
                     </div>
-
-
-                    <div class="post-nav">
-                        <div class="post-nav-next post-nav-item">
-
-
-                            {% if has_prev %}
-                            <a href="{% url 'blog_code' blog_prev.code %}" rel="prev" title="{{ blog_prev.title }}">
-                                <i class="fa fa-chevron-left"></i> {{ blog_prev.title }}
-                            </a>
-                            {% endif %}
-
-
-                        </div>
-
-                        <span class="post-nav-divider"></span>
-
-                        <div class="post-nav-prev post-nav-item">
-
-                            {% if has_next %}
-                            <a href="{% url 'blog_code' blog_next.code %}" rel="next" title="{{ blog_next.title }}">
-                                {{ blog_next.title }} <i class="fa fa-chevron-right"></i>
-                            </a>
-                            {% endif %}
-
-
-                        </div>
-                    </div>
-
-                </footer>
-
+                </div>
+            </footer>
             </article>
         </div>
 
         <div class="post-spread"></div>
     </div>
-    <div class="content-wrap-comment">
-    {% if blog.allow_comments %}
-        <div id="comment">
-        <form class="comment-form" id="jsStayForm">
-            <div class="form-group">
-                <label class="name">名字: </label>
-                <input name="name" type="text" class="form-name" id="js-name" placeholder="不超过20个字">
+</div>
 
-            </div>
-            <div class="form-group">
-                <label class="comment">评论:</label>
-                <textarea name="content" class="form-control" id="js-content" rows="5" placeholder="不超过300个字"></textarea>
+<div class="content-wrap-comment">
+    <div id="comment"></div>
+    <form class="comment-form" id="jsStayForm">
 
-            </div>
-            <input name="blog" type="hidden" id="js-name" value="{{ blog.id }}">
-            <p class="error company-tips" id="jsCompanyTips"></p>
+      <div class="form-group">
+        <label class="name">名字:  </label>
+        <input name="name" type="text" class="form-name" id="js-name" placeholder="不超过20个字">
 
-            <button class="btn" type="button" id="jsStayBtn" value="发表">发表</button>
-        </form>
-    </div>
-        <div class="#">
-        <ul class="comment-list">
-            {% for comment in all_comment %}
+      </div>
+      <div class="form-group">
+        <label class="comment">评论:</label>
+        <textarea name="content" class="form-control" id="js-content" rows="5" placeholder="不超过300个字"></textarea>
+
+      </div>
+        <input name="blog" type="hidden" id="js-name" value="{{ blog.id }}">
+        <p class="error company-tips" id="jsCompanyTips"></p>
+
+        <button class="btn" type="button" id="jsStayBtn" value="发表">发表</button>
+    </form>
+
+    <div class="#">
+    <ul class="comment-list">
+
+        {% for comment in all_comment %}
             <li class="comment-item">
-                <hr class="the-line"/>
+            <hr class="the-line"  />
                 <span class="nickname">{{ comment.name }} - </span>
                 <time class="submit-date"
-                      datetime="{{ comment.create_time }}">{{ comment.create_time|date:"Y/m/d h:m" }}
-                </time>
-                <p class="floor">{{ forloop.counter }} # </p>
+                      datetime="{{ comment.create_time }}">{{ comment.create_time|date:"Y/m/d   h:m" }}</time>
+                <p class="floor">{{ forloop.counter }} #  </p>
                 <div style="word-wrap: break-word">
-                    {{ comment.content }}
+                        {{ comment.content }}
                 </div>
 
             </li>
-            {% empty %}
+        {% empty %}
             暂无评论
-            {% endfor %}
+        {% endfor %}
 
-        </ul>
+    </ul>
     </div>
-    {% else %}
-        评论暂时被关闭
-    {% endif %}
-</div>
+
 </div>
 {% endblock %}
 
@@ -207,9 +186,6 @@
             });
         });
     })
+
 </script>
 {% endblock %}
-
-
-
-

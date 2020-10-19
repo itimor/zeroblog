@@ -27,7 +27,7 @@ class Command(BaseCommand):
 ## h2 标题
 ### h3 标题
 #### h4 标题
-
+![狗子](/static/image/avatar.png)
 ## 水平线
 ___
 ---
