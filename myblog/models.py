@@ -33,7 +33,7 @@ class Article(BaseModel):
     content = MDTextField(verbose_name='正文', default='')
     click_nums = models.IntegerField(verbose_name='热度', default=0)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='博客类别')
-    tags = models.CharField(verbose_name='标签', max_length=100)
+    tags = models.CharField(verbose_name='标签', default="其他", max_length=100)
     published = models.BooleanField(u'发布', default=True)
     is_top = models.BooleanField(u'置顶', default=False)
     publish_time = models.DateTimeField(u'发布时间', null=True)

@@ -21,11 +21,6 @@ class ArticleAdmin(admin.ModelAdmin):
         count_nums = Counts.objects.get(id=1)
         count_nums.blog_nums = blog_nums
         count_nums.save()
-        # 博客分类数目统计
-        obj_category = obj.category
-        category_number = obj_category.article_set.count()
-        obj_category.number = category_number
-        obj_category.save()
 
     def delete_model(self, request, obj):
         # 统计博客数目
@@ -33,11 +28,6 @@ class ArticleAdmin(admin.ModelAdmin):
         count_nums = Counts.objects.get(id=1)
         count_nums.blog_nums = blog_nums - 1
         count_nums.save()
-        # 博客分类数目统计
-        obj_category = obj.category
-        category_number = obj_category.blog_set.count()
-        obj_category.number = category_number - 1
-        obj_category.save()
         obj.delete()
 
 
