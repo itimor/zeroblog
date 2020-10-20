@@ -18,10 +18,7 @@ class Command(BaseCommand):
             raise CommandError('初始化管理员失败')
 
         self.stdout.write(self.style.SUCCESS('############ 初始化博客分类 ###########'))
-        category = Category.objects.create(parent=None, is_root=True, name='其他', code='other', number=1)
-
-        self.stdout.write(self.style.SUCCESS('############ 初始化博客标签 ###########'))
-        tag = Tag.objects.create(name='其他', code='other', number=1)
+        category = Category.objects.create(parent=None, is_root=True, name='其他', code='other')
 
         self.stdout.write(self.style.SUCCESS('############ 初始化博客文章 ###########'))
 
@@ -109,9 +106,8 @@ var foo = function (bar) {
 
 console.log(foo(5));
 ```"""
-        blog = Article.objects.create(title='这是你的第一篇markdown文章', code='16886688', content=content, published=True,
-                                   category=category)
-        blog.tags.add(tag)
+        Article.objects.create(title='这是你的第一篇markdown文章', code='16886688', content=content, published=True,
+                                   category=category, tags='其他')
 
         self.stdout.write(self.style.SUCCESS('############ 初始化博客统计 ###########'))
         Counts.objects.create(blog_nums=1, category_nums=1, tag_nums=1, visit_nums=0)

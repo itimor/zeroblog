@@ -7,7 +7,7 @@ from pure_pagination import PageNotAnInteger, Paginator
 from haystack.views import SearchView
 
 from blog.settings import HAYSTACK_SEARCH_RESULTS_PER_PAGE
-from myblog.models import Article, Category, Tag, Comment, Counts
+from myblog.models import Article, Category, Comment, Counts
 from myblog.forms import CommentForm
 
 md = markdown.Markdown(
@@ -69,37 +69,37 @@ class ArichiveView(View):
         return render(request, 'archive.html', {'all_blog': all_blog, 'blog_nums': blog_nums})
 
 
-class TagView(View):
-    """
-    标签云
-    """
-
-    def get(self, request):
-        all_tag = Tag.objects.all()
-        return render(request, 'tags.html', {'all_tag': all_tag})
-
-
-class TagDetailView(View):
-    """
-        标签下的所有博客
-        """
-
-    def get(self, request, tag_code):
-        tag = get_object_or_404(Tag, code=tag_code)
-        tag_blogs = tag.article_set.all().order_by('is_top', '-id')
-
-        # 分页
-        try:
-            page = request.GET.get('page', 1)
-        except PageNotAnInteger:
-            page = 1
-
-        p = Paginator(tag_blogs, 20, request=request)
-        tag_blogs = p.page(page)
-        return render(request, 'tag-detail.html', {
-            'tag_blogs': tag_blogs,
-            'tag_name': tag.name,
-        })
+# class TagView(View):
+#     """
+#     标签云
+#     """
+#
+#     def get(self, request):
+#         all_tag = Tag.objects.all()
+#         return render(request, 'tags.html', {'all_tag': all_tag})
+#
+#
+# class TagDetailView(View):
+#     """
+#         标签下的所有博客
+#         """
+#
+#     def get(self, request, tag_code):
+#         tag = get_object_or_404(Tag, code=tag_code)
+#         tag_blogs = tag.article_set.all().order_by('is_top', '-id')
+#
+#         # 分页
+#         try:
+#             page = request.GET.get('page', 1)
+#         except PageNotAnInteger:
+#             page = 1
+#
+#         p = Paginator(tag_blogs, 20, request=request)
+#         tag_blogs = p.page(page)
+#         return render(request, 'tag-detail.html', {
+#             'tag_blogs': tag_blogs,
+#             'tag_name': tag.name,
+#         })
 
 
 class ArticleDetailView(View):
@@ -118,6 +118,7 @@ class ArticleDetailView(View):
         # 将博客内容用markdown显示出来
         blog.content = md.convert(blog.content)
         blog.toc = md.toc
+        blog.tags = blog.tags.split()
         # 实现博客上一篇与下一篇功能
         has_prev = False
         has_next = False
@@ -208,7 +209,6 @@ class MySearchView(SearchView):
         # 博客、标签、分类数目统计
         count_nums = Counts.objects.get(id=1)
         context['cate_nums'] = count_nums.category_nums
-        context['tag_nums'] = count_nums.tag_nums
         context['blog_nums'] = count_nums.blog_nums
         return context
 

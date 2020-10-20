@@ -126,19 +126,6 @@
                         </li>
 
                         <li
-                            {% if request.path|slice:"5" == '/tags' %}
-                            class="menu-item menu-item-home menu-item-active"
-                            {% else %}
-                            class="menu-item menu-item-active"
-                            {% endif %}
-                            style="opacity: 1; transform: translateY(0px);">
-                          <a href="{% url 'tags' %}" rel="section">
-                              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
-                            标签
-                          </a>
-                        </li>
-
-                        <li
                             {% if request.path|slice:"5" == '/categorys' %}
                             class="menu-item menu-item-home menu-item-active"
                             {% else %}
@@ -188,25 +175,15 @@
                                 <p class="site-description motion-element" itemprop="description">わが征くは星の大海</p>
                             </div>
                             <nav class="site-state motion-element">
-
                                 <div class="site-state-item site-state-posts">
-                                    <a href="/">
-                                        <span class="site-state-item-count">{{ 'blog'|count_nums }}</span>
-                                        <span class="site-state-item-name">文章</span>
+                                    <a href="/admin">
+                                        <span class="site-state-item-name">博客后台</span>
                                     </a>
                                 </div>
 
                                 <div class="site-state-item site-state-categories">
-                                    <a href="/categorys">
-                                        <span class="site-state-item-count">{{ 'cate'|count_nums }}</span>
-                                        <span class="site-state-item-name">分类</span>
-                                    </a>
-                                </div>
-
-                                <div class="site-state-item site-state-tags">
-                                    <a href="/tags/">
-                                        <span class="site-state-item-count">{{ 'tag'|count_nums }}</span>
-                                        <span class="site-state-item-name">标签</span>
+                                    <a href="/">
+                                        <span class="site-state-item-name">爬虫后台</span>
                                     </a>
                                 </div>
 

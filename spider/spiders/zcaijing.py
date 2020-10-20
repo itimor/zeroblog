@@ -3,17 +3,13 @@
 # description: zcaijing.com spider
 
 import requests
-import os
-import django
 from lxml import etree, html
 from markdownify import markdownify
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'blog.settings'
-django.setup()
-
-from myblog.models import Category, Tag, Article, Counts
-
-base_url = "https://www.zcaijing.com"
+from spider.spiders.django_env import *
+code = 'zcaijin'
+obj = SpiderInfo.objects.get(code=code)
+base_url = obj.base_url
 
 ignore_category1 = ['k线图', '移动平均线', 'MACD', '股票技术指标', '股票大盘', '涨停板预测', '分时图', '股市名家', '缠中说禅', '股票投资', '期货', '股票黑马',
                     '美股要闻', '市场动向', '主力研究', '炒股软件', '投稿专区', '股票公式', '股市战法', '大V论市', '基金', '黄金', '私募投资']
@@ -132,19 +128,12 @@ def get_blog(url):
                 file.write(r.content)
     content_html = html.tostring(content).decode("utf-8")
     content = markdownify(content_html, heading_style="ATX")
+    tags = footer_info[:-2]
     try:
-        blog = Article.objects.create(title=title, code=code, content=content, published=True, category=category, source=url)
+        Article.objects.create(title=title, code=code, content=content, published=True, category=category, source=url,
+                               tags=tags)
     except:
         pass
-    tags = footer_info[:-2]
-    for item in tags:
-        code = item.xpath('./@href')[0].strip('/')
-        name = item.xpath('./text()')[0]
-        obj_tag, _ = Tag.objects.get_or_create(name=name, defaults={"code": code})
-        tag_number = obj_tag.article_set.count()
-        obj_tag.number = tag_number
-        obj_tag.save()
-        blog.tags.add(obj_tag)
 
 
 if __name__ == '__main__':
@@ -169,9 +158,3 @@ if __name__ == '__main__':
     # print(len(all_url))
     # for blog_url in all_url:
     #     get_blog(blog_url)
-    cates = Category.objects.all()
-    tags = Tag.objects.all()
-    count_nums.blog_nums += len(all_url)
-    count_nums.category_nums += len(cates)
-    count_nums.tag_nums += len(tags)
-    count_nums.save()

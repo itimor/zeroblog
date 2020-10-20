@@ -1,8 +1,6 @@
 from django.contrib import admin
-from django.db import models
-from mdeditor.widgets import MDEditorWidget
 from blog.settings import admin_title
-from myblog.models import Article, Category, Tag, Comment, Counts
+from myblog.models import Article, Category, Comment, Counts
 
 
 class ArticleAdmin(admin.ModelAdmin):
@@ -15,9 +13,6 @@ class ArticleAdmin(admin.ModelAdmin):
     search_fields = ('title', 'code')
     ordering = ('-create_time', 'published', 'is_top', 'publish_time')
     list_per_page = 20
-    formfield_overrides = {
-        models.TextField: {'widget': MDEditorWidget}
-    }
 
     def save_model(self, request, obj, form, change):
         obj.save()
@@ -31,12 +26,6 @@ class ArticleAdmin(admin.ModelAdmin):
         category_number = obj_category.article_set.count()
         obj_category.number = category_number
         obj_category.save()
-        # 博客标签数目统计
-        obj_tag_list = obj.tags.all()
-        for obj_tag in obj_tag_list:
-            tag_number = obj_tag.article_set.count()
-            obj_tag.number = tag_number
-            obj_tag.save()
 
     def delete_model(self, request, obj):
         # 统计博客数目
@@ -49,12 +38,6 @@ class ArticleAdmin(admin.ModelAdmin):
         category_number = obj_category.blog_set.count()
         obj_category.number = category_number - 1
         obj_category.save()
-        # 博客标签数目统计
-        obj_tag_list = obj.tags.all()
-        for obj_tag in obj_tag_list:
-            tag_number = obj_tag.blog_set.count()
-            obj_tag.number = tag_number - 1
-            obj_tag.save()
         obj.delete()
 
 
@@ -77,25 +60,6 @@ class CategoryAdmin(admin.ModelAdmin):
         count_nums.save()
 
 
-class TagAdmin(admin.ModelAdmin):
-    list_display = ['name', 'code', 'number']
-    search_fields = ('name', 'code')
-
-    def save_model(self, request, obj, form, change):
-        obj.save()
-        tag_nums = Tag.objects.count()
-        count_nums = Counts.objects.get(id=1)
-        count_nums.tag_nums = tag_nums
-        count_nums.save()
-
-    def delete_model(self, request, obj):
-        obj.delete()
-        tag_nums = Tag.objects.count()
-        count_nums = Counts.objects.get(id=1)
-        count_nums.tag_nums = tag_nums
-        count_nums.save()
-
-
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['name', 'blog', 'content', 'create_time']
     search_fields = ('blog', 'content')
@@ -107,7 +71,6 @@ class CountsAdmin(admin.ModelAdmin):
 
 admin.site.register(Article, ArticleAdmin)
 admin.site.register(Category, CategoryAdmin)
-admin.site.register(Tag, TagAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Counts, CountsAdmin)
 

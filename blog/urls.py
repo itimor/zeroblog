@@ -18,23 +18,18 @@ from django.contrib import admin
 from django.views.static import serve
 from django.conf.urls.static import static
 
-from myblog.views import IndexView, ArichiveView, TagView, TagDetailView, ArticleDetailView
-from myblog.views import AddCommentView, CategoryView, CategoryDetaiView, MySearchView
-from myblog.feeds import ArticleRssFeed
+from myblog.views import IndexView, MySearchView
 from blog import settings
 
 urlpatterns = [
+    # 后台
     url(r'^admin/', admin.site.urls),
+    # 首页
     url(r'^$', IndexView.as_view(), name='index'),
-    url(r'^archive/$', ArichiveView.as_view(), name='archive'),
-    url(r'^tags/$', TagView.as_view(), name='tags'),
-    url(r'^tags/(?P<tag_code>\w+)$', TagDetailView.as_view(), name='tag_code'),
-    url(r'^blog/(?P<blog_code>\w+).html$', ArticleDetailView.as_view(), name='blog_code'),
-    url(r'^add_comment/$', AddCommentView.as_view(), name='add_comment'),
-    url(r'^rss/$', ArticleRssFeed(), name='rss'),
-    url(r'^categorys/$', CategoryView.as_view(), name='categorys'),
-    url(r'^category/(?P<category_code>\w+)/$', CategoryDetaiView.as_view(), name='category_code'),
+    # 搜索
     url(r'^search/', MySearchView(), name='haystack_search'),
+    # 博客
+    url(r'^blog/', include('myblog.urls')),
     # 添加静态文件的访问处理函数
     url(r'^static/(?P<path>.*)/$', serve, {'document_root': settings.STATIC_URL}),
     # markdown

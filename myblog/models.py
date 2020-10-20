@@ -24,22 +24,6 @@ class Category(BaseModel):
         return self.name
 
 
-class Tag(BaseModel):
-    """
-    博客标签
-    """
-    name = models.CharField(verbose_name='博客标签', unique=True, max_length=20)
-    code = models.CharField(verbose_name='code', unique=True, max_length=20)
-    number = models.IntegerField(verbose_name='标签数目', default=1)
-
-    class Meta:
-        verbose_name = '博客标签'
-        verbose_name_plural = verbose_name
-
-    def __str__(self):
-        return self.name
-
-
 class Article(BaseModel):
     """
     博客
@@ -49,7 +33,7 @@ class Article(BaseModel):
     content = MDTextField(verbose_name='正文', default='')
     click_nums = models.IntegerField(verbose_name='热度', default=0)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='博客类别')
-    tags = models.ManyToManyField(Tag, verbose_name='博客标签')
+    tags = models.CharField(verbose_name='标签', max_length=100)
     published = models.BooleanField(u'发布', default=True)
     is_top = models.BooleanField(u'置顶', default=False)
     publish_time = models.DateTimeField(u'发布时间', null=True)

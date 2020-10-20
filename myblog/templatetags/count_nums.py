@@ -2,7 +2,7 @@
 # author: itimor
 
 from django import template
-from myblog.models import Article, Category, Tag
+from myblog.models import Article, Category
 
 register = template.Library()  # 自定义filter时必须加上
 
@@ -15,6 +15,4 @@ def count_nums(value):
         d = Article.objects.filter(published=True).count()
     if value == 'cate':
         d = Category.objects.all().count()
-    if value == 'tag':
-        d = Tag.objects.all().count()
     return d
