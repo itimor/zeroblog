@@ -46,7 +46,7 @@
                             </a>
                         </span>
                     </span>
-
+                {% if blog.allow_comments %}
                     <span class="post-comments-count">
                         <span class="post-meta-divider">|</span>
                         <span class="post-meta-item-icon">
@@ -56,7 +56,7 @@
                             <span class="post-comments-count join-count" itemprop="commentCount"></span>
                         </a>
                     </span>
-
+                {% endif %}
                 </div>
             </header>
 

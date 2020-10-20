@@ -450,14 +450,14 @@ body {
 .header-inner {
   margin: 0 auto;
   padding: 100px 0 70px;
-  width: 700px;
+  width: 1000px;
 }
 .main {
   padding-bottom: 90px;
 }
 .main-inner {
   margin: 0 auto;
-  width: 700px;
+  width: 1000px;
 }
 @media (min-width: 1600px) {
   .container .main-inner {
@@ -474,7 +474,7 @@ body {
 .footer-inner {
   box-sizing: border-box;
   margin: 20px auto;
-  width: 700px;
+  width: 1000px;
 }
 @media (min-width: 1600px) {
   .container .footer-inner {
@@ -1883,8 +1883,7 @@ pre .javascript .function {
 }
 .post-toc {
   overflow: auto;
-  text-align: left!important;
-  text-decoration:none;
+  text-align: left;
 }
 .post-toc ol {
   margin: 0;
@@ -2276,7 +2275,7 @@ a.search-result {
   position: fixed;
   top: 10%;
   left: 50%;
-  width: 700px;
+  width: 1000px;
   height: 80%;
   margin-left: -350px;
   padding: 3px 0 0 10px;
@@ -2598,7 +2597,7 @@ a.search-result {
 .header {
   position: relative;
   margin: 0 auto;
-  width: 960px;
+  width: 1280px;
 }
 @media (min-width: 768px) and (max-width: 991px) {
   .header {
@@ -2658,7 +2657,7 @@ a.search-result {
   }
 }
 .container .main-inner {
-  width: 960px;
+  width: 1280px;
 }
 @media (min-width: 768px) and (max-width: 991px) {
   .container .main-inner {
@@ -2674,9 +2673,9 @@ a.search-result {
   float: right;
   box-sizing: border-box;
   padding: 40px;
-  width: 700px;
+  width: 1000px;
   background: #fff;
-  min-height: 700px;
+  min-height: 500px;
   box-shadow: initial;
   border-radius: initial;
 }
@@ -2685,7 +2684,7 @@ a.search-result {
   box-sizing: border-box;
   padding: 40px;
   margin-top: 10px;
-  width: 700px;
+  width: 1000px;
   background: #fff;
   min-height: 20px;
   box-shadow: initial;
@@ -2746,7 +2745,7 @@ a.search-result {
   display: none;
 }
 .footer-inner {
-  width: 960px;
+  width: 1280px;
 }
 .footer-inner:before {
   content: " ";
