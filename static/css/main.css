@@ -1883,6 +1883,8 @@ pre .javascript .function {
 }
 .post-toc {
   overflow: auto;
+  text-align: left!important;
+  text-decoration:none;
 }
 .post-toc ol {
   margin: 0;

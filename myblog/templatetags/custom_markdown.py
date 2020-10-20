@@ -19,13 +19,6 @@ md = markdown.Markdown(
         'markdown.extensions.fenced_code',
     ])
 
-
-@register.filter(is_safe=True)  # 注册template filter
-@stringfilter  # 希望字符串作为参数
-def custom_markdown(value):
-    return mark_safe(md.convert(value))
-
-
 @register.filter(is_safe=True)  # 注册template filter
 @stringfilter  # 希望字符串作为参数
 def custom_markdown_summary(value):

@@ -4,7 +4,15 @@
 {{ blog.title }}
 {% endblock %}
 
+{% block sidebar %}
+<div class="post-toc">
+    <h5>文章目录</h5>
+    {{ blog.toc|safe }}
+</div>
+{% endblock %}
+
 {% block content %}
+
 <div class="content-wrap">
     <div id="content" class="content">
         <div id="posts" class="posts-expand">
@@ -53,9 +61,7 @@
             </header>
 
             <div class="post-body" itemprop="articleBody">
-
-                {{ blog.content|custom_markdown }}
-
+                {{ blog.content|safe }}
             </div>
 
 

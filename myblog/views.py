@@ -1,3 +1,5 @@
+import markdown
+
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 from django.http import HttpResponse
@@ -7,6 +9,16 @@ from haystack.views import SearchView
 from blog.settings import HAYSTACK_SEARCH_RESULTS_PER_PAGE
 from myblog.models import Article, Category, Tag, Comment, Counts
 from myblog.forms import CommentForm
+
+md = markdown.Markdown(
+    safe_mode=True,
+    enable_attributes=False,
+    extensions=[
+        'markdown.extensions.extra',
+        'markdown.extensions.toc',
+        'markdown.extensions.codehilite',
+        'markdown.extensions.fenced_code',
+    ])
 
 
 class IndexView(View):
@@ -103,12 +115,17 @@ class ArticleDetailView(View):
         # 获取评论内容
         all_comment = Comment.objects.filter(blog_id=blog.id)
         comment_nums = all_comment.count()
+        # 将博客内容用markdown显示出来
+        blog.content = md.convert(blog.content)
+        blog.toc = md.toc
         # 实现博客上一篇与下一篇功能
         has_prev = False
         has_next = False
         id_prev = id_next = int(blog.id)
         blog_id_max = Article.objects.all().order_by('-id').first()
         id_max = blog_id_max.id
+        blog_prev = None
+        blog_next = None
         while not has_prev and id_prev >= 1:
             blog_prev = Article.objects.filter(id=id_prev - 1).first()
             if not blog_prev:

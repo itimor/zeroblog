@@ -180,6 +180,7 @@
 
                 <aside id="sidebar" class="sidebar" style="margin-top: 302px; display: block;">
                     <div class="sidebar-inner">
+                        {% block sidebar %}
                         <section class="site-overview sidebar-panel sidebar-panel-active">
                             <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
                                 <img class="site-author-image" itemprop="image" src="/static/image/avatar.png" alt="geerniya">
@@ -254,6 +255,7 @@
                               </div>
 
                       </section>
+                      {% endblock %}
                     </div>
                 </aside>
 
