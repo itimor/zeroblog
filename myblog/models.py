@@ -3,6 +3,7 @@ from mdeditor.fields import MDTextField
 from django.utils import timezone
 
 from utils.db import BaseModel
+from utils.index import get_hash
 
 
 class Category(BaseModel):
@@ -28,8 +29,8 @@ class Article(BaseModel):
     """
     博客
     """
-    title = models.CharField(verbose_name='标题', max_length=100)
-    code = models.CharField(verbose_name='code', unique=True, max_length=20)
+    title = models.CharField(verbose_name='标题', unique=True, max_length=100)
+    code = models.CharField(verbose_name='code', unique=True, blank=True, null=True, max_length=20)
     content = MDTextField(verbose_name='正文', default='')
     click_nums = models.IntegerField(verbose_name='热度', default=0)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='博客类别')
@@ -48,15 +49,13 @@ class Article(BaseModel):
         return self.title
 
     def save(self, *args, **kwargs):
+        self.code = get_hash(self.title, str(self.id))[-10:]
         modified = kwargs.pop("modified", True)
         if modified:
             self.update_time = timezone.now()
 
         if self.published and not self.publish_time:
             self.publish_time = timezone.now()
-
-        if self.code == '':
-            self.code = self.id
 
         super(Article, self).save(*args, **kwargs)
 

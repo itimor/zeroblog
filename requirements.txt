@@ -7,6 +7,7 @@ django-haystack==3.0
 django-mdeditor==0.1.18
 django-pure-pagination==0.3.0
 django-simpleui==2020.9.26
+fake-useragent==0.1.11
 idna==2.10
 jieba==0.42.1
 lxml==4.5.2

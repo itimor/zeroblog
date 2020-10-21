@@ -11,7 +11,5 @@ pip install -r requestments.txt
 ## 初始化
 管理员： admin 123456
 ```
-python manage.py migrate
-python manage.py init_sys
-python manage.py runserver
+sh init.sh
 ```

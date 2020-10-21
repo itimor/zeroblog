@@ -5,7 +5,7 @@ import requests
 from fake_useragent import UserAgent
 from datetime import datetime, timedelta
 
-from utils.gen_md_table import gen_markdown_table
+from utils.index import gen_markdown_table
 
 from spider.spiders.django_env import *
 
@@ -28,10 +28,8 @@ headers = {'Accept': 'application/json, text/javascript, */*; q=0.01',
 
 url = f'{base_url}/new/hisAnnouncement/query'
 
-dt = datetime.now()
-today = dt.strftime("%Y-%m-%d")
 
-def szseAnnual(searchkey, day, page=1):
+def szseAnnual(searchkey, seDate, page=1):
     query = {'pageNum': page,
              'pageSize': 30,
              'tabName': 'fulltext',
@@ -40,7 +38,7 @@ def szseAnnual(searchkey, day, page=1):
              'secid': '',
              'plate': 'sz',
              'trade': '',
-             'seDate': setDate(day)
+             'seDate': seDate
              }
     r = requests.post(url, headers=headers, data=query).json()
     return r
@@ -58,12 +56,17 @@ def timeStamp2datetime(timeStamp):
 
 
 if __name__ == '__main__':
+    dt = datetime.now()
+    today = dt.strftime("%Y-%m-%d")
+    start_day = (dt - timedelta(3)).strftime("%Y-%m-%d")
+    end_day = (dt - timedelta(1)).strftime("%Y-%m-%d")
+    seDate = f'{start_day}~{end_day}'
+    print(seDate)
     data = []
     searchkeys = obj.keyword
-    day = 2
     for searchkey in searchkeys.split():
         print(searchkey)
-        p = szseAnnual(searchkey, day)
+        p = szseAnnual(searchkey, seDate)
         total_num = p['totalRecordNum']
 
         if total_num:
@@ -71,7 +74,7 @@ if __name__ == '__main__':
         if total_num > 30:
             page_total = int(total_num / 30)
             for page in range(1, page_total + 1):
-                p = szseAnnual(searchkey, day, page)
+                p = szseAnnual(searchkey, seDate, page)
                 if p['announcements'] is not None:
                     data += p['announcements']
         print(data)
@@ -86,7 +89,7 @@ if __name__ == '__main__':
     all_data = gen_markdown_table(header, header_code, b)
 
     category = Category.objects.get(name=obj.name, code=obj.code)
-
-    Article.objects.create(title=f'{obj.name}-{today}', code=today, content=all_data, published=True,
-                           category=category, tags=searchkeys, allow_comments=False)
+    if len(b) > 2:
+        Article.objects.create(title=f'{obj.name}-{today}', code=today, content=all_data, published=True,
+                               category=category, tags=searchkeys, allow_comments=False)
     print(all_data)

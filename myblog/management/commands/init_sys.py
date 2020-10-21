@@ -106,7 +106,7 @@ var foo = function (bar) {
 
 console.log(foo(5));
 ```"""
-        Article.objects.create(title='这是你的第一篇markdown文章', code='16886688', content=content, published=True,
+        Article.objects.create(title='这是你的第一篇markdown文章', content=content, published=True,
                                    category=category, tags='其他')
 
         self.stdout.write(self.style.SUCCESS('############ 初始化博客统计 ###########'))
