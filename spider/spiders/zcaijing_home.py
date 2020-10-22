@@ -25,7 +25,9 @@ group_urls = [
 ]
 
 # 爬虫时间最好设置在每天9点前
-t = 14
+t = 9
+# 文章标题
+title = '零点简报-%s'
 
 
 def get_blog(url, dt):
@@ -52,12 +54,12 @@ def get_blog(url, dt):
     return blog_url_list
 
 
-def make_home():
+def make_home(zcaijing_urls):
     home_content = ''
     header = ["标题", "关键字", "日期"]
     header_code = ["title", "tag", "date"]
     tags = []
-    for item in group_urls:
+    for item in zcaijing_urls:
         print(item['name'])
         home_content += f"## {item['name']}"
         home_content += "\n"
@@ -94,7 +96,7 @@ def make_home():
         tags = list(set(tags))
     source = base_url
     try:
-        blog_category = Category.objects.get(code='lingdianjianbao')
+        blog_category = Category.objects.get(name='零点简报')
     except:
         raise Exception(f"{blog_category} 没有创建")
     save_blog(title % cur_date, home_content, blog_category, ' '.join(tags), source)
@@ -112,11 +114,11 @@ def save_blog(title, content, category, tags, source):
 
 
 if __name__ == '__main__':
-    title = '零点简报-%s'
     category = 'zcaijing'
     obj = SpiderInfo.objects.get(code=category)
     base_url = obj.base_url
-    p = make_home()
+    p = make_home(group_urls)
+    p = make_home(single_urls)
     # test
     # p = get_blog('https://www.zcaijing.com/hongguan/', '2020-10-21')
     print(p)

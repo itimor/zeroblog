@@ -12,5 +12,5 @@ urlpatterns = [
     url(r'^add_comment/$', AddCommentView.as_view(), name='add_comment'),
     url(r'^rss/$', ArticleRssFeed(), name='rss'),
     url(r'^categorys/$', CategoryView.as_view(), name='categorys'),
-    url(r'^category/(?P<category_code>\w+)/$', CategoryDetaiView.as_view(), name='category_code'),
+    url(r'^category/(?P<category_code>[\w,-]+)/$', CategoryDetaiView.as_view(), name='category_code'),
 ]

@@ -12,7 +12,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         try:
             self.stdout.write(self.style.SUCCESS('############ 初始化管理员 ###########'))
-            User.objects.create(username='admin', password=make_password("123456"), email='itimor@126.com',
+            User.objects.create(username='admin', password=make_password("qwert@12345"), email='itimor@126.com',
                                 is_staff=True, is_superuser=True)
         except:
             raise CommandError('初始化管理员失败')

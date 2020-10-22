@@ -1,6 +1,7 @@
 from django.db import models
 from mdeditor.fields import MDTextField
 from django.utils import timezone
+from uuslug import slugify
 
 from utils.db import BaseModel
 from utils.index import get_hash
@@ -14,7 +15,7 @@ class Category(BaseModel):
                                limit_choices_to={'is_root': True})
     is_root = models.BooleanField(default=False, verbose_name='是否是一级分类')
     name = models.CharField(verbose_name='名称', unique=True, max_length=20)
-    code = models.CharField(verbose_name='code', unique=True, max_length=20)
+    code = models.CharField(verbose_name='code', unique=True, blank=True, null=True, max_length=20)
     number = models.IntegerField(verbose_name='分类数目', default=1)
 
     class Meta:
@@ -23,6 +24,10 @@ class Category(BaseModel):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.code = slugify(self.name)
+        super(Category, self).save(*args, **kwargs)
 
 
 class Article(BaseModel):
