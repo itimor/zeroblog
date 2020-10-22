@@ -11,7 +11,7 @@ class Command(BaseCommand):
         top = Category.objects.create(parent=None, is_root=True, name='爬虫', code='spider')
 
         self.stdout.write(self.style.SUCCESS('############ 初始化爬虫信息 ###########'))
-        obj = SpiderInfo.objects.create(name='零点财经', code='zcaijin', keyword='', base_url='https://www.zcaijing.com')
+        obj = SpiderInfo.objects.create(name='零点财经', code='zcaijing', keyword='', base_url='https://www.zcaijing.com')
         Category.objects.create(parent=top, is_root=False, name=obj.name, code=obj.code)
 
         obj = SpiderInfo.objects.create(name='巨潮资讯', code='cninfo', keyword='新能源 汽车',

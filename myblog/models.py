@@ -13,7 +13,7 @@ class Category(BaseModel):
     parent = models.ForeignKey('self', default=0, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='父级',
                                limit_choices_to={'is_root': True})
     is_root = models.BooleanField(default=False, verbose_name='是否是一级分类')
-    name = models.CharField(verbose_name='博客类别', unique=True, max_length=20)
+    name = models.CharField(verbose_name='名称', unique=True, max_length=20)
     code = models.CharField(verbose_name='code', unique=True, max_length=20)
     number = models.IntegerField(verbose_name='分类数目', default=1)
 
@@ -49,7 +49,7 @@ class Article(BaseModel):
         return self.title
 
     def save(self, *args, **kwargs):
-        self.code = get_hash(self.title, str(self.id))[-10:]
+        self.code = get_hash(self.title)[-10:]
         modified = kwargs.pop("modified", True)
         if modified:
             self.update_time = timezone.now()
