@@ -11,44 +11,30 @@ from utils.index import gen_markdown_table
 
 # 单独页面
 single_urls = [
-    {'name': '股市要闻', 'code': 'gushiyaowen', 'active': True, 'is_today': True, 'many': True},
-    {'name': '市场动向', 'code': 'scdx', 'active': True, 'is_today': True, 'many': True},
-]
-# 聚合首页
-group_urls = [
-    {'name': '上证早知道', 'code': 'szzzd', 'active': True, 'is_today': False, 'many': False},
-    {'name': '新股要闻', 'code': 'xgyw', 'active': True, 'is_today': False, 'many': False},
-    {'name': '主力研究', 'code': 'zlyj', 'active': True, 'is_today': False, 'many': False},
-    {'name': '分析上市公司', 'code': 'shangshigongsi', 'active': True, 'is_today': False, 'many': False},
-    {'name': '行业资讯', 'code': 'hyzx', 'active': True, 'is_today': False, 'many': True},
-    {'name': '宏观经济', 'code': 'hongguan', 'active': True, 'is_today': False, 'many': True},
+    {'name': '研究报告', 'code': 'report', 'active': True, 'is_today': False, 'many': False},
 ]
 
 # 爬虫时间最好设置在每天9点前
 t = 9
 # 文章标题
-title = '零点简报'
+title = '199it报告'
 
 
 def get_blog(url, dt):
     blog_url_list = []
     r = requests.get(url).text
     etree_html = etree.HTML(r)
-    if url == 'https://www.zcaijing.com/szzzd/':
-        column_ul = etree_html.xpath('//div[@class="ml-4 juhe-ml-mobile"]')
-    else:
-        column_ul = etree_html.xpath('//div[@class="d-flex flex-row my-3"]/div[@class="ml-0"]')
+    column_ul = etree_html.xpath('//article/div[@class="entry-content"]')
     for item in column_ul:
-        code_date = item.xpath('./span[@class="juhe-page-right-div-time-span"]/text()')[0]
-        title = item.xpath('./h2/a[@class="juhe-page-left-div-link"]/text()')[0]
-        tags = item.xpath('./span[@class="juhe-page-left-div-keyword-span"]/a/text()')
+        code_date = item.xpath('./aside[@class="meta-row row-3"]/div/ul/li[@class="post-time"]/time/text()')[0]
+        title = item.xpath('./h2/a/text()')[0]
+        tags = item.xpath('./aside[@class="meta-row cat-row"]/div/ul/li/a/text()')
         if code_date == dt:
-            code_url = item.xpath('./h2/a[@class="juhe-page-left-div-link"]/@href')[0]
-            full_blog_url = base_url + code_url
+            code_url = item.xpath('./h2/a/@href')[0]
             data = {
-                'url': full_blog_url,
+                'url': code_url,
                 'title': title,
-                'tags': tags,
+                'tags': tags[:-1],
             }
             blog_url_list.append(data)
     return blog_url_list
@@ -88,7 +74,8 @@ def make_home(zcaijing_urls):
                 tags += tag
                 # home_content += f"- [{pp['title']}]({pp['url']})" + "{:target='_blank'}" + ','.join(tag)
                 # home_content += "\n"
-                d = {'title': f"[{pp['title']}]({pp['url']})" + "{:target='_blank'}", 'tag': ' '.join(tag), 'date': cur_date}
+                d = {'title': f"[{pp['title']}]({pp['url']})" + "{:target='_blank'}", 'tag': ' '.join(tag),
+                     'date': cur_date}
                 data.append(d)
         home_content += gen_markdown_table(header, header_code, data)
         home_content += "\n"
@@ -99,7 +86,7 @@ def make_home(zcaijing_urls):
         blog_category = Category.objects.get(name=title)
     except:
         raise Exception(f"{blog_category} 没有创建")
-    save_blog(f'{title}-{cur_date}', home_content, blog_category, ' '.join(tags), source)
+    save_blog(f'{title}-{cur_date}', cur_date, home_content, blog_category, ' '.join(tags), source)
     return home_content
 
 
@@ -114,12 +101,10 @@ def save_blog(title, content, category, tags, source):
 
 
 if __name__ == '__main__':
-    category = 'zcaijing'
-    date_format = '%Y-%m-%d'
-    obj = SpiderInfo.objects.get(code=category)
-    base_url = obj.base_url
-    p = make_home(group_urls)
+    category = '199it'
+    date_format = '%Y年%m月%d日'
+    base_url = 'http://www.199it.com/archives/category'
     p = make_home(single_urls)
     # test
-    # p = get_blog('https://www.zcaijing.com/hongguan/', '2020-10-21')
+    # p = get_blog('http://www.199it.com/archives/category/report', '2020年10月21日')
     print(p)

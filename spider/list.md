@@ -3,8 +3,8 @@
 ### 知识学习
 - [零点财经](https://www.zcaijing.com)
 
-### 新闻公告
-- [巨潮资讯](http://www.cninfo.com.cn)
+### 综合全能
+- [萝卜投研](https://robo.datayes.com/v2/selection)
 
 ### 政府单位
 - [国家统计局](http://www.stats.gov.cn/tjsj/zxfb/)
