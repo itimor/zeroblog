@@ -195,5 +195,24 @@
         });
     })
 
+$(document).ready(function () {
+    var stickyNavTop = $('.sidebar-inner').offset().top;  //获取nav距离顶部的距离
+
+    var stickyNav = function () {
+        var scrollTop = $(window).scrollTop();  //获取滚动的距离
+
+        if (scrollTop > stickyNavTop) {        //判断当滚动距离大于nav距离顶部的时候添加sticky类,负责删除sticky类
+            $('.sidebar-inner').addClass('sticky');
+        } else {
+            $('.sidebar-inner').removeClass('sticky');
+        }
+    };
+
+    stickyNav();
+
+    $(window).scroll(function () {
+        stickyNav();
+    });
+});
 </script>
 {% endblock %}
