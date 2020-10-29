@@ -71,7 +71,6 @@ class Comment(BaseModel):
     """
     name = models.CharField(verbose_name='姓名', max_length=20, default='佚名')
     content = models.CharField(verbose_name='内容', max_length=300)
-    create_time = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
     blog = models.ForeignKey(Article, on_delete=models.CASCADE, verbose_name='博客')
 
     class Meta:
