@@ -63,7 +63,3 @@ admin.site.register(Article, ArticleAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Counts, CountsAdmin)
-
-# 修改标题
-admin.AdminSite.site_header = admin_title
-admin.AdminSite.site_title = admin_title
