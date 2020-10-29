@@ -21,6 +21,10 @@ from django.conf.urls.static import static
 from myblog.views import IndexView, MySearchView
 from blog import settings
 
+# 修改标题
+admin.AdminSite.site_header = settings.admin_title
+admin.AdminSite.site_title = settings.admin_title
+
 urlpatterns = [
     # 后台
     url(r'^admin/', admin.site.urls),
