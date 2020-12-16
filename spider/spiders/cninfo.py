@@ -55,6 +55,16 @@ def timeStamp2datetime(timeStamp):
     return ds
 
 
+def save_blog(title, content, category, tags, source):
+    try:
+        Article.objects.update_or_create(title=title, published=True, category=category, source=source, defaults={
+            "content": content, "tags": tags
+        })
+    except Exception as e:
+        print(e)
+        pass
+
+
 if __name__ == '__main__':
     dt = datetime.now()
     today = dt.strftime("%Y-%m-%d")
@@ -87,9 +97,9 @@ if __name__ == '__main__':
     header = ["代码", "简称", "标题", "时间"]
     header_code = ["secCode", "secName", "announcementTitle", "announcementTime"]
     all_data = gen_markdown_table(header, header_code, b)
-
-    category = Category.objects.get(name=obj.name, code=obj.code)
+    category = Category.objects.get(name=obj.name)
     if len(b) > 2:
-        Article.objects.create(title=f'{obj.name}-{today}', code=today, content=all_data, published=True,
-                               category=category, tags=searchkeys, allow_comments=False)
+        save_blog(f'{title}-{cur_date}', home_content, blog_category, ' '.join(tags), source)
+        Article.objects.update_or_create(title=f'{obj.name}-{today}', code=today, content=all_data, published=True,
+                                         category=category, tags=searchkeys, allow_comments=False)
     print(all_data)

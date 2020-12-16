@@ -216,7 +216,7 @@ h6 {
   margin: 1.5em 5px;
   text-align: center;
   line-height: 1.5;
-  color: #009688;
+  color: #fc6423;
   font-weight: bold;
   font-family: 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
 }
@@ -1026,7 +1026,7 @@ pre .javascript .function {
   margin-top: 7px;
   font-size: 10px;
   opacity: 1;
-  color: #009688;
+  color: #fc6423;
 }
 .use-motion .brand {
   opacity: 0;
@@ -2861,7 +2861,7 @@ a.search-result {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: #bbb;
+  background-color: #fc6423;
 }
 .btn-bar {
   background-color: #fff;

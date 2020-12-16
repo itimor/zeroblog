@@ -10,18 +10,11 @@ from spider.spiders.django_env import *
 from utils.index import gen_markdown_table
 
 # 单独页面
-single_urls = [
-    {'name': '股市要闻', 'code': 'gushiyaowen', 'active': True, 'is_today': True, 'many': True},
-    {'name': '市场动向', 'code': 'scdx', 'active': True, 'is_today': True, 'many': True},
-]
-# 聚合首页
-group_urls = [
-    {'name': '上证早知道', 'code': 'szzzd', 'active': True, 'is_today': False, 'many': False},
-    {'name': '新股要闻', 'code': 'xgyw', 'active': True, 'is_today': False, 'many': False},
-    {'name': '主力研究', 'code': 'zlyj', 'active': True, 'is_today': False, 'many': False},
-    {'name': '分析上市公司', 'code': 'shangshigongsi', 'active': True, 'is_today': False, 'many': False},
+info_urls = [
     {'name': '行业资讯', 'code': 'hyzx', 'active': True, 'is_today': False, 'many': True},
     {'name': '宏观经济', 'code': 'hongguan', 'active': True, 'is_today': False, 'many': True},
+    {'name': '股市要闻', 'code': 'gushiyaowen', 'active': True, 'is_today': True, 'many': True},
+    {'name': '市场动向', 'code': 'scdx', 'active': True, 'is_today': True, 'many': True},
 ]
 
 # 爬虫时间最好设置在每天9点前
@@ -61,8 +54,6 @@ def make_home(zcaijing_urls):
     tags = []
     for item in zcaijing_urls:
         print(item['name'])
-        home_content += f"## {item['name']}"
-        home_content += "\n"
         page_code = item['code']
         # 获得当天
         dd = datetime.now()
@@ -81,19 +72,21 @@ def make_home(zcaijing_urls):
         for url in urls:
             a = get_blog(url, cur_date)
             p += a
+        data = []
         if len(p) > 0:
-            data = []
             for pp in p:
                 tag = [i.strip() for i in pp['tags']]
                 tags += tag
-                # home_content += f"- [{pp['title']}]({pp['url']})" + "{:target='_blank'}" + ','.join(tag)
-                # home_content += "\n"
-                d = {'title': f"[{pp['title']}]({pp['url']})" + "{:target='_blank'}", 'tag': ' '.join(tag), 'date': cur_date}
-                data.append(d)
-        home_content += gen_markdown_table(header, header_code, data)
-        home_content += "\n"
-        home_content += "\n"
-        tags = list(set(tags))
+                if len(tag) > 0:
+                    d = {'title': f"[{pp['title']}]({pp['url']})" + "{:target='_blank'}", 'tag': ' '.join(tag),
+                         'date': cur_date}
+                    data.append(d)
+        if len(data) > 0:
+            home_content += f"## {item['name']}"
+            home_content += "\n"
+            home_content += gen_markdown_table(header, header_code, data)
+            home_content += "\n\n"
+            tags = list(set(tags))
     source = base_url
     try:
         blog_category = Category.objects.get(name=title)
@@ -118,8 +111,7 @@ if __name__ == '__main__':
     date_format = '%Y-%m-%d'
     obj = SpiderInfo.objects.get(code=category)
     base_url = obj.base_url
-    p = make_home(group_urls)
-    p = make_home(single_urls)
+    p = make_home(info_urls)
     # test
     # p = get_blog('https://www.zcaijing.com/hongguan/', '2020-10-21')
     print(p)

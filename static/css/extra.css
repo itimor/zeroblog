@@ -113,6 +113,7 @@
   position: relative;
   box-sizing: border-box;
   width: 40px;
+  margin-left: 2px;
   float: left;
   text-align: left;
   line-height: inherit;
@@ -122,16 +123,15 @@
   transition-delay: 0s;
 }
 
-
 #unit{
-    /*outline: none;*/
-    border: 0px;
+    border: none;
+    outline: none;
+    height: 35px;
     float: left;
-    margin: 10px 0px 20px 4px;
+    margin-left: 2px;
     width: 150px;
     font-size: 13px;
-
-
+    color: #999;
 }
 
 #unit::-webkit-input-placeholder { /* WebKit browsers */
