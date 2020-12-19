@@ -3,11 +3,10 @@
 import pandas as pd
 import numpy as np
 from scrapy import Selector
-import urllib
-import urllib.request
-import urllib.error
-import datetime, time
+import datetime
+import time
 import re
+import requests
 
 
 def dateRange(start, end, step=1, format="%Y-%m-%d"):
@@ -20,12 +19,9 @@ def Get_LHB_stocks_from_excel(begin_date, end_date):
     Timeline = dateRange(begin_date, end_date)
     dfs = pd.DataFrame()
     for date_id in Timeline:
-        #        print( 'Date: ', date_id )
         URL_stocks_infos = r'http://data.eastmoney.com/DataCenter_V3/stock2016/TradeDetail/pagesize=200,page=1,sortRule=-1,sortType=,startDate=' + date_id + ',endDate=' + date_id + ',gpfw=0,js=var%20data_tab_1.html?rt=26442172'
-        html = urllib.request.urlopen(URL_stocks_infos).read()
-        html = html.decode('gb2312', 'ignore')
-        print(html)
-        X = re.split(',"url"', html)[0]
+        r = requests.get(URL_stocks_infos).text
+        X = re.split(',"url"', r)[0]
         X = re.split('"data":', X)[1]
         df = pd.read_json(X, orient='records')
         if (len(df) != 0):
@@ -66,20 +62,24 @@ def Get_LHB_stocks_from_excel(begin_date, end_date):
 
 def Crawl_web(code, date, name, chgradio):
     url = 'http://data.eastmoney.com/stock/lhb,' + date + ',' + code[0:6] + '.html'
-    ########
-    content = urllib.request.urlopen(url).read()
-    content = content.decode('gb2312', 'ignore')
-    sel = Selector(text=content).xpath('//div[@class="data-tips"]//div[@class="left con-br"]//text()').extract()
+    r = requests.get(url).text
+    sel = Selector(text=r).xpath('//div[@class="data-tips"]//div[@class="left con-br"]//text()').extract()
     Table_datas = pd.DataFrame()
+    code_list = ['', ]
     for i in range(len(sel)):
+        if code in code_list:
+            code = ''
+            name = ''
+        else:
+            code_list.append(code)
         s_type = sel[i].split('类型：')[1]
-        data1 = Selector(text=content).xpath('//div[@class="data-tips"]//div[@class="right"]//span//text()').extract()
+        data1 = Selector(text=r).xpath('//div[@class="data-tips"]//div[@class="right"]//span//text()').extract()
         P_close = data1[0]
         Rtn = data1[1]
         ###################
-        links_table_buy = Selector(text=content).xpath(
+        links_table_buy = Selector(text=r).xpath(
             '//div[@class="content-sepe"]//table[@class="default_tab stock-detail-tab"]//tbody')
-        links_table_sell = Selector(text=content).xpath(
+        links_table_sell = Selector(text=r).xpath(
             '//div[@class="content-sepe"]//table[@class="default_tab tab-2"]//tbody')
         ####################
         List_buy_top, Table_data_buy = HTML_Parse([links_table_buy[i]])
@@ -133,8 +133,8 @@ def main(begin_date, end_date):
         Table_datas = pd.DataFrame()
         CODES = Stocks_info[Stocks_info['Date'] == date]['Wind_Code'].unique()
         for code in CODES:
-            chgradio = ';'.join(Stocks_info[Stocks_info['Wind_Code'] == code]['解读'])
-            name = Stocks_info[Stocks_info['Wind_Code'] == code]['Name']
+            chgradio = '\r\n'.join(Stocks_info[Stocks_info['Wind_Code'] == code]['解读'])
+            name = Stocks_info[Stocks_info['Wind_Code'] == code]['Name'].unique()[0]
             print('Downloading ......', code, name, chgradio)
             df = Crawl_web(code, date, name, chgradio)
             repeat_times = 1
@@ -146,6 +146,7 @@ def main(begin_date, end_date):
                     print('Sucessful Download ......', code, date)
                 repeat_times = repeat_times + 1
             Table_datas = Table_datas.append(df)
+
         writer = pd.ExcelWriter(save_dir + str_result_filename)
         Table_datas.to_excel(writer, sheet_name=date, index=False)
         writer.save()
@@ -156,6 +157,6 @@ def main(begin_date, end_date):
 ########### main function ########################
 if __name__ == '__main__':
     save_dir = '/Users/sha/data/longhu/'
-    begin_date = '2020-12-01'
+    begin_date = '2020-12-14'
     end_date = '2020-12-18'
     main(begin_date, end_date)
