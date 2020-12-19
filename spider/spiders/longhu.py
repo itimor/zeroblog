@@ -129,11 +129,12 @@ def main(begin_date, end_date):
     Timeline_unique = np.unique(Stocks_info['Date'])
     str_result_filename = "龙虎榜综合信息_" + str(min(Stocks_info['Date'])) + '_' + str(max(Stocks_info['Date'])) + ".xlsx"
     print(str_result_filename)
+    writer = pd.ExcelWriter(save_dir + str_result_filename)
     for date in Timeline_unique:
         Table_datas = pd.DataFrame()
         CODES = Stocks_info[Stocks_info['Date'] == date]['Wind_Code'].unique()
         for code in CODES:
-            chgradio = '\r\n'.join(Stocks_info[Stocks_info['Wind_Code'] == code]['解读'])
+            chgradio = ';'.join(Stocks_info[Stocks_info['Wind_Code'] == code]['解读'])
             name = Stocks_info[Stocks_info['Wind_Code'] == code]['Name'].unique()[0]
             print('Downloading ......', code, name, chgradio)
             df = Crawl_web(code, date, name, chgradio)
@@ -146,11 +147,9 @@ def main(begin_date, end_date):
                     print('Sucessful Download ......', code, date)
                 repeat_times = repeat_times + 1
             Table_datas = Table_datas.append(df)
-
-        writer = pd.ExcelWriter(save_dir + str_result_filename)
-        Table_datas.to_excel(writer, sheet_name=date, index=False)
-        writer.save()
-        ##########################
+        if len(CODES) > 0:
+            Table_datas.to_excel(writer, sheet_name=date, index=False)
+    writer.save()
     return 0
 
 
