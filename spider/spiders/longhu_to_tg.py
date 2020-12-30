@@ -108,8 +108,9 @@ def main(begin_date, end_date):
             (dfs["obj_lv"] >= 45) &
             (dfs["obj"] == "主力") &
             (dfs["Date"] == date), display_column
-            ]
-        last_df = df1.applymap(str).reset_index(drop=True).to_string(header=None)
+        ]
+        last_df = df1.applymap(str).drop_duplicates('Wind_Code', 'first', inplace=False).reset_index(
+            drop=True).to_string(header=None)
         # 发送tg
         send_tg(date, last_df)
 
