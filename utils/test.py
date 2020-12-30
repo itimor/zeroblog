@@ -2,27 +2,11 @@
 # author: itimor
 # description: 递归解析json
 
-import json
+import re
 
+a = ['实力游资买入，成功率33.44%', '一个机构买入，成功率55.44%']
 
-def recursive_json_loads(data):
-    if isinstance(data, list):
-        return [recursive_json_loads(i) for i in data]
-    elif isinstance(data, tuple):
-        return tuple([recursive_json_loads(i) for i in data])
-    elif isinstance(data, dict):
-        return {recursive_json_loads(k): recursive_json_loads(data[k]) for k in data.keys()}
-    else:
-        try:
-            obj = json.loads(data)
-            if obj == data:
-                return data
-        except:
-            return data
-        return recursive_json_loads(obj)
-
-
-if __name__ == '__main__':
-    a = {'aa': 123}
-    p = recursive_json_loads(a)
-    print(a)
+for i in a:
+    b = re.findall('(实力游资|机构)(买入|卖出)，成功率(\d+.\d+)%', i)[0]
+    if float(b[2]) >= 45:
+        print(i)

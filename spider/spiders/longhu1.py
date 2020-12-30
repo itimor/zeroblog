@@ -30,7 +30,7 @@ def Get_LHB_stocks_from_excel(begin_date, end_date):
             colunms_name = ['Code', 'Name', '收盘价', '净买额占比', '换手率', '流通市值', '买卖方', '成功率']
             df2 = df2.rename(
                 columns={'Tdate': 'Date', 'SCode': colunms_name[0], 'SName': colunms_name[1],
-                         'ClosePrice': colunms_name[3], 'JmRate': colunms_name[10], 'Ltsz': colunms_name[13]})
+                         'ClosePrice': colunms_name[2], 'JmRate': colunms_name[3], 'Ltsz': colunms_name[4]})
             df2['Wind_Code'] = str(df2['Code'])
             s_codes = list()
             for i in df2['Code']:
@@ -47,18 +47,34 @@ def Get_LHB_stocks_from_excel(begin_date, end_date):
                 else:
                     s_codes.append(s)
             df2['Wind_Code'] = s_codes
-            print('Date: ', date_id, '上榜条数: ', len(df2), ',  上榜股票只数: ', len(df2['Wind_Code'].unique()))
+            s_obj = []
+            s_obj_lv = []
+            for i in df2['JD']:
+                b = re.findall('(实力游资|机构)(买入|卖出)，成功率(\d+.\d+)%', i)
+                if len(b) > 0:
+                    obj = '主力'
+                    obj_lv = float(b[0][2])
+                else:
+                    obj = '扑街'
+                    obj_lv = 0
+                s_obj.append(obj)
+                s_obj_lv.append(obj_lv)
+            df2['obj'] = s_obj
+            df2['obj_lv'] = s_obj_lv
+
             dfs = dfs.append(df2)
-        else:
-            print('Date: ', date_id, '上榜条数: ', 0, ',  上榜股票只数: ', 0)
+
+    # 过滤
+    # df.drop(['Tdate', 'JD'], axis=1)
+    dfs.loc[
+        (dfs["obj"] == "主力") &
+        (dfs["obj_lv"] >= 45)].head()
     return dfs
 
 
 def main(begin_date, end_date):
     Stocks_info = Get_LHB_stocks_from_excel(begin_date, end_date)
     Timeline_unique = np.unique(Stocks_info['Date'])
-    str_result_filename = "龙虎榜综合信息_" + str(min(Stocks_info['Date'])) + '_' + str(max(Stocks_info['Date'])) + ".xlsx"
-    print(str_result_filename)
     print(Stocks_info)
     print(Timeline_unique)
 
