@@ -6,7 +6,6 @@ from datetime import datetime, timedelta
 from telegram import Bot, ParseMode
 from fake_useragent import UserAgent
 import pandas as pd
-import numpy as np
 import time
 import re
 import requests
@@ -77,7 +76,7 @@ def main(date, num=1000, max=50, tactics='df1'):
     chat_id = ""
     df_a = pd.DataFrame()
     if tactics == 'df1':
-        # 策略1：超大单从大到小排序，非科创，股价小于50，主力/超大单/大单为正，小单/中单为负，超大单占比小于16，大于0
+        # 策略1：超大单从大到小排序，非科创，股价小于60，主力/超大单/大单为正，小单/中单为负，超大单占比小于16，大于0
         df_a = dfs.loc[
             (dfs["Close"] < 50) &
             (dfs["Super"] > 0) &
@@ -95,11 +94,11 @@ def main(date, num=1000, max=50, tactics='df1'):
     df['Buy'] = [i / sum(b) for i in b]
     df[['Close']] = df[['Close']].astype(float)
     df['BuyCount'] = df['Buy'] / df['Close']
-    print(df)
-    last_df = df.round({'Buy': 2}).to_string(header=None)
+    df1 = df.round({'Buy': 2})[:50].to_string(header=None)
+    df2 = df.round({'Buy': 2})[51:].to_string(header=None)
     # 发送tg
-    if len(last_df) > 0:
-        send_tg(date, last_df, chat_id)
+    send_tg(date, df1, chat_id)
+    send_tg(date, df2, chat_id)
 
 
 if __name__ == '__main__':

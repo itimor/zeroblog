@@ -103,20 +103,6 @@ def main(begin_date, end_date, tactics='df1'):
                 (dfs["Date"] == date), display_column
             ]
             chat_id = "@hollystock"
-
-        if tactics == 'df2':
-            # 策略2：涨跌幅从大到小，非科创，游资/机构操作成功率大于45，股价小于50，涨跌幅大于0，小于5
-            df_a = dfs.loc[
-                (dfs["Close"] < 50) &
-                (dfs["Radio"] > 0) &
-                (dfs["Radio"] < 5) &
-                (dfs["Type"] != "KC") &
-                (dfs["obj_lv"] >= 45) &
-                (dfs["obj"] == "主力") &
-                (dfs["Date"] == date), display_column
-            ]
-            chat_id = "@timorstock"
-
         df = df_a.applymap(str).drop_duplicates('Wind_Code', 'first', inplace=False).reset_index(drop=True)[:5]
         b = [1 / math.log(i + 2) for i in range(0, len(df))]
         df['Buy'] = [i / sum(b) for i in b]
