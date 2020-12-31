@@ -2,18 +2,19 @@
 # author: itimor
 # 东方财富龙虎榜,并根据策略筛选股票，并发送到tg频道
 
+from datetime import datetime, timedelta
+from telegram import Bot, ParseMode
 import pandas as pd
 import numpy as np
-import datetime
 import re
 import requests
-from telegram import Bot, ParseMode
+import math
 
 
 def daterange(start, end, step=1, format="%Y-%m-%d"):
-    strptime, strftime = datetime.datetime.strptime, datetime.datetime.strftime
+    strptime, strftime = datetime.strptime, datetime.strftime
     days = (strptime(end, format) - strptime(start, format)).days
-    return [strftime(strptime(start, format) + datetime.timedelta(i), format) for i in range(0, days + 1, step)]
+    return [strftime(strptime(start, format) + timedelta(i), format) for i in range(0, days + 1, step)]
 
 
 def get_lhb_stocks(begin_date, end_date):
@@ -54,7 +55,6 @@ def get_lhb_stocks(begin_date, end_date):
                 else:
                     s_codes.append(s)
                     s_types.append(s_type)
-                s_types.append(s_type)
             df2['Wind_Code'] = s_codes
             df2['Type'] = s_codes
             s_obj = []
@@ -86,7 +86,7 @@ def send_tg(date, msg):
 def main(begin_date, end_date):
     dfs = get_lhb_stocks(begin_date, end_date)
     timeline = np.unique(dfs['Date'])
-    display_column = ['Wind_Code', 'Name', 'Close', 'Turn', 'Market']
+    display_column = ['Wind_Code', 'Name', 'Type', 'Close', 'Turn']
     for date in timeline:
         print(date)
         # 策略1：净买额占比从大到小，非科创，游资/机构操作成功率大于45， 股价小于50，净买额占比小于15，大于-1
@@ -109,13 +109,29 @@ def main(begin_date, end_date):
             (dfs["obj"] == "主力") &
             (dfs["Date"] == date), display_column
         ]
-        last_df = df1.applymap(str).drop_duplicates('Wind_Code', 'first', inplace=False).reset_index(
-            drop=True).to_string(header=None)
+        df = df1.applymap(str).drop_duplicates('Wind_Code', 'first', inplace=False).reset_index(drop=True)[:5]
+        b = [1 / math.log(i + 2) for i in range(0, len(df))]
+        df['Buy'] = [i / sum(b) for i in b]
+        df[['Close']] = df[['Close']].astype(float)
+        df['BuyCount'] = df['Buy'] / df['Close']
+        last_df = df.round({'Buy': 2}).to_string(header=None)
         # 发送tg
         send_tg(date, last_df)
 
 
 if __name__ == '__main__':
-    begin_date = '2020-12-03'
-    end_date = '2020-12-30'
+    t = 20
+    date_format = '%Y-%m-%d'
+
+    # 获得当天
+    dd = datetime.now()
+    if dd.hour > t:
+        cur_date = dd.strftime(date_format)
+    else:
+        cur_date = (dd - timedelta(1)).strftime(date_format)
+
+    # begin_date = '2020-12-29'
+    # end_date = '2020-12-30'
+    begin_date = cur_date
+    end_date = cur_date
     main(begin_date, end_date)
