@@ -5,15 +5,17 @@
 from datetime import datetime, timedelta
 from telegram import Bot, ParseMode
 from fake_useragent import UserAgent
+from sqlalchemy import create_engine
 import pandas as pd
+import numpy as np
 import time
 import re
 import requests
-import math
 
 ua = UserAgent()
 
 headers = {'User-Agent': ua.random}
+engine = create_engine('sqlite:////Users/sha/data/zjlx/zjlx.db', echo=False)
 
 
 def daterange(start, end, step=1, format="%Y-%m-%d"):
@@ -38,28 +40,24 @@ def get_stocks(num):
                      'f87': colunms_name[7], 'f184': colunms_name[8]})
         df2['Wind_Code'] = str(df2['Code'])
         s_codes = []
-        s_types = []
         for i in df2['Code']:
             if len(str(i)) < 6:
                 s = '0' * (6 - len(str(i))) + str(i)
             else:
                 s = str(i)
             if s[0] == '6':
-                s_type = 'SH'
-            elif s[0] == '3':
-                s_type = 'KC'
+                s = s + '.SH'
             else:
-                s_type = 'SZ'
+                s = s + '.SZ'
             if len(s_codes) == 0:
                 s_codes = [s]
-                s_types = [s_type]
             else:
                 s_codes.append(s)
-                s_types.append(s_type)
         df2['Wind_Code'] = s_codes
-        df2['Type'] = s_codes
+        # 排除st和300、688开头的股票
         dfs = df2[~ df2['Name'].str.contains('ST')]
-    return dfs
+        last_dfs = dfs[~ dfs['Wind_Code'].str.contains('^300|^688')]
+    return last_dfs
 
 
 def send_tg(date, msg, chat_id):
@@ -70,35 +68,29 @@ def send_tg(date, msg, chat_id):
     bot.send_message(chat_id=chat_id, text=text, parse_mode=ParseMode.HTML)
 
 
-def main(date, num=1000, max=50, tactics='df1'):
+def main(date, num, tactics):
     dfs = get_stocks(num)
-    display_column = ['Wind_Code', 'Name', 'Type', 'Close', 'Super']
-    chat_id = ""
-    df_a = pd.DataFrame()
-    if tactics == 'df1':
-        # 策略1：超大单从大到小排序，非科创，股价小于60，主力/超大单/大单为正，小单/中单为负，超大单占比小于16，大于0
-        df_a = dfs.loc[
+    display_column = ['Wind_Code', 'Name', 'Type', 'Close', 'Super', 'Big', 'Mid', 'Small', 'Radio']
+    df = dfs.loc[
             (dfs["Close"] < 50) &
             (dfs["Super"] > 0) &
-            (dfs["Super"] < 15) &
             (dfs["Master"] > 0) &
             (dfs["Big"] > 0) &
             (dfs["Mid"] < 0) &
-            (dfs["Small"] < 0) &
-            (dfs["Type"] != "KC"), display_column
-        ].sort_values(['Super'], ascending=[0])
-        chat_id = "@timorstock"
-
-    df = df_a.reset_index(drop=True)[:max]
-    b = [1 / math.log(i + 2) for i in range(0, len(df))]
-    df['Buy'] = [i / sum(b) for i in b]
-    df[['Close']] = df[['Close']].astype(float)
-    df['BuyCount'] = df['Buy'] / df['Close']
-    df1 = df.round({'Buy': 2})[:50].to_string(header=None)
-    df2 = df.round({'Buy': 2})[51:].to_string(header=None)
-    # 发送tg
-    send_tg(date, df1, chat_id)
-    send_tg(date, df2, chat_id)
+            (dfs["Small"] < 0), display_column
+        ]
+    df['Increase_1'] = np.nan
+    df['Increase_2'] = np.nan
+    df['Increase_3'] = np.nan
+    df.to_sql(date, con=engine)
+    # for tactic in tactics:
+    #     # 策略1：超大单从大到小排序，非科创，股价小于60，主力/超大单/大单为正，小单/中单为负，超大单占比小于16，大于10
+    #     df = df_a.sort_values([tactic], ascending=[0]).reset_index(drop=True)
+    # df1 = df.round({'Buy': 2})[:50].to_string(header=None)
+    # df2 = df.round({'Buy': 2})[51:].to_string(header=None)
+    # # 发送tg
+    # send_tg(date, df1, chat_id)
+    # send_tg(date, df2, chat_id)
 
 
 if __name__ == '__main__':
@@ -112,7 +104,6 @@ if __name__ == '__main__':
         cur_date = dd.strftime(date_format)
     else:
         cur_date = (dd - timedelta(1)).strftime(date_format)
-    tactics = 'df1'
-    num = 1000
-    max = 100
-    main(cur_date, num, max, tactics)
+    tactics = ['Master', 'Super', 'Big']
+    num = 2000
+    main(cur_date, num, tactics)
