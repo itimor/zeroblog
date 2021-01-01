@@ -9,9 +9,6 @@ import pandas as pd
 import numpy as np
 import tushare as ts
 import easyquotation as es
-import time
-import re
-import requests
 
 ua = UserAgent()
 headers = {'User-Agent': ua.random}
