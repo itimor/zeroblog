@@ -72,7 +72,7 @@ def get_lhb_stocks(begin_date, end_date):
             df2['obj'] = s_obj
             df2['obj_lv'] = s_obj_lv
             dfs = dfs.append(df2)
-    return dfs.round({'Market': 2}).sort_values(['Close'], ascending=[1])
+    return dfs
 
 
 def send_tg(date, msg, chat_id):
@@ -101,9 +101,9 @@ def main(begin_date, end_date, tactics='df1'):
                 (dfs["obj_lv"] >= 45) &
                 (dfs["obj"] == "主力") &
                 (dfs["Date"] == date), display_column
-            ]
+            ].round({'Market': 2}).sort_values(['Close'], ascending=[1])
             chat_id = "@hollystock"
-        df = df_a.applymap(str).drop_duplicates('Wind_Code', 'first', inplace=False).reset_index(drop=True)[:5]
+        df = df_a.drop_duplicates('Wind_Code', 'first', inplace=False).reset_index(drop=True)[:5]
         b = [1 / math.log(i + 2) for i in range(0, len(df))]
         df['Buy'] = [i / sum(b) for i in b]
         df[['Close']] = df[['Close']].astype(float)

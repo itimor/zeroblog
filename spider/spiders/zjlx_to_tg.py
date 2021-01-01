@@ -83,14 +83,6 @@ def main(date, num, tactics):
     df['Increase_2'] = np.nan
     df['Increase_3'] = np.nan
     df.to_sql(date, con=engine)
-    # for tactic in tactics:
-    #     # 策略1：超大单从大到小排序，非科创，股价小于60，主力/超大单/大单为正，小单/中单为负，超大单占比小于16，大于10
-    #     df = df_a.sort_values([tactic], ascending=[0]).reset_index(drop=True)
-    # df1 = df.round({'Buy': 2})[:50].to_string(header=None)
-    # df2 = df.round({'Buy': 2})[51:].to_string(header=None)
-    # # 发送tg
-    # send_tg(date, df1, chat_id)
-    # send_tg(date, df2, chat_id)
 
 
 if __name__ == '__main__':
