@@ -49,7 +49,7 @@ def get_stocks(num):
         df2['code'] = s_codes
         # 排除st和300、688开头的股票
         dfs = df2[~ df2['name'].str.contains('ST')]
-        last_dfs = dfs[~ dfs['code'].str.contains('^300|^688')]
+        last_dfs = dfs[~ dfs['code'].str.contains('^300|^688|^900')]
     return last_dfs
 
 
@@ -92,4 +92,5 @@ if __name__ == '__main__':
         cur_date = (dd - timedelta(1)).strftime(date_format)
     tactics = ['master', 'super', 'big']
     num = 2000
+    cur_date = '2020-12-27'
     main(cur_date, num, tactics)
