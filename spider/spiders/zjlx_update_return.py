@@ -42,9 +42,9 @@ def get_stocks(table, date, d1, d2):
             return_2.append(code_info.iat[1, 5])
             return_3.append(code_info.iat[0, 5])
         else:
-            return_1.append(None)
-            return_2.append(None)
-            return_3.append(None)
+            return_1.append(np.nan)
+            return_2.append(np.nan)
+            return_3.append(np.nan)
 
     df['return_1'] = return_1
     df['return_2'] = return_2
