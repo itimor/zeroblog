@@ -4,11 +4,15 @@
 
 from datetime import datetime, timedelta
 from telegram import Bot, ParseMode
+from fake_useragent import UserAgent
 import pandas as pd
 import numpy as np
 import re
 import requests
 import math
+
+ua = UserAgent()
+headers = {'User-Agent': ua.random}
 
 
 def daterange(start, end, step=1, format="%Y-%m-%d"):

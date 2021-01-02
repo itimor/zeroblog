@@ -3,7 +3,6 @@
 # 东方财富资金流向，并根据策略筛选股票，并发送到tg频道
 
 from datetime import datetime, timedelta
-from telegram import Bot, ParseMode
 from fake_useragent import UserAgent
 from sqlalchemy import create_engine
 import pandas as pd
@@ -60,15 +59,7 @@ def get_stocks(num):
     return last_dfs
 
 
-def send_tg(date, msg, chat_id):
-    token = '723532221:AAH8SSfM7SfTe4HmhV72QdLbOUW3akphUL8'
-    bot = Bot(token=token)
-    chat_id = chat_id
-    text = '<a href="http://data.eastmoney.com/zjlx/detail.html">%s两市资金流向</a>\n' % date + msg
-    bot.send_message(chat_id=chat_id, text=text, parse_mode=ParseMode.HTML)
-
-
-def main(num, date, tactics):
+def main(num):
     dfs = get_stocks(num)
     display_name = ['create_date', 'code', 'name', 'super', 'big', 'mid', 'small', 'master', 'close_0', 'return_0']
     df = dfs.loc[
@@ -85,7 +76,6 @@ def main(num, date, tactics):
 
 if __name__ == '__main__':
     t = 18
-    tactics = ['master', 'super', 'big']
     num = 2000
     date_format = '%Y-%m-%d'
     d_format = '%Y%m%d'
@@ -100,5 +90,4 @@ if __name__ == '__main__':
     print(df)
     cur_date = date.strftime(date_format)
     if len(df) > 0:
-        main(cur_date, num, tactics)
-
+        main(cur_date, num)

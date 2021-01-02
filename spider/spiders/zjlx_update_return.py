@@ -3,14 +3,10 @@
 # 东方财富资金流向，并根据策略筛选股票，并发送到tg频道
 
 from datetime import datetime, timedelta
-from fake_useragent import UserAgent
 from sqlalchemy import create_engine
 import pandas as pd
 import numpy as np
 import tushare as ts
-
-ua = UserAgent()
-headers = {'User-Agent': ua.random}
 
 # ts初始化
 ts_data = ts.pro_api('d256364e28603e69dc6362aefb8eab76613b704035ee97b555ac79ab')
@@ -22,8 +18,10 @@ ts_data = ts.pro_api('d256364e28603e69dc6362aefb8eab76613b704035ee97b555ac79ab')
 engine = create_engine('sqlite:///zjlx.db', echo=False, encoding='utf-8')
 
 
-def get_stocks(table, date, d1, d2):
-    df = pd.read_sql_query(f'select * from {table} where create_date="{date}"', con=engine)
+def get_stocks(date, d1, d2):
+    df = pd.read_sql_query(f'select * from zjlx_data where create_date="{date}"', con=engine)
+    if len(df) == 0:
+        return
     close_1 = []
     close_2 = []
     close_3 = []
@@ -47,17 +45,16 @@ def get_stocks(table, date, d1, d2):
 
 
 if __name__ == '__main__':
-    table = 'zjlx_data'
     date_format = '%Y-%m-%d'
     d_format = '%Y%m%d'
-    date = '2020-12-31'
-    dd = datetime.strptime(date, date_format)
+    # 获得当天
+    dd = datetime.now()
     # 获取股票交易日期
     start_date = (dd - timedelta(11)).strftime(d_format)
-    end_date = (dd - timedelta(1)).strftime(d_format)
+    end_date = dd.strftime(d_format)
     df = ts_data.trade_cal(exchange='', start_date=start_date, end_date=end_date, is_open='1')
-    print(df)
-    d1 = df.iat[0, 1]
-    d2 = df.iat[2, 1]
-    get_stocks(table, date, d1, d2)
-
+    date = datetime.strptime(df.iat[4, 1], d_format).strftime(date_format)
+    d1 = df.iat[5, 1]
+    d2 = df.iat[7, 1]
+    print(date, d1, d2)
+    get_stocks(date, d1, d2)
