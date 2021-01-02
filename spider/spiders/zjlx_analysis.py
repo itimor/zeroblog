@@ -42,6 +42,7 @@ tactics = ['master', 'super', 'big']
 def get_stocks(date):
     d1 = pd.Series([date] * len(tactics) * len(label_level))
     s = pd.Series([date] * len(tactics) * len(label_level))
+    #https://www.pythonf.cn/read/94564
     df_a = pd.DataFrame({
         'date': d1,
         'tactic': np.nan,
