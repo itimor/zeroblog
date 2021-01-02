@@ -40,6 +40,20 @@ tactics = ['master', 'super', 'big']
 
 
 def get_stocks(date):
+    d1 = pd.Series([date] * len(tactics) * len(label_level))
+    s = pd.Series([date] * len(tactics) * len(label_level))
+    df_a = pd.DataFrame({
+        'date': d1,
+        'tactic': np.nan,
+        'level': np.nan,
+        'v1': np.nan,
+        'v2': np.nan,
+        'v3': np.nan,
+        'v4': np.nan,
+        'v5': np.nan,
+        'v6': np.nan,
+        'v7': np.nan,
+    })
     for rank_name, k in df_rank.items():
         for rank_level, v in k.items():
             print(f'{rank_name} {rank_level} {v}')
