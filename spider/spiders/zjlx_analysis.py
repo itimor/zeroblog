@@ -11,13 +11,6 @@ import tushare as ts
 # 创建连接引擎
 engine = create_engine('sqlite:///zjlx.db', echo=False, encoding='utf-8')
 
-# 最强王者：9
-# 至尊星耀：8 - 9
-# 永恒钻石：7 - 8
-# 尊贵铂金：6 - 7
-# 荣耀黄金：5 - 6
-# 秩序白银：3 - 5
-# 倔强青铜：0 - 3
 df_rank = dict()
 for i in range(1, 4):
     df_rank['ranks_' + str(i)] = {'v1': 'return_1 >= 9',
@@ -42,9 +35,9 @@ def get_stocks(date):
             'date': d1,
             'l1': l1,
         })
-        for rank_level, v in k.items():
-            for tactic in tactics:
-                print(f'{rank_name} {rank_level} {tactic} {v}')
+        for tactic in tactics:
+            for rank_level, v in k.items():
+                print(f'{rank_name} {tactic} {rank_level}')
                 df_a = pd.read_sql_query(f'select {tactic} from zjlx_data where create_date="{date}" and {v}',
                                          con=engine)
                 if len(df_a) > 0:
@@ -54,7 +47,10 @@ def get_stocks(date):
                 cut = pd.cut(a, area_level, labels=label_level)
                 b = cut.value_counts().sort_index().to_list()
                 df.loc[df.date == date, rank_level] = b
-                df.to_sql(f'zjlx_{rank_name}_{tactic}', con=engine, index=False, if_exists='replace')
+                table_name = f'zjlx_{rank_name}_{tactic}'
+                df[rank_level] = df[rank_level] / df[rank_level].sum()
+                df = df.replace(np.nan, 0)
+                df.to_sql(table_name, con=engine, index=False, if_exists='replace')
 
 
 if __name__ == '__main__':
@@ -74,3 +70,4 @@ if __name__ == '__main__':
     date = '2020-12-31'
     print(date)
     get_stocks(date)
+
