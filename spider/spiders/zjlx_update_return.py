@@ -8,12 +8,6 @@ import pandas as pd
 import numpy as np
 import tushare as ts
 
-# ts初始化
-ts_data = ts.pro_api('d256364e28603e69dc6362aefb8eab76613b704035ee97b555ac79ab')
-# df = ts_data.daily(ts_code='000001.SZ', start_date='20180718', end_date='20180718')
-# print(df)
-# print(df.iat[0, 6])
-
 # 创建连接引擎
 engine = create_engine('sqlite:///zjlx.db', echo=False, encoding='utf-8')
 
@@ -52,9 +46,13 @@ if __name__ == '__main__':
     # 获取股票交易日期
     start_date = (dd - timedelta(11)).strftime(d_format)
     end_date = dd.strftime(d_format)
+    # ts初始化
+    ts_data = ts.pro_api('d256364e28603e69dc6362aefb8eab76613b704035ee97b555ac79ab')
     df = ts_data.trade_cal(exchange='', start_date=start_date, end_date=end_date, is_open='1')
-    date = datetime.strptime(df.iat[4, 1], d_format).strftime(date_format)
-    d1 = df.iat[5, 1]
-    d2 = df.iat[7, 1]
+    df_a = df.sort_values(by=['cal_date'], ascending=[False])
+    d = 1
+    date = datetime.strptime(df_a.iat[d, 1], d_format).strftime(date_format)
+    d1 = df_a.iat[d - 1, 1]
+    d2 = df_a.iat[0, 1]
     print(date, d1, d2)
     get_stocks(date, d1, d2)

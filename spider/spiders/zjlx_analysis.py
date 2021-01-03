@@ -8,9 +8,6 @@ import pandas as pd
 import numpy as np
 import tushare as ts
 
-# ts初始化
-# ts_data = ts.pro_api('d256364e28603e69dc6362aefb8eab76613b704035ee97b555ac79ab')
-
 # 创建连接引擎
 engine = create_engine('sqlite:///zjlx.db', echo=False, encoding='utf-8')
 
@@ -38,26 +35,26 @@ tactics = ['master', 'super', 'big']
 
 
 def get_stocks(date):
-    d1 = pd.Series([date] * len(tactics) * len(label_level))
-    t = list()
-    for i in range(len(tactics)):
-        t += [tactics[i]] * len(label_level)
-    t1 = pd.Series(t)
-    l1 = pd.Series(label_level * len(tactics))
+    d1 = pd.Series([date] * len(label_level))
+    l1 = pd.Series(label_level)
     for rank_name, k in df_rank.items():
         df = pd.DataFrame({
             'date': d1,
-            't1': t1,
             'l1': l1,
         })
         for rank_level, v in k.items():
-            print(f'{rank_name} {rank_level} {v}')
-            df_a = pd.read_sql_query(f'select * from zjlx_data where create_date="{date}" and {v}', con=engine)
             for tactic in tactics:
-                cut = pd.cut(df_a[tactic], area_level, labels=label_level)
-                a = cut.value_counts().sort_index().to_list()
-                df.loc[(df.date == date) & (df.t1 == tactic), rank_level] = a
-        df.to_sql('zjlx_analysis_' + str(rank_name), con=engine, index=False, if_exists='replace')
+                print(f'{rank_name} {rank_level} {tactic} {v}')
+                df_a = pd.read_sql_query(f'select {tactic} from zjlx_data where create_date="{date}" and {v}',
+                                         con=engine)
+                if len(df_a) > 0:
+                    a = df_a[tactic].to_list()
+                else:
+                    a = [0] * len(label_level)
+                cut = pd.cut(a, area_level, labels=label_level)
+                b = cut.value_counts().sort_index().to_list()
+                df.loc[df.date == date, rank_level] = b
+                df.to_sql(f'zjlx_{rank_name}_{tactic}', con=engine, index=False, if_exists='replace')
 
 
 if __name__ == '__main__':
@@ -66,11 +63,14 @@ if __name__ == '__main__':
     # 获得当天
     dd = datetime.now()
     # 获取股票交易日期
-    # start_date = (dd - timedelta(11)).strftime(d_format)
-    # end_date = dd.strftime(d_format)
+    start_date = (dd - timedelta(11)).strftime(d_format)
+    end_date = dd.strftime(d_format)
+    # ts初始化
+    # ts_data = ts.pro_api('d256364e28603e69dc6362aefb8eab76613b704035ee97b555ac79ab')
     # df = ts_data.trade_cal(exchange='', start_date=start_date, end_date=end_date, is_open='1')
-    # date = datetime.strptime(df.iat[4, 1], d_format).strftime(date_format)
+    # df_a = df.sort_values(by=['cal_date'], ascending=[False])
+    # d = 1
+    # date = datetime.strptime(df_a.iat[d, 1], d_format).strftime(date_format)
     date = '2020-12-31'
     print(date)
     get_stocks(date)
-
