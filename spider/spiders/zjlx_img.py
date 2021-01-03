@@ -17,11 +17,11 @@ plt.rcParams['axes.unicode_minus'] = False
 
 colunms_name = ['date', 'l1', '最强王者', '至尊星耀', '永恒钻石', '尊贵铂金', '荣耀黄金', '秩序白银', '倔强青铜']
 
+
 def get_stocks(date):
     # zjlx_ranks_1
     table = 'zjlx_ranks_1_master'
     df_zjlx_ranks_1_master = pd.read_sql_query(f'select * from {table} where date="{date}"', con=engine)
-    print(df_zjlx_ranks_1_master.columns)
     df_zjlx_ranks_1_master.columns = colunms_name
     df_zjlx_ranks_1_master.plot(x='l1')
     # 图片标题

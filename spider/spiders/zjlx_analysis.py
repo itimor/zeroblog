@@ -22,19 +22,19 @@ for i in range(1, 4):
                                   'v7': 'return_1 >= 0 and return_1 < 3',
                                   }
 
-area_level = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
-label_level = ['0-10', '10-20', '20-30', '30-40', '40-50', '50-60', '60-70', '70-80', '80-90', '90-100']
+area_level = [i for i in range(101)]
+label_level = [i for i in range(100)]
 tactics = ['master', 'super', 'big']
 
 
 def get_stocks(date):
     d1 = pd.Series([date] * len(label_level))
     l1 = pd.Series(label_level)
+    df = pd.DataFrame({
+        'date': d1,
+        'l1': l1,
+    })
     for rank_name, k in df_rank.items():
-        df = pd.DataFrame({
-            'date': d1,
-            'l1': l1,
-        })
         for tactic in tactics:
             for rank_level, v in k.items():
                 print(f'{rank_name} {tactic} {rank_level}')
