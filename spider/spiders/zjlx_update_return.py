@@ -22,7 +22,15 @@ def get_stocks(date, d1, d2):
     for code in df['code']:
         code_info = ts_data.daily(ts_code=code, start_date=d1, end_date=d2)
         print(code)
-        if len(code_info) > 0:
+        if len(code_info) == 1:
+            close_1.append(code_info.iat[2, 5])
+            close_2.append(np.nan)
+            close_3.append(np.nan)
+        elif len(code_info) == 2:
+            close_1.append(code_info.iat[2, 5])
+            close_2.append(code_info.iat[1, 5])
+            close_3.append(np.nan)
+        elif len(code_info) == 3:
             close_1.append(code_info.iat[2, 5])
             close_2.append(code_info.iat[1, 5])
             close_3.append(code_info.iat[0, 5])
@@ -35,7 +43,8 @@ def get_stocks(date, d1, d2):
         df['close_' + str(i)] = eval('close_' + str(i))
         df['return_' + str(i)] = (df['close_' + str(i)] - df['close_0']) / df['close_0']
 
-    df.round({'return_1': 2, 'return_2': 2, 'return_3': 2}).to_sql(table, con=engine, index=False, if_exists='replace')
+    df.round({'return_1': 2, 'return_2': 2, 'return_3': 2}).to_sql('zjlx_data', con=engine, index=False,
+                                                                   if_exists='replace')
 
 
 if __name__ == '__main__':
