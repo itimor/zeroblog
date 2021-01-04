@@ -11,15 +11,10 @@ import tushare as ts
 import time
 import re
 import requests
+import os
 
 ua = UserAgent()
 headers = {'User-Agent': ua.random}
-
-# ts初始化
-ts_data = ts.pro_api('d256364e28603e69dc6362aefb8eab76613b704035ee97b555ac79ab')
-
-# 创建连接引擎
-engine = create_engine('sqlite:///new_zjlx.db', echo=False, encoding='utf-8')
 
 zjlx_list = {
     'zjlx_1': {
@@ -42,7 +37,6 @@ def get_stocks(info):
     X = re.split('}}', r)[0]
     X = re.split('"diff":', X)[1]
     df = pd.read_json(X, orient='records')
-    print(df[:5])
     df.columns = info['columns']
     df['code'] = str(df['pre_code'])
     s_codes = []
@@ -65,7 +59,7 @@ def get_stocks(info):
     return df
 
 
-def main(date):
+def main():
     t1 = int(time.time() * 1000)
     t2 = t1 - 31
     for name, info in zjlx_list.items():
@@ -75,10 +69,10 @@ def main(date):
             (dfs["close_0"] < 50) &
             (dfs["mid"] < 0) &
             (dfs["small"] < 0)]
-        df[['close_1']] = np.nan
-        df[['return_1']] = np.nan
+        df['close_1'] = 0
+        df['return_1'] = 0
         print(df[:5])
-        df.to_sql(f'{date}_{name}', con=engine, index=False, if_exists='replace')
+        df.to_sql(name, con=engine, index=False, if_exists='replace')
 
 
 if __name__ == '__main__':
@@ -91,10 +85,18 @@ if __name__ == '__main__':
         date = dd
     else:
         date = (dd - timedelta(1))
+
+    # ts初始化
+    ts_data = ts.pro_api('d256364e28603e69dc6362aefb8eab76613b704035ee97b555ac79ab')
     df = ts_data.trade_cal(exchange='', start_date=date.strftime(d_format), end_date=date.strftime(d_format),
                            is_open='1')
     print(df)
     cur_date = date.strftime(date_format)
-    if len(df) > 0:
-        main(cur_date)
 
+    if not os.path.exists(cur_date):
+        os.makedirs(cur_date)
+
+    # 创建连接引擎
+    engine = create_engine(f'sqlite:///{cur_date}/aaa.db', echo=False, encoding='utf-8')
+    if len(df) > 0:
+        main()

@@ -8,9 +8,6 @@ import pandas as pd
 import numpy as np
 import tushare as ts
 
-# 创建连接引擎
-engine = create_engine('sqlite:///new_zjlx.db', echo=False, encoding='utf-8')
-
 df_rank = {'v1': 'return_1 >= 9',
            'v2': 'return_1 >= 8 and return_1 < 9',
            'v3': 'return_1 >= 7 and return_1 < 8',
@@ -32,11 +29,12 @@ def get_stocks(date):
         'date': d1,
         'l1': l1,
     })
-    for tactic in tactics:
-        for rank_level, v in df_rank.items():
-            print(f'{tactic} {rank_level}')
-            for i in [1, 3, 5, 10]:
-                table = f'{date}_zjlx_{i}'
+    for i in [1, 3, 5, 10]:
+        table = f'zjlx_{i}'
+        print(table)
+        for tactic in tactics:
+            for rank_level, v in df_rank.items():
+                print(f'{tactic} {rank_level}')
                 df_a = pd.read_sql_query(f'select {tactic} from {table} where {v}', con=engine)
                 if len(df_a) > 0:
                     a = df_a[tactic].to_list()
@@ -45,10 +43,9 @@ def get_stocks(date):
                 cut = pd.cut(a, area_level, labels=label_level)
                 b = cut.value_counts().sort_index().to_list()
                 df.loc[df.date == date, rank_level] = b
-                table_name = f'{date}_zjlx_{tactic}'
                 df[rank_level] = df[rank_level] / df[rank_level].sum()
                 df = df.replace(np.nan, 0)
-                df.to_sql(table_name, con=engine, index=False, if_exists='replace')
+                df.to_sql(tactic, con=engine, index=False, if_exists='replace')
 
 
 if __name__ == '__main__':
@@ -67,5 +64,6 @@ if __name__ == '__main__':
     # date = datetime.strptime(df_a.iat[d, 1], d_format).strftime(date_format)
     date = '2020-12-31'
     print(date)
+    # 创建连接引擎
+    engine = create_engine(f'sqlite:///{date}/aaa.db', echo=False, encoding='utf-8')
     get_stocks(date)
-
