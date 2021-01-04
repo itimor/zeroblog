@@ -71,8 +71,12 @@ def main():
         (dfs["small"] < 0), display_name]
     df['update_time'] = pd.to_datetime(df['update_time'], unit='s')
     df['date'] = df['update_time'].dt.strftime(date_format)
+    for i in range(1, 4):
+        df['close_' + str(i)] = np.nan
+        df['return_' + str(i)] = np.nan
+
     print(df[:5])
-    df.to_sql('zjlx_data', con=engine, index=False, if_exists='append')
+    df.to_sql('zjlx_data', con=engine, index=False, if_exists='replace')
 
 
 if __name__ == '__main__':

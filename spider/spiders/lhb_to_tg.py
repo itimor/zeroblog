@@ -14,7 +14,6 @@ import math
 ua = UserAgent()
 headers = {'User-Agent': ua.random}
 
-
 def daterange(start, end, step=1, format="%Y-%m-%d"):
     strptime, strftime = datetime.strptime, datetime.strftime
     days = (strptime(end, format) - strptime(start, format)).days
