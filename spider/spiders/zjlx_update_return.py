@@ -13,7 +13,7 @@ engine = create_engine('sqlite:///zjlx.db', echo=False, encoding='utf-8')
 
 
 def get_stocks(date, d1, d2):
-    df = pd.read_sql_query(f'select * from zjlx_data where create_date="{date}"', con=engine)
+    df = pd.read_sql_query(f'select * from zjlx_data where date="{date}"', con=engine)
     if len(df) == 0:
         return
     close_1 = []
