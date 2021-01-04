@@ -76,7 +76,7 @@ def main():
 
 
 if __name__ == '__main__':
-    t = 18
+    t = 10
     date_format = '%Y-%m-%d'
     d_format = '%Y%m%d'
     # 获得当天
