@@ -77,7 +77,6 @@ def main():
 
 if __name__ == '__main__':
     t = 18
-    num = 2000
     date_format = '%Y-%m-%d'
     d_format = '%Y%m%d'
     # 获得当天
@@ -86,9 +85,9 @@ if __name__ == '__main__':
         date = dd
     else:
         date = (dd - timedelta(1))
-    # df = ts_data.trade_cal(exchange='', start_date=date.strftime(d_format), end_date=date.strftime(d_format),
-    #                        is_open='1')
-    # print(df)
-    # cur_date = date.strftime(date_format)
-    # if len(df) > 0:
-    main()
+    df = ts_data.trade_cal(exchange='', start_date=date.strftime(d_format), end_date=date.strftime(d_format),
+                           is_open='1')
+    print(df)
+    cur_date = date.strftime(date_format)
+    if len(df) > 0:
+        main()
