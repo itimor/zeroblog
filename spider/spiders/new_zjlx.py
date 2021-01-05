@@ -16,24 +16,8 @@ import os
 ua = UserAgent()
 headers = {'User-Agent': ua.random}
 
-zjlx_list = {
-    'zjlx_1': {
-        'columns': ['close_0', 'return_0', 'pre_code', 'name', 'super', 'big', 'mid', 'small', 'master'],
-        'url': 'http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=3000&po=1&np=1&ut=b2884a393a59ad64002292a3e90d46a5&fltt=2&invt=2&fid0=f4001&fid=f62&fs=m:0+t:6+f:!2,m:0+t:13+f:!2,m:0+t:80+f:!2,m:1+t:2+f:!2,m:1+t:23+f:!2,m:0+t:7+f:!2,m:1+t:3+f:!2&stat=1&fields=f12,f14,f2,f3,f184,f69,f75,f81,f87&rt=53658803&cb=jQuery18307545864640209479_1609764020312&_=1609764093954'
-    }, 'zjlx_3': {
-        'columns': ['close_0', 'pre_code', 'name', 'return_0', 'super', 'big', 'mid', 'small', 'master'],
-        'url': 'http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=3000&po=1&np=1&ut=b2884a393a59ad64002292a3e90d46a5&fltt=2&invt=2&fid0=f4001&fid=f267&fs=m:0+t:6+f:!2,m:0+t:13+f:!2,m:0+t:80+f:!2,m:1+t:2+f:!2,m:1+t:23+f:!2,m:0+t:7+f:!2,m:1+t:3+f:!2&stat=3&fields=f12,f14,f2,f127,f268,f270,f272,f274,f276&rt=53658808&cb=jQuery18307545864640209479_1609764020312&_=1609764263473'
-    }, 'zjlx_5': {
-        'columns': ['close_0', 'pre_code', 'name', 'return_0', 'super', 'big', 'mid', 'small', 'master'],
-        'url': 'http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=3000&po=1&np=1&ut=b2884a393a59ad64002292a3e90d46a5&fltt=2&invt=2&fid0=f4001&fid=f164&fs=m:0+t:6+f:!2,m:0+t:13+f:!2,m:0+t:80+f:!2,m:1+t:2+f:!2,m:1+t:23+f:!2,m:0+t:7+f:!2,m:1+t:3+f:!2&stat=5&fields=f12,f14,f2,f109,f165,f167,f169,f171,f173&rt=53658810&cb=jQuery18307545864640209479_1609764020312&_=1609764300393'
-    }, 
-#'zjlx_10': {
-#        'columns': ['close_0', 'pre_code', 'name', 'return_0', 'super', 'big', 'mid', 'small', 'master'],
-#        'url': 'http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=3000&po=1&np=1&ut=b2884a393a59ad64002292a3e90d46a5&fltt=2&invt=2&fid0=f4001&fid=f174&fs=m:0+t:6+f:!2,m:0+t:13+f:!2,m:0+t:80+f:!2,m:1+t:2+f:!2,m:1+t:23+f:!2,m:0+t:7+f:!2,m:1+t:3+f:!2&stat=10&fields=f12,f14,f2,f160,f175,f177,f179,f181,f183&rt=53658810&cb=jQuery18307545864640209479_1609764020312&_=1609764321169'}
-}
 
-
-def get_stocks(info):
+def get_stocks(info, t1, t2):
     r = requests.get(info['url'], headers=headers).text
     X = re.split('}}', r)[0]
     X = re.split('"diff":', X)[1]
@@ -61,11 +45,27 @@ def get_stocks(info):
 
 
 def main():
-    t1 = int(time.time() * 1000)
-    t2 = t1 - 31
+    t2 = int(time.time() * 1000)
+    t1 = t2 - 1027
+    zjlx_list = {
+        'zjlx_1': {
+            'columns': ['close_0', 'return_0', 'pre_code', 'name', 'super', 'big', 'mid', 'small', 'master'],
+            'url': f'http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=3000&po=1&np=1&ut=b2884a393a59ad64002292a3e90d46a5&fltt=2&invt=2&fid0=f4001&fid=f62&fs=m:0+t:6+f:!2,m:0+t:13+f:!2,m:0+t:80+f:!2,m:1+t:2+f:!2,m:1+t:23+f:!2,m:0+t:7+f:!2,m:1+t:3+f:!2&stat=1&fields=f12,f14,f2,f3,f184,f69,f75,f81,f87&rt=53658803&cb=jQuery18307545864640209479_{t1}&_={t2}'
+        }, 'zjlx_3': {
+            'columns': ['close_0', 'pre_code', 'name', 'return_0', 'super', 'big', 'mid', 'small', 'master'],
+            'url': f'http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=3000&po=1&np=1&ut=b2884a393a59ad64002292a3e90d46a5&fltt=2&invt=2&fid0=f4001&fid=f267&fs=m:0+t:6+f:!2,m:0+t:13+f:!2,m:0+t:80+f:!2,m:1+t:2+f:!2,m:1+t:23+f:!2,m:0+t:7+f:!2,m:1+t:3+f:!2&stat=3&fields=f12,f14,f2,f127,f268,f270,f272,f274,f276&rt=53658808&cb=jQuery18307545864640209479_{t1}&_={t2}'
+        }, 'zjlx_5': {
+            'columns': ['close_0', 'pre_code', 'name', 'return_0', 'super', 'big', 'mid', 'small', 'master'],
+            'url': f'http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=3000&po=1&np=1&ut=b2884a393a59ad64002292a3e90d46a5&fltt=2&invt=2&fid0=f4001&fid=f164&fs=m:0+t:6+f:!2,m:0+t:13+f:!2,m:0+t:80+f:!2,m:1+t:2+f:!2,m:1+t:23+f:!2,m:0+t:7+f:!2,m:1+t:3+f:!2&stat=5&fields=f12,f14,f2,f109,f165,f167,f169,f171,f173&rt=53658810&cb=jQuery18307545864640209479_{t1}&_={t2}'
+        },
+        # 'zjlx_10': {
+        #        'columns': ['close_0', 'pre_code', 'name', 'return_0', 'super', 'big', 'mid', 'small', 'master'],
+        #        'url': 'http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=3000&po=1&np=1&ut=b2884a393a59ad64002292a3e90d46a5&fltt=2&invt=2&fid0=f4001&fid=f174&fs=m:0+t:6+f:!2,m:0+t:13+f:!2,m:0+t:80+f:!2,m:1+t:2+f:!2,m:1+t:23+f:!2,m:0+t:7+f:!2,m:1+t:3+f:!2&stat=10&fields=f12,f14,f2,f160,f175,f177,f179,f181,f183&rt=53658810&cb=jQuery18307545864640209479_1609764020312&_=1609764321169'}
+    }
+
     for name, info in zjlx_list.items():
         print(name)
-        dfs = get_stocks(info)
+        dfs = get_stocks(info, t1, t2)
         df = dfs.loc[
             (dfs["close_0"] < 50) &
             (dfs["super"] > 0) &
@@ -102,3 +102,4 @@ if __name__ == '__main__':
     engine = create_engine(f'sqlite:///{cur_date}/aaa.db', echo=False, encoding='utf-8')
     if len(df) > 0:
         main()
+
