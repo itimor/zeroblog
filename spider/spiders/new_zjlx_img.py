@@ -10,13 +10,14 @@ import tushare as ts
 import matplotlib.pyplot as plt
 
 colunms_name = ['date', 'l1', 'v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7']
-tables = ['zjlx_1', 'zjlx_3', 'zjlx_5']
+tables = [' ', 'zjlx_3', 'zjlx_5']
 tactics = ['master', 'super', 'big']
 
 
-# zjlx_1  big 5-10  super 2 6  master 6 - 13
-# zjlx_3  big 2-6  13-15  super 2 5 11- 13
-# zjlx_1  big 1 5  super 1 5  master 1 - 5
+# zjlx_1  big 4-10  super 3 7  master 3 - 11
+# zjlx_3  big 11-15  super 11 13 master 0 3
+# zjlx_5  big 2 8  super 2 7  master 0 3
+# SELECT * FROM zjlx_1  WHERE big > 4 AND big < 10 AND super > 3 AND super < 7 AND master  > 3 AND master < 11 ORDER by return_0;
 
 def get_stocks():
     for zjlx in tables:
