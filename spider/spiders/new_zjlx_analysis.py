@@ -17,8 +17,8 @@ df_rank = {'v1': 'return_1 >= 9',
            'v7': 'return_1 >= 0 and return_1 < 3',
            }
 
-area_level = [i for i in range(101)]
-label_level = [i for i in range(100)]
+area_level = [i for i in range(31)]
+label_level = [i for i in range(30)]
 tactics = ['master', 'super', 'big']
 
 
@@ -45,7 +45,7 @@ def get_stocks(date):
                 df.loc[df.date == date, rank_level] = b
                 df[rank_level] = df[rank_level] / df[rank_level].sum()
                 df = df.replace(np.nan, 0)
-                df.to_sql(tactic, con=engine, index=False, if_exists='replace')
+                df.to_sql(f'{table}_{tactic}', con=engine, index=False, if_exists='replace')
 
 
 if __name__ == '__main__':
@@ -57,12 +57,12 @@ if __name__ == '__main__':
     start_date = (dd - timedelta(11)).strftime(d_format)
     end_date = dd.strftime(d_format)
     # ts初始化
-    # ts_data = ts.pro_api('d256364e28603e69dc6362aefb8eab76613b704035ee97b555ac79ab')
-    # df = ts_data.trade_cal(exchange='', start_date=start_date, end_date=end_date, is_open='1')
-    # df_a = df.sort_values(by=['cal_date'], ascending=[False])
-    # d = 1
-    # date = datetime.strptime(df_a.iat[d, 1], d_format).strftime(date_format)
-    date = '2020-12-31'
+    ts_data = ts.pro_api('d256364e28603e69dc6362aefb8eab76613b704035ee97b555ac79ab')
+    df = ts_data.trade_cal(exchange='', start_date=start_date, end_date=end_date, is_open='1')
+    df_a = df.sort_values(by=['cal_date'], ascending=[False])
+    d = 1
+    date = datetime.strptime(df_a.iat[d, 1], d_format).strftime(date_format)
+    #date = '2020-12-31'
     print(date)
     # 创建连接引擎
     engine = create_engine(f'sqlite:///{date}/aaa.db', echo=False, encoding='utf-8')

@@ -26,9 +26,10 @@ zjlx_list = {
     }, 'zjlx_5': {
         'columns': ['close_0', 'pre_code', 'name', 'return_0', 'super', 'big', 'mid', 'small', 'master'],
         'url': 'http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=3000&po=1&np=1&ut=b2884a393a59ad64002292a3e90d46a5&fltt=2&invt=2&fid0=f4001&fid=f164&fs=m:0+t:6+f:!2,m:0+t:13+f:!2,m:0+t:80+f:!2,m:1+t:2+f:!2,m:1+t:23+f:!2,m:0+t:7+f:!2,m:1+t:3+f:!2&stat=5&fields=f12,f14,f2,f109,f165,f167,f169,f171,f173&rt=53658810&cb=jQuery18307545864640209479_1609764020312&_=1609764300393'
-    }, 'zjlx_10': {
-        'columns': ['close_0', 'pre_code', 'name', 'return_0', 'super', 'big', 'mid', 'small', 'master'],
-        'url': 'http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=3000&po=1&np=1&ut=b2884a393a59ad64002292a3e90d46a5&fltt=2&invt=2&fid0=f4001&fid=f174&fs=m:0+t:6+f:!2,m:0+t:13+f:!2,m:0+t:80+f:!2,m:1+t:2+f:!2,m:1+t:23+f:!2,m:0+t:7+f:!2,m:1+t:3+f:!2&stat=10&fields=f12,f14,f2,f160,f175,f177,f179,f181,f183&rt=53658810&cb=jQuery18307545864640209479_1609764020312&_=1609764321169'}
+    }, 
+#'zjlx_10': {
+#        'columns': ['close_0', 'pre_code', 'name', 'return_0', 'super', 'big', 'mid', 'small', 'master'],
+#        'url': 'http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=3000&po=1&np=1&ut=b2884a393a59ad64002292a3e90d46a5&fltt=2&invt=2&fid0=f4001&fid=f174&fs=m:0+t:6+f:!2,m:0+t:13+f:!2,m:0+t:80+f:!2,m:1+t:2+f:!2,m:1+t:23+f:!2,m:0+t:7+f:!2,m:1+t:3+f:!2&stat=10&fields=f12,f14,f2,f160,f175,f177,f179,f181,f183&rt=53658810&cb=jQuery18307545864640209479_1609764020312&_=1609764321169'}
 }
 
 
@@ -54,8 +55,8 @@ def get_stocks(info):
         else:
             s_codes.append(s)
     df['code'] = s_codes
-    # dfs = df[~ df['name'].str.contains('ST')]
-    # last_dfs = dfs[~ dfs['code'].str.contains('^300|^688|^900')]
+    dfs = df[~ df['name'].str.contains('ST')]
+    last_dfs = dfs[~ dfs['code'].str.contains('^300|^688|^900')]
     return df
 
 
@@ -67,7 +68,8 @@ def main():
         dfs = get_stocks(info)
         df = dfs.loc[
             (dfs["close_0"] < 50) &
-            (dfs["mid"] < 0) &
+            (dfs["super"] > 0) &
+            (dfs["big"] > 0) &
             (dfs["small"] < 0)]
         df['close_1'] = 0
         df['return_1'] = 0

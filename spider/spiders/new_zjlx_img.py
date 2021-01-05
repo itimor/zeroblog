@@ -9,52 +9,30 @@ import numpy as np
 import tushare as ts
 import matplotlib.pyplot as plt
 
-# plt.rcParams['font.sans-serif'] = ['SimHei']
-# plt.rcParams['axes.unicode_minus'] = False
+colunms_name = ['date', 'l1', 'v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7']
+tables = ['zjlx_1', 'zjlx_3', 'zjlx_5']
+tactics = ['master', 'super', 'big']
 
-colunms_name = ['date', 'l1', '最强王者', '至尊星耀', '永恒钻石', '尊贵铂金', '荣耀黄金', '秩序白银', '倔强青铜']
 
+# zjlx_1  big 5-10  super 2 6  master 6 - 13
+# zjlx_3  big 2-6  13-15  super 2 5 11- 13
+# zjlx_1  big 1 5  super 1 5  master 1 - 5
 
-def get_stocks(date):
-    # zjlx_ranks_1
-    table = 'ranks_1_master'
-    df_zjlx_ranks_1_master = pd.read_sql_query(f'select * from {table}', con=engine)
-    df_zjlx_ranks_1_master.columns = colunms_name
-    df_zjlx_ranks_1_master.plot(x='l1')
-    # 图片标题
-    plt.title(f'{table}')
-    # x坐标轴文本
-    plt.xlabel('资金流入占比')
-    # y坐标轴文本
-    plt.ylabel('涨幅占比')
-    # 显示网格
-    plt.grid(True)
-
-    table = 'ranks_1_super'
-    df_zjlx_ranks_1_super = pd.read_sql_query(f'select * from {table}', con=engine)
-    df_zjlx_ranks_1_super.columns = colunms_name
-    df_zjlx_ranks_1_super.plot(x='l1')
-    # 图片标题
-    plt.title(f'{table}')
-    # x坐标轴文本
-    plt.xlabel('资金流入占比')
-    # y坐标轴文本
-    plt.ylabel('涨幅占比')
-    # 显示网格
-    plt.grid(True)
-
-    table = 'ranks_1_big'
-    df_zjlx_ranks_1_big = pd.read_sql_query(f'select * from {table}', con=engine)
-    df_zjlx_ranks_1_big.columns = colunms_name
-    df_zjlx_ranks_1_big.plot(x='l1')
-    # 图片标题
-    plt.title(f'{table}')
-    # x坐标轴文本
-    plt.xlabel('资金流入占比')
-    # y坐标轴文本
-    plt.ylabel('涨幅占比')
-    # 显示网格
-    plt.grid(True)
+def get_stocks():
+    for zjlx in tables:
+        for tactic in tactics:
+            table = f'{zjlx}_{tactic}'
+            df_zjlx_ranks_1_master = pd.read_sql_query(f'select * from {table}', con=engine)
+            df_zjlx_ranks_1_master.columns = colunms_name
+            df_zjlx_ranks_1_master.plot(x='l1')
+            # 图片标题
+            plt.title(table)
+            # x坐标轴文本
+            plt.xlabel('资金流入占比')
+            # y坐标轴文本
+            plt.ylabel('涨幅占比')
+            # 显示网格
+            plt.grid(True)
 
 
 if __name__ == '__main__':
@@ -71,11 +49,11 @@ if __name__ == '__main__':
     # df_a = df.sort_values(by=['cal_date'], ascending=[False])
     # d = 1
     # date = datetime.strptime(df_a.iat[d, 1], d_format).strftime(date_format)
-    date = '2020-12-31'
+    date = '2021-01-04'
     print(date)
     # 创建连接引擎
     engine = create_engine(f'sqlite:///{date}/aaa.db', echo=False, encoding='utf-8')
-    get_stocks(date)
+    get_stocks()
     # 显示图形
     plt.show()
 

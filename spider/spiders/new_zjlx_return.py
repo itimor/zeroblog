@@ -27,6 +27,8 @@ def get_stocks(d1, d2):
             if len(code_info) == 1:
                 code_info_dict[code] = code_info.iat[0, 5]
                 close_1.append(code_info.iat[0, 5])
+            else:
+                close_1.append(np.nan)
 
         df['close_1'] = close_1
         print(df[:5])
@@ -44,15 +46,15 @@ if __name__ == '__main__':
     end_date = dd.strftime(d_format)
     # ts初始化
     ts_data = ts.pro_api('d256364e28603e69dc6362aefb8eab76613b704035ee97b555ac79ab')
-    # df = ts_data.trade_cal(exchange='', start_date=start_date, end_date=end_date, is_open='1')
-    # df_a = df.sort_values(by=['cal_date'], ascending=[False])
-    # d = 1
-    # date = datetime.strptime(df_a.iat[d, 1], d_format).strftime(date_format)
-    # d1 = df_a.iat[d - 1, 1]
-    # d2 = df_a.iat[0, 1]
-    date = '2020-12-31'
-    d1 = '20210104'
-    d2 = '20210104'
+    df = ts_data.trade_cal(exchange='', start_date=start_date, end_date=end_date, is_open='1')
+    df_a = df.sort_values(by=['cal_date'], ascending=[False])
+    d = 1
+    date = datetime.strptime(df_a.iat[d, 1], d_format).strftime(date_format)
+    d1 = df_a.iat[d - 1, 1]
+    d2 = df_a.iat[0, 1]
+    #date = '2020-12-31'
+    #d1 = '20210104'
+    #d2 = '20210104'
     print(date, d1, d2)
     # 创建连接引擎
     engine = create_engine(f'sqlite:///{date}/aaa.db', echo=False, encoding='utf-8')
