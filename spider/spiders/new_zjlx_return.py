@@ -8,15 +8,17 @@ import pandas as pd
 import numpy as np
 import tushare as ts
 
-tables = ['zjlx_1', 'zjlx_3', 'zjlx_5', 'zjlx_10']
-
 
 def get_stocks(d1, d2):
     code_info_dict = dict()
     for table in tables:
-        df = pd.read_sql_query(f'select * from {table}', con=engine)
-        if len(df) == 0:
-            return
+        try:
+            df = pd.read_sql_query(f'select * from {table}', con=engine)
+            if len(df) == 0:
+                continue
+        except:
+            continue
+
         close_1 = []
         for code in df['code']:
             if code in code_info_dict:
@@ -39,6 +41,7 @@ def get_stocks(d1, d2):
 if __name__ == '__main__':
     date_format = '%Y-%m-%d'
     d_format = '%Y%m%d'
+    t_format = '%H%M'
     # 获得当天
     dd = datetime.now()
     # 获取股票交易日期
@@ -52,10 +55,12 @@ if __name__ == '__main__':
     date = datetime.strptime(df_a.iat[d, 1], d_format).strftime(date_format)
     d1 = df_a.iat[d - 1, 1]
     d2 = df_a.iat[0, 1]
-    #date = '2020-12-31'
-    #d1 = '20210104'
-    #d2 = '20210104'
+    # date = '2020-12-31'
+    # d1 = '20210104'
+    # d2 = '20210104'
     print(date, d1, d2)
+    tables = [datetime.strftime(x, t_format) for x in
+              pd.date_range(f'{date} 09:50', f'{date} 11:20:00', freq='10min')]
     # 创建连接引擎
     engine = create_engine(f'sqlite:///{date}/aaa.db', echo=False, encoding='utf-8')
     get_stocks(d1, d2)

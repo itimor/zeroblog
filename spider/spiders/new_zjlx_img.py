@@ -10,7 +10,6 @@ import tushare as ts
 import matplotlib.pyplot as plt
 
 colunms_name = ['date', 'l1', 'v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7']
-tables = [' ', 'zjlx_3', 'zjlx_5']
 tactics = ['master', 'super', 'big']
 
 
@@ -39,6 +38,7 @@ def get_stocks():
 if __name__ == '__main__':
     date_format = '%Y-%m-%d'
     d_format = '%Y%m%d'
+    t_format = '%H%M'
     # 获得当天
     dd = datetime.now()
     # 获取股票交易日期
@@ -50,8 +50,10 @@ if __name__ == '__main__':
     # df_a = df.sort_values(by=['cal_date'], ascending=[False])
     # d = 1
     # date = datetime.strptime(df_a.iat[d, 1], d_format).strftime(date_format)
-    date = '2021-01-04'
+    date = '2021-01-06'
     print(date)
+    tables = [datetime.strftime(x, t_format) for x in
+              pd.date_range(f'{date} 09:50', f'{date} 11:20:00', freq='10min')]
     # 创建连接引擎
     engine = create_engine(f'sqlite:///{date}/aaa.db', echo=False, encoding='utf-8')
     get_stocks()

@@ -29,8 +29,7 @@ def get_stocks(date):
         'date': d1,
         'l1': l1,
     })
-    for i in [1, 3, 5, 10]:
-        table = f'zjlx_{i}'
+    for table in tables:
         print(table)
         for tactic in tactics:
             for rank_level, v in df_rank.items():
@@ -51,6 +50,7 @@ def get_stocks(date):
 if __name__ == '__main__':
     date_format = '%Y-%m-%d'
     d_format = '%Y%m%d'
+    t_format = '%H%M'
     # 获得当天
     dd = datetime.now()
     # 获取股票交易日期
@@ -62,8 +62,10 @@ if __name__ == '__main__':
     df_a = df.sort_values(by=['cal_date'], ascending=[False])
     d = 1
     date = datetime.strptime(df_a.iat[d, 1], d_format).strftime(date_format)
-    #date = '2020-12-31'
+    # date = '2020-12-31'
     print(date)
+    tables = [datetime.strftime(x, t_format) for x in
+              pd.date_range(f'{date} 09:50', f'{date} 11:20:00', freq='10min')]
     # 创建连接引擎
     engine = create_engine(f'sqlite:///{date}/aaa.db', echo=False, encoding='utf-8')
     get_stocks(date)
