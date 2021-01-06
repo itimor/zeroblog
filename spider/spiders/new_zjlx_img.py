@@ -12,11 +12,11 @@ import matplotlib.pyplot as plt
 colunms_name = ['date', 'l1', 'v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7']
 tactics = ['master', 'super', 'big']
 
+# 1100
+# super 最大前三 涨幅>0  < 2
+# mid 最小前五 涨幅>0
+# small 最大前五 涨幅>0
 
-# zjlx_1  big 4-10  super 3 7  master 3 - 11
-# zjlx_3  big 11-15  super 11 13 master 0 3
-# zjlx_5  big 2 8  super 2 7  master 0 3
-# SELECT * FROM zjlx_1  WHERE big > 0 AND big < 5 AND super > 0 AND super < 2 AND master  > 0 AND master < 5 ORDER by return_0;
 
 def get_stocks():
     for zjlx in tables:
