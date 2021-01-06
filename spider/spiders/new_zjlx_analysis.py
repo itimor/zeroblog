@@ -29,12 +29,15 @@ def get_stocks(date):
         'date': d1,
         'l1': l1,
     })
-    for table in tables:
-        print(table)
+    for zjlx in tables:
+        table = f'{db}_{zjlx}'
         for tactic in tactics:
             for rank_level, v in df_rank.items():
-                print(f'{tactic} {rank_level}')
-                df_a = pd.read_sql_query(f'select {tactic} from {table} where {v}', con=engine)
+                try:
+                    df_a = pd.read_sql_query(f'select {tactic} from {table} where {v}', con=engine)
+                except:
+                    continue
+                print(f'{table} {tactic} {rank_level}')
                 if len(df_a) > 0:
                     a = df_a[tactic].to_list()
                 else:
@@ -44,7 +47,7 @@ def get_stocks(date):
                 df[rank_level] = b
                 df[rank_level] = df[rank_level] / df[rank_level].sum()
                 df = df.replace(np.nan, 0)
-                df.to_sql(f'{db}_{table}_{tactic}', con=engine, index=False, if_exists='replace')
+                df.to_sql(f'{table}_{tactic}', con=engine, index=False, if_exists='replace')
 
 
 if __name__ == '__main__':
@@ -60,7 +63,7 @@ if __name__ == '__main__':
     d = dd.strftime(d_format)
     df = ts_data.trade_cal(exchange='', start_date=d, end_date=d, is_open='1')
     print(df)
-    if len(df) > 0 and dd.hour > 20:
+    if len(df) > 0 and dd.hour > 19:
         tables = [datetime.strftime(x, t_format) for x in
                   pd.date_range(f'{cur_date} 09:50', f'{cur_date} 11:20:00', freq='10min')]
         # 创建连接引擎

@@ -59,7 +59,7 @@ def get_lhb_stocks(begin_date, end_date):
                     s_codes.append(s)
                     s_types.append(s_type)
             df2['Wind_Code'] = s_codes
-            df2['Type'] = s_codes
+            df2['Type'] = s_types
             s_obj = []
             s_obj_lv = []
             for i in df2['JD']:

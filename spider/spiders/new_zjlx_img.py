@@ -16,13 +16,17 @@ tactics = ['master', 'super', 'big']
 # zjlx_1  big 4-10  super 3 7  master 3 - 11
 # zjlx_3  big 11-15  super 11 13 master 0 3
 # zjlx_5  big 2 8  super 2 7  master 0 3
-# SELECT * FROM zjlx_1  WHERE big > 4 AND big < 10 AND super > 3 AND super < 7 AND master  > 3 AND master < 11 ORDER by return_0;
+# SELECT * FROM zjlx_1  WHERE big > 0 AND big < 5 AND super > 0 AND super < 2 AND master  > 0 AND master < 5 ORDER by return_0;
 
 def get_stocks():
     for zjlx in tables:
         for tactic in tactics:
             table = f'{db}_{zjlx}_{tactic}'
-            df_zjlx_ranks_1_master = pd.read_sql_query(f'select * from {table}', con=engine)
+            print(table)
+            try:
+                df_zjlx_ranks_1_master = pd.read_sql_query(f'select * from {table}', con=engine)
+            except:
+                continue
             df_zjlx_ranks_1_master.columns = colunms_name
             df_zjlx_ranks_1_master.plot(x='l1')
             # 图片标题
@@ -48,7 +52,7 @@ if __name__ == '__main__':
     d = dd.strftime(d_format)
     df = ts_data.trade_cal(exchange='', start_date=d, end_date=d, is_open='1')
     print(df)
-    if len(df) > 0 and dd.hour > 20:
+    if len(df) > 0 and dd.hour > 19:
         tables = [datetime.strftime(x, t_format) for x in
                   pd.date_range(f'{cur_date} 09:50', f'{cur_date} 11:20:00', freq='10min')]
         # 创建连接引擎

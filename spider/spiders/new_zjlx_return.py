@@ -11,9 +11,11 @@ import tushare as ts
 
 def get_stocks(d1, d2):
     code_info_dict = dict()
-    for table in tables:
+    for zjlx in tables:
+        table = f'{db}_{zjlx}'
+        print(table)
         try:
-            df = pd.read_sql_query(f'select * from {db}_{table}', con=engine)
+            df = pd.read_sql_query(f'select * from {table}', con=engine)
             if len(df) == 0:
                 continue
         except Exception as e:
