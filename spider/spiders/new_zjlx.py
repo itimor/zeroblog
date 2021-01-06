@@ -51,8 +51,9 @@ def main(dd):
     cur_date = dd.strftime(date_format)
     t_list = [datetime.strftime(x, t_format) for x in
               pd.date_range(f'{cur_date} 09:50', f'{cur_date} 11:20:00', freq='10min')]
+    t_list.append('1800')
     cur_t = dd.strftime(t_format)
-    if cur_t in t_list:
+    if cur_t in t_list or cur_t == '1600':
         print(cur_t)
         dfs = get_stocks(t1, t2)
         df = dfs.loc[
@@ -61,10 +62,11 @@ def main(dd):
             (dfs["return_0"] > -9) &
             (dfs["return_0"] < 3)]
         print(df[:5])
-        df.to_sql(cur_t, con=engine, index=False, if_exists='replace')
+        df.to_sql(f'{db}_{cur_t}', con=engine, index=False, if_exists='replace')
 
 
 if __name__ == '__main__':
+    db = 'aaa'
     date_format = '%Y-%m-%d'
     d_format = '%Y%m%d'
     t_format = '%H%M'
@@ -80,6 +82,6 @@ if __name__ == '__main__':
         os.makedirs(cur_date)
 
     # 创建连接引擎
-    engine = create_engine(f'sqlite:///{cur_date}/aaa.db', echo=False, encoding='utf-8')
+    engine = create_engine(f'sqlite:///{cur_date}/{db}.db', echo=False, encoding='utf-8')
     if len(df) > 0:
         main(dd)

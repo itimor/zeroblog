@@ -13,12 +13,11 @@ def get_stocks(d1, d2):
     code_info_dict = dict()
     for table in tables:
         try:
-            df = pd.read_sql_query(f'select * from {table}', con=engine)
+            df = pd.read_sql_query(f'select * from {db}_{table}', con=engine)
             if len(df) == 0:
                 continue
-        except:
+        except Exception as e:
             continue
-
         close_1 = []
         for code in df['code']:
             if code in code_info_dict:
@@ -39,28 +38,21 @@ def get_stocks(d1, d2):
 
 
 if __name__ == '__main__':
+    db = 'aaa'
     date_format = '%Y-%m-%d'
     d_format = '%Y%m%d'
     t_format = '%H%M'
     # 获得当天
     dd = datetime.now()
-    # 获取股票交易日期
-    start_date = (dd - timedelta(11)).strftime(d_format)
-    end_date = dd.strftime(d_format)
+    cur_date = dd.strftime(date_format)
     # ts初始化
     ts_data = ts.pro_api('d256364e28603e69dc6362aefb8eab76613b704035ee97b555ac79ab')
-    df = ts_data.trade_cal(exchange='', start_date=start_date, end_date=end_date, is_open='1')
-    df_a = df.sort_values(by=['cal_date'], ascending=[False])
-    d = 1
-    date = datetime.strptime(df_a.iat[d, 1], d_format).strftime(date_format)
-    d1 = df_a.iat[d - 1, 1]
-    d2 = df_a.iat[0, 1]
-    # date = '2020-12-31'
-    # d1 = '20210104'
-    # d2 = '20210104'
-    print(date, d1, d2)
-    tables = [datetime.strftime(x, t_format) for x in
-              pd.date_range(f'{date} 09:50', f'{date} 11:20:00', freq='10min')]
-    # 创建连接引擎
-    engine = create_engine(f'sqlite:///{date}/aaa.db', echo=False, encoding='utf-8')
-    get_stocks(d1, d2)
+    d = dd.strftime(d_format)
+    df = ts_data.trade_cal(exchange='', start_date=d, end_date=d, is_open='1')
+    print(df)
+    if len(df) > 0:
+        tables = [datetime.strftime(x, t_format) for x in
+                  pd.date_range(f'{cur_date} 09:50', f'{cur_date} 11:20:00', freq='10min')]
+        # 创建连接引擎
+        engine = create_engine(f'sqlite:///{cur_date}/{db}.db', echo=False, encoding='utf-8')
+        get_stocks(d, d)
