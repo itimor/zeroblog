@@ -63,6 +63,7 @@ if __name__ == '__main__':
     if len(df) > 0 and dd.hour > 20:
         tables = [datetime.strftime(x, t_format) for x in
                   pd.date_range(f'{cur_date} 09:50', f'{cur_date} 11:20:00', freq='10min')]
+        tables.append('1600')
         # 创建连接引擎
         engine = create_engine(f'sqlite:///{cur_date}/{db}.db', echo=False, encoding='utf-8')
         get_stocks(cur_date)

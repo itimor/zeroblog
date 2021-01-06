@@ -20,6 +20,7 @@ headers = {'User-Agent': ua.random}
 def get_stocks(t1, t2):
     url = f'http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=3000&po=1&np=1&ut=b2884a393a59ad64002292a3e90d46a5&fltt=2&invt=2&fid0=f4001&fid=f62&fs=m:0+t:6+f:!2,m:0+t:13+f:!2,m:0+t:80+f:!2,m:1+t:2+f:!2,m:1+t:23+f:!2,m:0+t:7+f:!2,m:1+t:3+f:!2&stat=1&fields=f12,f14,f2,f3,f184,f69,f75,f81,f87&rt=53658803&cb=jQuery18307545864640209479_{t1}&_={t2}'
     r = requests.get(url, headers=headers).text
+    print(r[:100])
     X = re.split('}}', r)[0]
     X = re.split('"diff":', X)[1]
     df = pd.read_json(X, orient='records')
@@ -51,8 +52,9 @@ def main(dd):
     cur_date = dd.strftime(date_format)
     t_list = [datetime.strftime(x, t_format) for x in
               pd.date_range(f'{cur_date} 09:50', f'{cur_date} 11:20:00', freq='10min')]
-    t_list.append('1800')
     cur_t = dd.strftime(t_format)
+    if dd.hour > 15:
+        cur_t = '1600'
     if cur_t in t_list or cur_t == '1600':
         print(cur_t)
         dfs = get_stocks(t1, t2)
