@@ -48,7 +48,9 @@ def get_stocks():
 def main(cur_t):
     dfs = get_stocks()
     df = dfs.loc[
-        (dfs["close_0"] < 50)]
+        (dfs["close_0"] < 50) &
+        (dfs["return_0"] < 6) &
+        (dfs["return_0"] > 2)]
     df['close_1'] = 0
     df['return_1'] = 0
     print(df[:5])
@@ -56,25 +58,15 @@ def main(cur_t):
 
 
 if __name__ == '__main__':
-    db = 'bbb'
+    db = 'ccc'
     date_format = '%Y-%m-%d'
     d_format = '%Y%m%d'
     t_format = '%H%M'
     # 获得当天
     dd = datetime.now()
-    # ts初始化
-    ts_data = ts.pro_api('d256364e28603e69dc6362aefb8eab76613b704035ee97b555ac79ab')
-    df = ts_data.trade_cal(exchange='', start_date=dd.strftime(d_format), end_date=dd.strftime(d_format), is_open='1')
-    print(df)
     cur_date = dd.strftime(date_format)
-
-    if not os.path.exists(cur_date):
-        os.makedirs(cur_date)
-
-    # 创建连接引擎
-    engine = create_engine(f'sqlite:///{cur_date}/{db}.db', echo=False, encoding='utf-8')
     t_list = [datetime.strftime(x, t_format) for x in
-              pd.date_range(f'{cur_date} 13:00', f'{cur_date} 15:00:00', freq='30min')]
+              pd.date_range(f'{cur_date} 10:00', f'{cur_date} 11:30:00', freq='10min')]
     cur_t = dd.strftime(t_format)
     if dd.hour > 15:
         cur_t = '1600'

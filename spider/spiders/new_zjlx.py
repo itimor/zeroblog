@@ -17,7 +17,7 @@ headers = {'User-Agent': ua.random}
 
 
 def get_stocks():
-    num = 2000
+    num = 4000
     url = f'http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz={num}&po=1&np=1&ut=b2884a393a59ad64002292a3e90d46a5&fltt=2&invt=2&fid0=f4001&fid=f184&fs=m:0+t:6+f:!2,m:0+t:13+f:!2,m:0+t:80+f:!2,m:1+t:2+f:!2,m:1+t:23+f:!2,m:0+t:7+f:!2,m:1+t:3+f:!2&stat=1&fields=f12,f14,f2,f3,f184,f69,f75,f81,f87&rt=53664047&cb=jQuery183034292625864656134_1609903402058&_=1609921421171'
     r = requests.get(url, headers=headers).text
     X = re.split('}}', r)[0]
@@ -46,48 +46,51 @@ def get_stocks():
 
 
 def main(cur_t):
-        dfs = get_stocks()
-        df = dfs.loc[
-            (dfs["super"] > 0) &
-            (dfs["big"] > 0) &
-            (dfs["return_0"] > -9) &
-            (dfs["return_0"] < 3)]
-        df['close_1'] = 0
-        df['return_1'] = 0
-        df.to_sql(f'{db}_{cur_t}', con=engine, index=False, if_exists='replace')
+    dfs = get_stocks()
+    df = dfs.loc[
+        (dfs["close_0"] < 50) &
+        (dfs["super"] > 0) &
+        (dfs["big"] > 0) &
+        (dfs["return_0"] > 1) &
+        (dfs["return_0"] < 5)]
+    df['close_1'] = 0
+    df['return_1'] = 0
+    print(df[:5])
+    df.to_sql(f'aaa_{cur_t}', con=engine, index=False, if_exists='replace')
+    df = dfs.loc[
+        (dfs["close_0"] < 50) &
+        (dfs["return_0"] < 6) &
+        (dfs["return_0"] > 2)]
+    df['close_1'] = 0
+    df['return_1'] = 0
+    print(df[:5])
+    df.to_sql(f'bbb_{cur_t}', con=engine, index=False, if_exists='replace')
 
 
 if __name__ == '__main__':
-    db = 'aaa'
+    db = 'ccc'
     date_format = '%Y-%m-%d'
     d_format = '%Y%m%d'
     t_format = '%H%M'
     # 获得当天
     dd = datetime.now()
-    # ts初始化
-    ts_data = ts.pro_api('d256364e28603e69dc6362aefb8eab76613b704035ee97b555ac79ab')
-    df = ts_data.trade_cal(exchange='', start_date=dd.strftime(d_format), end_date=dd.strftime(d_format), is_open='1')
-    print(df)
     cur_date = dd.strftime(date_format)
-
-    if not os.path.exists(cur_date):
-        os.makedirs(cur_date)
-
-    # 创建连接引擎
-    engine = create_engine(f'sqlite:///{cur_date}/{db}.db', echo=False, encoding='utf-8')
-    # if len(df) > 0:
     t_list = [datetime.strftime(x, t_format) for x in
-              pd.date_range(f'{cur_date} 09:50', f'{cur_date} 11:20:00', freq='10min')]
-    import time
-    while True:
-        dd = datetime.now()
-        cur_t = dd.strftime(t_format)
-        if dd.hour > 15:
-            cur_t = '1600'
-        print(cur_t)
-        if cur_t in t_list or cur_t == '1600':
+              pd.date_range(f'{cur_date} 10:00', f'{cur_date} 11:30:00', freq='10min')]
+    cur_t = dd.strftime(t_format)
+    if dd.hour > 15:
+        cur_t = '1600'
+    if cur_t in t_list or cur_t == '1600':
+        # ts初始化
+        ts_data = ts.pro_api('d256364e28603e69dc6362aefb8eab76613b704035ee97b555ac79ab')
+        df = ts_data.trade_cal(exchange='', start_date=dd.strftime(d_format), end_date=dd.strftime(d_format),
+                               is_open='1')
+        print(df)
+        if not os.path.exists(cur_date):
+            os.makedirs(cur_date)
+
+        # 创建连接引擎
+        engine = create_engine(f'sqlite:///{cur_date}/{new}.db', echo=False, encoding='utf-8')
+        if len(df) > 0:
             main(cur_t)
-            continue
-        else:
-            print('no no no')
-            time.sleep(120)
+
