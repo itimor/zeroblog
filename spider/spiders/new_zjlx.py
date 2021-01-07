@@ -45,15 +45,7 @@ def get_stocks():
     return last_dfs
 
 
-def main(dd):
-    cur_date = dd.strftime(date_format)
-    t_list = [datetime.strftime(x, t_format) for x in
-              pd.date_range(f'{cur_date} 09:50', f'{cur_date} 11:20:00', freq='10min')]
-    cur_t = dd.strftime(t_format)
-    if dd.hour > 15:
-        cur_t = '1600'
-    if cur_t in t_list or cur_t == '1600':
-        print(cur_t)
+def main(cur_t):
         dfs = get_stocks()
         df = dfs.loc[
             (dfs["super"] > 0) &
@@ -62,7 +54,6 @@ def main(dd):
             (dfs["return_0"] < 3)]
         df['close_1'] = 0
         df['return_1'] = 0
-        print(df[:5])
         df.to_sql(f'{db}_{cur_t}', con=engine, index=False, if_exists='replace')
 
 
@@ -84,5 +75,19 @@ if __name__ == '__main__':
 
     # 创建连接引擎
     engine = create_engine(f'sqlite:///{cur_date}/{db}.db', echo=False, encoding='utf-8')
-    if len(df) > 0:
-        main(dd)
+    # if len(df) > 0:
+    t_list = [datetime.strftime(x, t_format) for x in
+              pd.date_range(f'{cur_date} 09:50', f'{cur_date} 11:20:00', freq='10min')]
+    import time
+    while True:
+        dd = datetime.now()
+        cur_t = dd.strftime(t_format)
+        if dd.hour > 15:
+            cur_t = '1600'
+        print(cur_t)
+        if cur_t in t_list or cur_t == '1600':
+            main(cur_t)
+            continue
+        else:
+            print('no no no')
+            time.sleep(120)
