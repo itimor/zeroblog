@@ -68,7 +68,7 @@ def main(cur_t):
 
 
 if __name__ == '__main__':
-    db = 'ccc'
+    db = 'new'
     date_format = '%Y-%m-%d'
     d_format = '%Y%m%d'
     t_format = '%H%M'
@@ -90,7 +90,7 @@ if __name__ == '__main__':
             os.makedirs(cur_date)
 
         # 创建连接引擎
-        engine = create_engine(f'sqlite:///{cur_date}/{new}.db', echo=False, encoding='utf-8')
+        engine = create_engine(f'sqlite:///{cur_date}/{db}.db', echo=False, encoding='utf-8')
         if len(df) > 0:
             main(cur_t)
 
