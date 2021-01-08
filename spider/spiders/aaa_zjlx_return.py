@@ -37,7 +37,7 @@ def get_stocks():
 
 
 if __name__ == '__main__':
-    db = 'bbb'
+    db = 'aaa'
     date_format = '%Y-%m-%d'
     d_format = '%Y%m%d'
     t_format = '%H%M'
@@ -46,7 +46,7 @@ if __name__ == '__main__':
     cur_date = dd.strftime(date_format)
     if dd.hour > 15:
         t_list = [datetime.strftime(x, t_format) for x in
-                  pd.date_range(f'{cur_date} 13:20', f'{cur_date} 15:00:00', freq='20min')]
+                  pd.date_range(f'{cur_date} 10:00', f'{cur_date} 11:20:00', freq='10min')]
         # 创建连接引擎
         engine = create_engine(f'sqlite:///{cur_date}/{db}.db', echo=False, encoding='utf-8')
         get_stocks()
