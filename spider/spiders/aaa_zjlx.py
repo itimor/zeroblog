@@ -49,7 +49,7 @@ if __name__ == '__main__':
     dd = datetime.now()
     cur_date = dd.strftime(date_format)
     t_list_am = [datetime.strftime(x, t_format) for x in
-                 pd.date_range(f'{cur_date} 10:00', f'{cur_date} 11:30:00', freq='10min')]
+                 pd.date_range(f'{cur_date} 09:30', f'{cur_date} 11:30:00', freq='10min')]
     t_list_pm = [datetime.strftime(x, t_format) for x in
                  pd.date_range(f'{cur_date} 13:10', f'{cur_date} 14:50:00', freq='10min')]
     t_list = t_list_am + t_list_pm
