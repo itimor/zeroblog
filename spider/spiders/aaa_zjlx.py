@@ -7,6 +7,7 @@ from sqlalchemy import create_engine
 import pandas as pd
 import numpy as np
 import tushare as ts
+import os
 
 
 def get_stocks():
@@ -61,6 +62,8 @@ if __name__ == '__main__':
     df = ts_data.trade_cal(exchange='', start_date=d, end_date=d, is_open='1')
     print(df)
     if len(df) > 0:
+        if not os.path.exists(cur_date):
+            os.makedirs(cur_date)
         # 创建连接引擎
         engine = create_engine(f'sqlite:///{cur_date}/{db}.db', echo=False, encoding='utf-8')
         get_stocks()
