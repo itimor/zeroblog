@@ -18,8 +18,8 @@ def gen_analysis(table):
                'v7': 'return >= 0 and return < 3',
                }
 
-    area_level = [i for i in range(31)]
-    label_level = [i for i in range(30)]
+    area_level = [i for i in range(11)]
+    label_level = [i for i in range(10)]
     tactics = ['master', 'super', 'big', 'mid', 'small']
 
     df = pd.DataFrame({
@@ -67,10 +67,11 @@ def get_stocks():
             columns = ['return', 'master', 'super', 'big', 'mid', 'small']
             for column in columns:
                 df_a[column + '_x'] = df_a[column + '_1'] - df_a[column + '_0']
-            print(df_a[:5])
-            columns = ['code', 'name', 'close_x', 'return_x', 'master_x', 'super_x', 'big_x', 'mid_x', 'small_x']
-            new_df = df_a.loc[(df_a["return_x"] > 0), columns]
-            new_df.merge(df_1600, on=['code', 'name'])
+            result = pd.merge(df_a, df_1600, how='left', on=['code', 'name'])
+            columns = ['code', 'name', 'close', 'return',
+                       'return_x', 'master_x', 'super_x', 'big_x', 'mid_x', 'small_x']
+            new_df = result.loc[(result["return_x"] > 0), columns]
+            print(new_df[:5])
             new_table = f'{db}_{last_time}_{zjlx}'
             new_df.to_sql(new_table, con=engine, index=False, if_exists='replace')
             gen_analysis(new_table)
@@ -86,13 +87,12 @@ if __name__ == '__main__':
     # 获得当天
     dd = datetime.now()
     cur_date = dd.strftime(date_format)
+    cur_date = '2021-01-11'
     t_list_am = [datetime.strftime(x, t_format) for x in
                  pd.date_range(f'{cur_date} 09:40', f'{cur_date} 11:30:00', freq='10min')]
     t_list_pm = [datetime.strftime(x, t_format) for x in
                  pd.date_range(f'{cur_date} 13:10', f'{cur_date} 14:50:00', freq='10min')]
     t_list = t_list_am + t_list_pm
-    cur_t = dd.strftime(t_format)
-    if dd.hour > 15:
-        # 创建连接引擎
-        engine = create_engine(f'sqlite:///{cur_date}/{db}.db', echo=False, encoding='utf-8')
-        get_stocks()
+    engine = create_engine(f'sqlite:///{cur_date}/{db}.db', echo=False, encoding='utf-8')
+    get_stocks()
+
