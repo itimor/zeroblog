@@ -118,7 +118,7 @@ def main(begin_date, end_date, tactics='df1'):
 
 
 if __name__ == '__main__':
-    t = 20
+    t = 16
     date_format = '%Y-%m-%d'
 
     # 获得当天
