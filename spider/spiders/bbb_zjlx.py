@@ -17,7 +17,7 @@ headers = {'User-Agent': ua.random}
 
 
 def get_stocks():
-    num = 2000
+    num = 500
     timestamp = datetime.timestamp(dd)
     t1 = int(timestamp * 1000)
     url = f'http://push2.eastmoney.com/api/qt/clist/get?cb=jQuery112304319747659550317_1610554619377&fid=f3&po=1&pz={num}&pn=1&np=1&fltt=2&invt=2&ut=b2884a393a59ad64002292a3e90d46a5&fs=m%3A0%2Bt%3A6%2Bf%3A!2%2Cm%3A0%2Bt%3A13%2Bf%3A!2%2Cm%3A0%2Bt%3A80%2Bf%3A!2%2Cm%3A1%2Bt%3A2%2Bf%3A!2%2Cm%3A1%2Bt%3A23%2Bf%3A!2%2Cm%3A0%2Bt%3A7%2Bf%3A!2%2Cm%3A1%2Bt%3A3%2Bf%3A!2&fields=f12%2Cf14%2Cf2%2Cf3%2Cf62%2Cf184%2Cf66%2Cf69%2Cf72%2Cf75%2Cf78%2Cf81%2Cf84%2Cf87%2Cf204%2Cf205%2Cf124'
@@ -27,7 +27,6 @@ def get_stocks():
     df_a = pd.read_json(X, orient='records')
     df = df_a[['f12', 'f14', 'f2', 'f3', 'f184', 'f69', 'f75', 'f81', 'f87']]
     df.columns = ['pre_code', 'name', 'close', 'return', 'super', 'big', 'mid', 'small', 'master']
-    print(df[:5])
     df['code'] = str(df['pre_code'])
     s_codes = []
     for i in df['pre_code']:
@@ -53,13 +52,12 @@ def get_stocks():
 def main():
     dfs = get_stocks()
     columns = ['code', 'name', 'close', 'return', 'master', 'super', 'big', 'mid', 'small']
-    levels = [7, 8, 9]
-    for level in levels:
-        df = dfs.loc[
-            (dfs["close"] < 50) &
-            (dfs["return"] > level), columns]
-        print(df[:5])
-        df.to_sql(f'{db}_{level}', con=engine, index=False, if_exists='replace')
+    level = 6
+    df = dfs.loc[
+        (dfs["close"] < 50) &
+        (dfs["return"] > level), columns]
+    print(df[:5])
+    df.to_sql(f'{db}_{level}', con=engine, index=False, if_exists='replace')
 
 
 if __name__ == '__main__':
