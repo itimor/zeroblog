@@ -17,7 +17,7 @@ def main(date):
     if len(df_a) > 0:
         df_a_columns = ['ts_code', 'open', 'high', 'low', 'change']
         new_df = pd.merge(df, df_a[df_a_columns], how='left', left_on=['code'], right_on=['ts_code'])
-        new_df.loc[new_df.close > new_df.open, 'ogc'] = '1'
+        new_df['ogc'] = new_df['open'] - new_df['close']
         columns = ['code', 'name', 'close', 'return', 'master', 'super', 'big', 'mid', 'small', 'open', 'high', 'low',
                    'change', 'ogc']
         df_b = new_df[columns]

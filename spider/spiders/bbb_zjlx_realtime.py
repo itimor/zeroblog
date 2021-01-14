@@ -34,6 +34,7 @@ def get_stocks(codes):
             'high': d[4],
             'low': d[5],
             'change': float(d[3]) - float(d[2]),
+            'ogc': float(d[1]) - float(d[2]),
         }
         dfs.append(d_data)
     dfs_json = json.dumps(dfs)
@@ -46,10 +47,9 @@ def main():
     df = pd.read_sql_query(f'select * from {table}', con=engine)
     df_a = get_stocks(df['code'].to_list())
     if len(df_a) > 0:
-        df_a_columns = ['code', 'open', 'now', 'high', 'low', 'change']
-        new_df = pd.merge(df, df_a[df_a_columns], how='inner', left_on=['code'], right_on=['code'])
+        new_df = pd.merge(df, df_a, how='inner', left_on=['code'], right_on=['code'])
         columns = ['code', 'name', 'close', 'return', 'master', 'super', 'big', 'mid', 'small', 'open', 'now', 'high',
-                   'low', 'change']
+                   'low', 'change', 'ogc']
         df_b = new_df[columns]
         print(df_b[:5])
         df_b.to_sql(table, con=engine, index=False, if_exists='replace')
