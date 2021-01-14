@@ -52,7 +52,6 @@ def get_stocks():
 def main():
     dfs = get_stocks()
     columns = ['code', 'name', 'close', 'return', 'master', 'super', 'big', 'mid', 'small']
-    level = 6
     df = dfs.loc[
         (dfs["close"] < 50) &
         (dfs["return"] > level), columns]
@@ -62,6 +61,7 @@ def main():
 
 if __name__ == '__main__':
     db = 'bbb'
+    level = 7
     date_format = '%Y-%m-%d'
     d_format = '%Y%m%d'
     t_format = '%H%M'
@@ -69,15 +69,16 @@ if __name__ == '__main__':
     dd = datetime.now()
     cur_date = dd.strftime(date_format)
     cur_t = dd.strftime(t_format)
-    if dd.hour < 15:
+    if dd.hour > 15:
         # ts初始化
-        # ts_data = ts.pro_api('d256364e28603e69dc6362aefb8eab76613b704035ee97b555ac79ab')
-        # df = ts_data.trade_cal(exchange='', start_date=dd.strftime(d_format), end_date=dd.strftime(d_format),
-        #                        is_open='1')
-        # print(df)
+        ts_data = ts.pro_api('d256364e28603e69dc6362aefb8eab76613b704035ee97b555ac79ab')
+        df = ts_data.trade_cal(exchange='', start_date=dd.strftime(d_format), end_date=dd.strftime(d_format),
+                               is_open='1')
+        print(df)
         if not os.path.exists(cur_date):
             os.makedirs(cur_date)
 
         # 创建连接引擎
         engine = create_engine(f'sqlite:///{cur_date}/{db}.db', echo=False, encoding='utf-8')
         main()
+
