@@ -51,6 +51,11 @@ def main(cur_t):
     columns = ['code', 'name', 'close', 'return', 'master', 'super', 'big', 'mid', 'small']
     df = dfs.loc[
         (dfs["close"] < 50) &
+        (dfs["master"] < -3) &
+        (dfs["super"] > 3) &
+        (dfs["big"] > 3) &
+        (dfs["mid"] > 0) &
+        (dfs["small"] < 0) &
         (dfs["return"] > -1) &
         (dfs["return"] < 5), columns]
     print(df[:5])
