@@ -87,7 +87,6 @@ if __name__ == '__main__':
     # 获得当天
     dd = datetime.now()
     cur_date = dd.strftime(date_format)
-    cur_date = '2021-01-11'
     t_list_am = [datetime.strftime(x, t_format) for x in
                  pd.date_range(f'{cur_date} 09:40', f'{cur_date} 11:30:00', freq='10min')]
     t_list_pm = [datetime.strftime(x, t_format) for x in

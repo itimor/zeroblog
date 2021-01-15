@@ -34,8 +34,8 @@ def get_stocks(codes):
             'now': d[3],
             'high': d[4],
             'low': d[5],
-            'change': float(d[3]) - float(d[2]),
-            'ogc': float(d[1]) - float(d[2]),
+            'change': (float(d[3]) - float(d[1])) / float(d[1]) * 100,
+            'ogc': (float(d[1]) - float(d[2])) / float(d[2]) * 100,
         }
         dfs.append(d_data)
     dfs_json = json.dumps(dfs)
@@ -52,20 +52,26 @@ def send_tg(date, msg, chat_id):
 
 
 def main(date):
-    table = f'{db}_x'
+    table = f'{date}_x'
     df = pd.read_sql_query(f'select * from {table}', con=engine)
-    df_a = get_stocks(df['code'].to_list())
-    if len(df_a) > 0:
-        new_df = pd.merge(df, df_a, how='inner', left_on=['code'], right_on=['code'])
-        columns = ['code', 'name', 'close', 'return', 'open', 'now', 'ogc']
-        df_b = new_df[columns].sort_values(by=['ogc'], ascending=True)
-        print(df_b.head())
-        last_df = df_b[:10].round({'ogc': 2}).to_string(header=None)
+    dfs = get_stocks(df['code'].to_list())
+    if len(dfs) > 0:
+        new_df = pd.merge(df, dfs, how='inner', left_on=['code'], right_on=['code'])
+        columns = ['code', 'name', 'close', 'open', 'now', 'change', 'ogc']
         # 发送tg
-        if len(last_df) > 0:
-            chat_id = "@hollystock"
-            send_tg(date, last_df, chat_id)
-        # df_b.to_sql(table, con=engine, index=False, if_exists='replace')
+        if tg:
+            df_a = new_df.loc[
+                (new_df["change"] < 0.05) &
+                (new_df["ogc"] < -0.05), columns].sort_values(by=['ogc'], ascending=True)
+            print(df_a.head())
+            if len(df_a) > 0:
+                last_df = df_a.head().round({'change': 2, 'ogc': 2}).to_string(header=None)
+                chat_id = "@hollystock"
+                send_tg(date, last_df, chat_id)
+        else:
+            df_a = new_df.sort_values(by=['ogc'], ascending=True)
+            print(df_a.head())
+            df_a.to_sql(table, con=engine, index=False, if_exists='replace')
 
 
 if __name__ == '__main__':
@@ -80,6 +86,13 @@ if __name__ == '__main__':
     end_date = dd - timedelta(days=1)
     cur_date = dd.strftime(date_format)
     cur_t = dd.strftime(t_format)
+    t_list = [datetime.strftime(x, t_format) for x in
+              pd.date_range(f'{cur_date} 09:16', f'{cur_date} 09:30:00', freq='2min')]
+
+    if cur_t in t_list:
+        tg = True
+    else:
+        tg = False
     if dd.hour > 9:
         # ts初始化
         ts_data = ts.pro_api('d256364e28603e69dc6362aefb8eab76613b704035ee97b555ac79ab')
