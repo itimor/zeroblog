@@ -49,12 +49,17 @@ def get_stocks():
 def main(cur_t):
     dfs = get_stocks()
     columns = ['code', 'name', 'close', 'return', 'master', 'super', 'big', 'mid', 'small']
-    df = dfs.loc[
-        (dfs["close"] < 50) &
-        (dfs["mid"] > 0) &
-        (dfs["small"] < 0) &
-        (dfs["return"] > -1) &
-        (dfs["return"] < 5), columns]
+    if cur_t == '1600':
+        df = dfs.loc[
+            (dfs["close"] < 50) &
+            (dfs["return"] >0 ), columns]
+    else:
+        df = dfs.loc[
+            (dfs["close"] < 50) &
+            (dfs["mid"] > 0) &
+            (dfs["small"] < 0) &
+            (dfs["return"] > -4) &
+            (dfs["return"] < 3), columns]
     print(df[:5])
     if len(df) > 0:
         df.to_sql(f'{db}_{cur_t}', con=engine, index=False, if_exists='replace')
@@ -75,6 +80,7 @@ if __name__ == '__main__':
     t_list = t_list_am + t_list_pm
     cur_t = dd.strftime(t_format)
     if dd.hour > 15:
+        cur_t = '1600'
         t_list.append('1600')
     if cur_t in t_list:
         print(cur_t)
