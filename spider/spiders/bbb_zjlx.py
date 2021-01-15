@@ -50,13 +50,14 @@ def get_stocks():
 
 
 def main(date):
+    table = f'x_{date}'
     dfs = get_stocks()
     columns = ['code', 'name', 'close', 'return', 'master', 'super', 'big', 'mid', 'small']
     df = dfs.loc[
         (dfs["close"] < 50) &
         (dfs["return"] > level), columns]
     print(df[:5])
-    df.to_sql(f'{date}_x', con=engine, index=False, if_exists='replace')
+    df.to_sql(table, con=engine, index=False, if_exists='replace')
 
 
 if __name__ == '__main__':
@@ -80,5 +81,5 @@ if __name__ == '__main__':
 
         # 创建连接引擎
         engine = create_engine(f'sqlite:///{cur_date}/{db}.db', echo=False, encoding='utf-8')
-        main(cur_date)
+        main(cur_d)
 

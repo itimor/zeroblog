@@ -52,7 +52,7 @@ def send_tg(date, msg, chat_id):
 
 
 def main(date):
-    table = f'{date}_x'
+    table = f'x_{date}'
     df = pd.read_sql_query(f'select * from {table}', con=engine)
     dfs = get_stocks(df['code'].to_list())
     if len(dfs) > 0:
@@ -62,7 +62,7 @@ def main(date):
         if tg:
             df_a = new_df.loc[
                 (new_df["change"] < 0.05) &
-                (new_df["ogc"] < -0.05), columns].sort_values(by=['ogc'], ascending=True)
+                (new_df["ogc"] < -0.05), columns].sort_values(by=['ogc', 'change'], ascending=True)
             print(df_a.head())
             if len(df_a) > 0:
                 last_df = df_a.head().round({'change': 2, 'ogc': 2}).to_string(header=None)
@@ -99,10 +99,10 @@ if __name__ == '__main__':
         df = ts_data.trade_cal(exchange='', start_date=start_date.strftime(d_format),
                                end_date=end_date.strftime(d_format), is_open='1')
         last_d = df.tail(1)['cal_date'].to_list()[0]
+        # last_d = "20210115"
         last_day = datetime.strptime(last_d, d_format)
         last_date = last_day.strftime(date_format)
-        # last_date = "2021-01-14"
         # 创建连接引擎
         engine = create_engine(f'sqlite:///{last_date}/{db}.db', echo=False, encoding='utf-8')
-        main(cur_date)
+        main(last_d)
 
