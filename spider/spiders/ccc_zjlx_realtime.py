@@ -47,7 +47,7 @@ def send_tg(date, msg, chat_id):
     token = '723532221:AAH8SSfM7SfTe4HmhV72QdLbOUW3akphUL8'
     bot = Bot(token=token)
     chat_id = chat_id
-    text = '%s 昨日涨幅>5今天低开前十\n' % date + msg
+    text = '%s 昨日涨幅小于5今天低开前十\n' % date + msg
     bot.send_message(chat_id=chat_id, text=text, parse_mode=ParseMode.HTML)
 
 
@@ -66,7 +66,7 @@ def main(date):
             print(df_a.head())
             if len(df_a) > 0:
                 last_df = df_a.head().round({'change': 2, 'ogc': 2}).to_string(header=None)
-                chat_id = "@hollystock"
+                chat_id = "@timorstock"
                 send_tg(date, last_df, chat_id)
         else:
             df_a = new_df.sort_values(by=['ogc'], ascending=True)
@@ -75,7 +75,7 @@ def main(date):
 
 
 if __name__ == '__main__':
-    db = 'bbb'
+    db = 'ccc'
     date_format = '%Y-%m-%d'
     d_format = '%Y%m%d'
     t_format = '%H%M'
