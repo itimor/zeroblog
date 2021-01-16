@@ -77,6 +77,8 @@ def get_stocks():
             gen_analysis(new_table)
             last_df = df
             last_time = zjlx
+        df_b = pd.merge(df, df_1600, on=['code', 'name'], suffixes=['_0', '_1'])
+        df_b.to_sql(table, con=engine, index=False, if_exists='replace')
 
 
 if __name__ == '__main__':
