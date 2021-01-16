@@ -57,9 +57,9 @@ def main(date):
     dfs = get_stocks(df['code'].to_list())
     if len(dfs) > 0:
         new_df = pd.merge(df, dfs, how='inner', left_on=['code'], right_on=['code'])
-        columns = ['code', 'name', 'close', 'open', 'now', 'change', 'ogc']
         # 发送tg
         if tg:
+            columns = ['code', 'name', 'return', 'now', 'ogc']
             df_a = new_df.loc[
                 # (new_df["ogc"] < -5) &
                 (new_df["change"] < 5)
