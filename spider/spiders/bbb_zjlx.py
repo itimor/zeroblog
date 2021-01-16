@@ -78,8 +78,8 @@ if __name__ == '__main__':
         print(df)
         if not os.path.exists(cur_date):
             os.makedirs(cur_date)
-
-        # 创建连接引擎
-        engine = create_engine(f'sqlite:///{cur_date}/{db}.db', echo=False, encoding='utf-8')
-        main(cur_d)
+        if len(df) > 0:
+            # 创建连接引擎
+            engine = create_engine(f'sqlite:///{cur_date}/{db}.db', echo=False, encoding='utf-8')
+            main(cur_d)
 

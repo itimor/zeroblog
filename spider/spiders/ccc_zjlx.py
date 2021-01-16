@@ -69,6 +69,7 @@ if __name__ == '__main__':
     # 获得当天
     dd = datetime.now()
     cur_date = dd.strftime(date_format)
+    # cur_date = '2021-01-15'
     cur_d = dd.strftime(d_format)
     cur_t = dd.strftime(t_format)
     if dd.hour > 15:
@@ -78,8 +79,8 @@ if __name__ == '__main__':
         print(df)
         if not os.path.exists(cur_date):
             os.makedirs(cur_date)
-
-        # 创建连接引擎
-        engine = create_engine(f'sqlite:///{cur_date}/{db}.db', echo=False, encoding='utf-8')
-        main(cur_d)
+	if len(df) > 0:
+            # 创建连接引擎
+            engine = create_engine(f'sqlite:///{cur_date}/{db}.db', echo=False, encoding='utf-8')
+            main(cur_d)
 

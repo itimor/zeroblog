@@ -61,15 +61,27 @@ def main(date):
         # 发送tg
         if tg:
             df_a = new_df.loc[
-                (new_df["change"] < 5) &
-                (new_df["ogc"] < -5), columns].sort_values(by=['ogc', 'change'], ascending=True)
+                # (new_df["ogc"] < -5) &
+                (new_df["change"] < 5)
+                , columns].sort_values(by=['ogc', 'change'], ascending=True)
             print(df_a.head())
             if len(df_a) > 0:
                 last_df = df_a.head().round({'change': 2, 'ogc': 2}).to_string(header=None)
                 chat_id = "@hollystock"
                 send_tg(date, last_df, chat_id)
+            df_b = new_df.loc[
+                (new_df["return"] < 6) &
+                (new_df["return"] > 0) &
+                # (new_df["ogc"] < -5) &
+                (new_df["change"] < 5)
+                , columns].sort_values(by=['ogc', 'change'], ascending=False)
+            print(df_b.head())
+            if len(df_b) > 0:
+                last_df = df_b.head().round({'change': 2, 'ogc': 2}).to_string(header=None)
+                chat_id = "@timorstock"
+                send_tg(date, last_df, chat_id)
         else:
-            df_a = new_df.sort_values(by=['ogc'], ascending=True)
+            df_a = new_df.sort_values(by=['ogc', 'change'], ascending=True)
             print(df_a.head())
             df_a.to_sql(table, con=engine, index=False, if_exists='replace')
 
@@ -85,9 +97,7 @@ if __name__ == '__main__':
     end_date = dd - timedelta(days=1)
     cur_date = dd.strftime(date_format)
     cur_t = dd.strftime(t_format)
-    t_list = [datetime.strftime(x, t_format) for x in
-              pd.date_range(f'{cur_date} 09:16', f'{cur_date} 09:30:00', freq='2min')]
-
+    t_list = [datetime.strftime(x, t_format) for x in pd.date_range(f'{cur_date} 09:16', f'{cur_date} 09:30:00', freq='6min')]
     if cur_t in t_list:
         tg = True
     else:
