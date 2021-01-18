@@ -56,7 +56,7 @@ def main(date):
     df = dfs.loc[
         (dfs["close"] < 50) &
         (dfs["return"] > 0) &
-        (dfs["return"] < 5), columns]
+        (dfs["return"] <= 5), columns]
     print(df[:5])
     df.to_sql(table, con=engine, index=False, if_exists='replace')
 

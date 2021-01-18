@@ -55,14 +55,13 @@ def main(date):
     columns = ['code', 'name', 'close', 'return', 'master', 'super', 'big', 'mid', 'small']
     df = dfs.loc[
         (dfs["close"] < 50) &
-        (dfs["return"] > level), columns]
+        (dfs["return"] > 5), columns]
     print(df[:5])
     df.to_sql(table, con=engine, index=False, if_exists='replace')
 
 
 if __name__ == '__main__':
     db = 'bbb'
-    level = 5
     date_format = '%Y-%m-%d'
     d_format = '%Y%m%d'
     t_format = '%H%M'
