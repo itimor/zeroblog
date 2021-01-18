@@ -50,12 +50,19 @@ def get_stocks():
 
 
 def main(date):
-    table = f'x_{date}'
     dfs = get_stocks()
     columns = ['code', 'name', 'close', 'return', 'master', 'super', 'big', 'mid', 'small']
+    table = f'b_{date}'
     df = dfs.loc[
         (dfs["close"] < 50) &
         (dfs["return"] > 5), columns]
+    print(df[:5])
+    df.to_sql(table, con=engine, index=False, if_exists='replace')
+    table = f'c_{date}'
+    df = dfs.loc[
+        (dfs["close"] < 50) &
+        (dfs["return"] > 0) &
+        (dfs["return"] <= 5), columns]
     print(df[:5])
     df.to_sql(table, con=engine, index=False, if_exists='replace')
 
@@ -77,7 +84,7 @@ if __name__ == '__main__':
         print(df)
         if not os.path.exists(cur_date):
             os.makedirs(cur_date)
-        if len(df) == 0:
+        if len(df) > 0:
             # 创建连接引擎
             engine = create_engine(f'sqlite:///{cur_date}/{db}.db', echo=False, encoding='utf-8')
             main(cur_d)

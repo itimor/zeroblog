@@ -50,8 +50,7 @@ def send_tg(date, msg, chat_id):
     bot.send_message(chat_id=chat_id, text=text, parse_mode=ParseMode.HTML)
 
 
-def main(date):
-    table = f'x_{date}'
+def main(date, table):
     df = pd.read_sql_query(f'select * from {table}', con=engine)
     dfs = get_stocks(df['code'].to_list())
     if len(dfs) > 0:
@@ -108,10 +107,14 @@ if __name__ == '__main__':
         ts_data = ts.pro_api('d256364e28603e69dc6362aefb8eab76613b704035ee97b555ac79ab')
         df = ts_data.trade_cal(exchange='', start_date=start_date.strftime(d_format),
                                end_date=end_date.strftime(d_format), is_open='1')
+        print(df)
         last_d = df.tail(1)['cal_date'].to_list()[0]
-        last_d = "20210116"
+        # last_d = "20210116"
         last_day = datetime.strptime(last_d, d_format)
         last_date = last_day.strftime(date_format)
         # 创建连接引擎
         engine = create_engine(f'sqlite:///{last_date}/{db}.db', echo=False, encoding='utf-8')
-        main(last_d)
+        table = f'b_{last_d}'
+        main(last_d, table)
+        # table = f'c_{last_d}'
+        # main(last_d, table)
