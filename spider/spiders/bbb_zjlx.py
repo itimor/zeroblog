@@ -49,19 +49,19 @@ def get_stocks():
     return last_dfs
 
 
-def main(date):
+def main():
     dfs = get_stocks()
     columns = ['code', 'name', 'close', 'return', 'master', 'super', 'big', 'mid', 'small']
-    table = f'b_{date}'
+    table = f'b_new'
     df = dfs.loc[
         (dfs["close"] < 50) &
         (dfs["return"] > 5), columns]
     print(df[:5])
     df.to_sql(table, con=engine, index=False, if_exists='replace')
-    table = f'c_{date}'
+    table = f'c_new'
     df = dfs.loc[
         (dfs["close"] < 50) &
-        (dfs["return"] > 0) &
+        (dfs["return"] > 3) &
         (dfs["return"] <= 5), columns]
     print(df[:5])
     df.to_sql(table, con=engine, index=False, if_exists='replace')
@@ -87,5 +87,5 @@ if __name__ == '__main__':
         if len(df) > 0:
             # 创建连接引擎
             engine = create_engine(f'sqlite:///{cur_date}/{db}.db', echo=False, encoding='utf-8')
-            main(cur_d)
+            main()
 
