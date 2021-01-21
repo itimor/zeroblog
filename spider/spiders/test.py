@@ -15,15 +15,6 @@ ua = UserAgent()
 headers = {'User-Agent': ua.random}
 
 
-def get_stock(code):
-    url = f'http://hq.sinajs.cn/list={code}'
-    r = requests.get(url, headers=headers).text
-    X = re.split('";', r)[0]
-    X = re.split('="', X)[1]
-    print(X)
-
-
-if __name__ == '__main__':
-    code = 'sz002463'
-    get_stock(code)
-
+ts_data = ts.pro_api('d256364e28603e69dc6362aefb8eab76613b704035ee97b555ac79ab')
+df = ts_data.daily(ts_code='', start_date='20210120', end_date='20210120')
+print(df)

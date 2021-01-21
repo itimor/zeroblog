@@ -74,7 +74,6 @@ if __name__ == '__main__':
     t_format = '%H%M'
     # 获得当天
     dd = datetime.now()
-    cur_date = dd.strftime(date_format)
     cur_d = dd.strftime(d_format)
     cur_t = dd.strftime(t_format)
     if dd.hour > 15:
@@ -82,10 +81,10 @@ if __name__ == '__main__':
         ts_data = ts.pro_api('d256364e28603e69dc6362aefb8eab76613b704035ee97b555ac79ab')
         df = ts_data.trade_cal(exchange='', start_date=cur_d, end_date=cur_d, is_open='1')
         print(df)
-        if not os.path.exists(cur_date):
-            os.makedirs(cur_date)
+        if not os.path.exists(cur_d):
+            os.makedirs(cur_d)
         if len(df) > 0:
             # 创建连接引擎
-            engine = create_engine(f'sqlite:///{cur_date}/{db}.db', echo=False, encoding='utf-8')
+            engine = create_engine(f'sqlite:///{cur_d}/{db}.db', echo=False, encoding='utf-8')
             main()
 
