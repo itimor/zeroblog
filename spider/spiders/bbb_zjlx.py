@@ -26,7 +26,7 @@ def get_stocks():
     X = re.split('"diff":', X)[1]
     df_a = pd.read_json(X, orient='records')
     df = df_a[['f12', 'f14', 'f2', 'f3', 'f184', 'f69', 'f75', 'f81', 'f87']]
-    df.columns = ['pre_code', 'name', 'close', 'return', 'super', 'big', 'mid', 'small', 'master']
+    df.columns = ['pre_code', 'name', 'close', 'return', 'master', 'super', 'big', 'mid', 'small']
     df['code'] = str(df['pre_code'])
     s_codes = []
     for i in df['pre_code']:
@@ -69,7 +69,6 @@ def main():
 
 if __name__ == '__main__':
     db = 'bbb'
-    date_format = '%Y-%m-%d'
     d_format = '%Y%m%d'
     t_format = '%H%M'
     # 获得当天
@@ -87,4 +86,3 @@ if __name__ == '__main__':
             # 创建连接引擎
             engine = create_engine(f'sqlite:///{cur_d}/{db}.db', echo=False, encoding='utf-8')
             main()
-

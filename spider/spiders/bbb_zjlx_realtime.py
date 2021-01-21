@@ -18,11 +18,11 @@ headers = {'User-Agent': ua.random}
 
 # 今日尾盘入  明日大涨 后天大大涨
 """
-SELECT * from b_new where ogc <-2 and super > 10 and change < 6 ORDER by super;
+SELECT * from b_new where ogc <-2 and master > 10 and change < 6 ORDER by master;
 """
 # 今日早盘入  明日大涨 后天大大涨
 """
-SELECT * from b_new where ogc <0 and super < 20 and big > 0 and small < 0 and close < 10 ORDER by ogc;
+SELECT * from b_new where ogc <0 and master < 20 and big > 0 and small < 0 and close < 10 ORDER by ogc;
 """
 
 
