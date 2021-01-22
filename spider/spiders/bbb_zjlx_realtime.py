@@ -14,7 +14,6 @@ import re
 import json
 
 ua = UserAgent()
-headers = {'User-Agent': ua.random}
 
 # 今日尾盘入  明日大涨 后天大大涨
 """
@@ -33,6 +32,7 @@ def get_stocks(codes):
         c = pre_code.split('.')
         code = f'{c[1].lower()}{c[0]}'
         url = f'http://hq.sinajs.cn/list={code}'
+        headers = {'User-Agent': ua.random}
         r = requests.get(url, headers=headers).text
         X = re.split('";', r)[0]
         X = re.split('="', X)[1]
@@ -76,6 +76,7 @@ def main(date, s_table):
     if len(dfs) > 0:
         new_df = pd.merge(df, dfs, how='inner', left_on=['code'], right_on=['code'])
         df_a = pd.DataFrame()
+        cur_t = '1600'
         if dd.hour > 8 and dd.hour < 10:
             cur_t = '0930'
             columns = ['code', 'name', 'super', 'return', 'now', 'change', 'ogc']
@@ -92,12 +93,13 @@ def main(date, s_table):
             cur_t = '1430'
             columns = ['code', 'name', 'super', 'return', 'now', 'change', 'ogc']
             df_a = new_df.loc[
-                (new_df["super"] > 7) &
+                (new_df["master"] > 7) &
                 (new_df["ogc"] < -2) &
                 (new_df["change"] < 5)
                 , columns].sort_values(by=['super'], ascending=True)
             if len(df_a) > 0:
                 last_df = df_a.head().round({'change': 2, 'ogc': 2}).to_string(header=None)
+                chat_id = "@hollystock"
                 text = '%s 明日可能会涨\n' % date + last_df
                 send_tg(text, chat_id)
         if dd.hour > 15:
@@ -125,10 +127,10 @@ if __name__ == '__main__':
                                end_date=end_date.strftime(d_format), is_open='1')
         last_d = df.tail(1)['cal_date'].to_list()[0]
         # last_d = "20210116"
-        last_day = datetime.strptime(last_d, d_format)
         # 创建连接引擎
-        engine = create_engine(f'sqlite:///{last_day}/{db}.db', echo=False, encoding='utf-8')
-        table_type = 'b'
+        engine = create_engine(f'sqlite:///{last_d}/{db}.db', echo=False, encoding='utf-8')
+        # table_type = 'b'
         # table_type = 'c'
-        s_table = f'{table_type}_new'
-        main(last_day, s_table)
+        for table_type in ['b', 'c']:
+            s_table = f'{table_type}_new'
+            main(last_d, s_table)
