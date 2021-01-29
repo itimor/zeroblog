@@ -5,9 +5,10 @@ from django.views import View
 from django.http import HttpResponse
 from pure_pagination import PageNotAnInteger, Paginator
 from haystack.views import SearchView
+from taggit.models import Tag
 
 from blog.settings import HAYSTACK_SEARCH_RESULTS_PER_PAGE
-from myblog.models import Article, Category, Comment, Counts
+from myblog.models import *
 from myblog.forms import CommentForm
 
 md = markdown.Markdown(
@@ -69,37 +70,38 @@ class ArichiveView(View):
         return render(request, 'archive.html', {'all_blog': all_blog, 'blog_nums': blog_nums})
 
 
-# class TagView(View):
-#     """
-#     标签云
-#     """
-#
-#     def get(self, request):
-#         all_tag = Tag.objects.all()
-#         return render(request, 'tags.html', {'all_tag': all_tag})
-#
-#
-# class TagDetailView(View):
-#     """
-#         标签下的所有博客
-#         """
-#
-#     def get(self, request, tag_code):
-#         tag = get_object_or_404(Tag, code=tag_code)
-#         tag_blogs = tag.article_set.all().order_by('is_top', '-id')
-#
-#         # 分页
-#         try:
-#             page = request.GET.get('page', 1)
-#         except PageNotAnInteger:
-#             page = 1
-#
-#         p = Paginator(tag_blogs, 20, request=request)
-#         tag_blogs = p.page(page)
-#         return render(request, 'tag-detail.html', {
-#             'tag_blogs': tag_blogs,
-#             'tag_name': tag.name,
-#         })
+class TagView(View):
+    """
+    标签云
+    """
+
+    def get(self, request):
+        all_tag = Tag.objects.all()
+        return render(request, 'tags.html', {'all_tag': all_tag})
+
+
+class TagDetailView(View):
+    """
+    标签下的所有博客
+    """
+
+    def get(self, request, tag_slug):
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        tag_blogs = Article.objects.filter(tags__slug__in=[tag_slug]).order_by('is_top', '-id')
+        print(tag_blogs)
+
+        # 分页
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+
+        p = Paginator(tag_blogs, 20, request=request)
+        tag_blogs = p.page(page)
+        return render(request, 'tag-detail.html', {
+            'tag_blogs': tag_blogs,
+            'tag_name': tag.name,
+        })
 
 
 class ArticleDetailView(View):
@@ -107,10 +109,10 @@ class ArticleDetailView(View):
     博客详情页
     """
 
-    def get(self, request, blog_code):
-        blog = get_object_or_404(Article, code=blog_code)
+    def get(self, request, blog_slug):
+        blog = get_object_or_404(Article, slug=blog_slug)
         # 博客点击数+1, 评论数统计
-        blog.click_nums += 1
+        blog.views += 1
         blog.save()
         # 获取评论内容
         all_comment = Comment.objects.filter(blog_id=blog.id)
@@ -118,7 +120,7 @@ class ArticleDetailView(View):
         # 将博客内容用markdown显示出来
         blog.content = md.convert(blog.content)
         blog.toc = md.toc
-        blog.tags = blog.tags.split()
+        blog.tags = blog.tags.all()
         # 实现博客上一篇与下一篇功能
         has_prev = False
         has_next = False
@@ -180,8 +182,8 @@ class CategoryDetaiView(View):
     博客分类
     """
 
-    def get(self, request, category_code):
-        category = get_object_or_404(Category, code=category_code)
+    def get(self, request, category_slug):
+        category = get_object_or_404(Category, slug=category_slug)
         cate_blogs = category.article_set.all().order_by('is_top', '-id')
 
         # 分页
@@ -206,10 +208,6 @@ class MySearchView(SearchView):
 
     def extra_context(self):
         context = super(MySearchView, self).extra_context()
-        # 博客、标签、分类数目统计
-        count_nums = Counts.objects.get(id=1)
-        context['cate_nums'] = count_nums.category_nums
-        context['blog_nums'] = count_nums.blog_nums
         return context
 
     def build_page(self):

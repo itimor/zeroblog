@@ -138,6 +138,19 @@
                           </a>
                         </li>
 
+                        <li
+                            {% if request.path|slice:"8" == '/tags' %}
+                            class="menu-item menu-item-home menu-item-active"
+                            {% else %}
+                            class="menu-item menu-item-active"
+                            {% endif %}
+                            style="opacity: 1; transform: translateY(0px);">
+                          <a href="{% url 'tags' %}" rel="section">
+                              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+                            标签云
+                          </a>
+                        </li>
+
                         <li class="menu-item menu-item-archives" style="opacity: 1; transform: translateY(0px);">
 
                              <a href="/#search" id="search" rel="section">

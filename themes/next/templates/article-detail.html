@@ -41,7 +41,7 @@
                         </span>
                         <span class="post-meta-item-text">分类于</span>
                         <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                            <a href="{% url 'category_code' blog.category.code %}" itemprop="url" rel="index">
+                            <a href="{% url 'category_slug' blog.category.slug %}" itemprop="url" rel="index">
                                 <span itemprop="name">{{ blog.category.name }}</span>
                             </a>
                         </span>
@@ -95,7 +95,7 @@
                 <div class="post-nav">
                     <div class="post-nav-next post-nav-item">
                         {% if has_prev %}
-                        <a href="{% url 'blog_code' blog_prev.code %}" rel="prev" title="{{ blog_prev.title }}">
+                        <a href="{% url 'blog_slug' blog_prev.slug %}" rel="prev" title="{{ blog_prev.title }}">
                             <i class="fa fa-chevron-left"></i> {{ blog_prev.title }}
                         </a>
                         {% endif %}
@@ -105,7 +105,7 @@
 
                     <div class="post-nav-prev post-nav-item">
                         {% if has_next %}
-                        <a href="{% url 'blog_code' blog_next.code %}" rel="next" title="{{ blog_next.title }}">
+                        <a href="{% url 'blog_slug' blog_next.slug %}" rel="next" title="{{ blog_next.title }}">
                             {{ blog_next.title }} <i class="fa fa-chevron-right"></i>
                         </a>
                         {% endif %}

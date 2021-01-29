@@ -100,6 +100,6 @@ if __name__ == '__main__':
     category = Category.objects.get(name=obj.name)
     if len(b) > 2:
         save_blog(f'{title}-{cur_date}', home_content, blog_category, ' '.join(tags), source)
-        Article.objects.update_or_create(title=f'{obj.name}-{today}', code=today, content=all_data, published=True,
+        Article.objects.update_or_create(title=f'{obj.name}-{today}', slug=today, content=all_data, published=True,
                                          category=category, tags=searchkeys, allow_comments=False)
     print(all_data)

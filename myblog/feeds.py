@@ -21,4 +21,4 @@ class ArticleRssFeed(Feed):
         return item.content
 
     def item_link(self, item):
-        return reverse('blog_code', args=[item.code, ])
+        return reverse('blog_slug', args=[item.slug, ])

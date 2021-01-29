@@ -8,7 +8,7 @@ from spider.models import *
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        Category.objects.create(parent=None, is_root=True, name='爬虫', code='spider')
+        Category.objects.create(parent=None, is_root=True, name='爬虫', slug='spider')
 
         self.stdout.write(self.style.SUCCESS('############ 初始化爬虫信息 ###########'))
         SpiderInfo.objects.create(name='零点财经', code='zcaijing', keyword='', base_url='https://www.zcaijing.com')

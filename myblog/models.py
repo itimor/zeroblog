@@ -3,7 +3,10 @@ from mdeditor.fields import MDTextField
 from django.utils import timezone
 from django.utils.html import format_html
 from uuslug import slugify
+from taggit.managers import TaggableManager
+from taggit.models import TagBase, GenericTaggedItemBase, TaggedItemBase
 
+from utils.storage import PathAndRename
 from utils.db import BaseModel
 from utils.index import get_hash
 
@@ -16,7 +19,7 @@ class Category(BaseModel):
                                limit_choices_to={'is_root': True})
     is_root = models.BooleanField(default=False, verbose_name='是否是一级分类')
     name = models.CharField(verbose_name='名称', unique=True, max_length=20)
-    code = models.CharField(verbose_name='code', unique=True, blank=True, null=True, max_length=20)
+    slug = models.CharField(verbose_name='slug', unique=True, blank=True, null=True, max_length=20)
     number = models.IntegerField(verbose_name='分类数目', default=1)
 
     class Meta:
@@ -27,8 +30,34 @@ class Category(BaseModel):
         return self.name
 
     def save(self, *args, **kwargs):
-        self.code = slugify(self.name)
+        if self.slug is None:
+            self.slug = slugify(self.name)
         super(Category, self).save(*args, **kwargs)
+
+
+class Tag(TagBase):
+    name = models.CharField(verbose_name='名称', unique=True, max_length=20)
+    slug = models.CharField(verbose_name='slug', unique=True, blank=True, null=True, max_length=20)
+
+    class Meta:
+        verbose_name = '博客标签'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if self.slug is None:
+            self.slug = slugify(self.name)
+        super(Tag, self).save(*args, **kwargs)
+
+
+class TagManager(GenericTaggedItemBase, TaggedItemBase):
+    tag = models.ForeignKey(
+        Tag,
+        on_delete=models.CASCADE,
+        related_name="%(app_label)s_%(class)s_items",
+    )
 
 
 class Article(BaseModel):
@@ -42,18 +71,18 @@ class Article(BaseModel):
     }
 
     title = models.CharField(verbose_name='标题', unique=True, max_length=100)
-    code = models.CharField(verbose_name='code', unique=True, blank=True, null=True, max_length=20)
+    cover = models.ImageField(upload_to=PathAndRename("cover"), verbose_name=u'封面')
+    slug = models.CharField(verbose_name='slug', unique=True, blank=True, null=True, max_length=20)
     content = MDTextField(verbose_name='正文', default='')
-    click_nums = models.IntegerField(verbose_name='热度', default=0)
+    views = models.PositiveIntegerField(verbose_name='热度', default=0)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='博客类别')
-    tags = models.CharField(verbose_name='标签', default="其他", max_length=100)
+    tags = TaggableManager(u'标签', blank=True, through=TagManager)
     status = models.CharField(u'状态', max_length=1, choices=tuple(STATUS_CHOICES.items()), default='d')
     is_top = models.BooleanField(u'置顶', default=False)
     create_time = models.DateTimeField(u'创建时间', auto_now_add=True)
     update_time = models.DateTimeField(u'更新时间', null=True)
     publish_time = models.DateTimeField(u'发布时间', null=True)
     allow_comments = models.BooleanField('开启评论', default=True)
-    source = models.CharField(verbose_name='来源地址', max_length=254, blank=True)
 
     class Meta:
         verbose_name = '博客文章'
@@ -62,6 +91,7 @@ class Article(BaseModel):
     def __str__(self):
         return self.title
 
+    # 后台管理状态加颜色。
     def colored_status(self):
         if self.status == 'd':
             color = 'grey'
@@ -75,14 +105,20 @@ class Article(BaseModel):
 
     colored_status.short_description = "状态"
 
+    # 阅读了增加的方法。
+    def increase_views(self):
+        self.views += 1
+        self.save(update_fields=['views'])
+
     def save(self, *args, **kwargs):
-        self.code = get_hash(self.title)[-10:]
+        if self.slug is None:
+            self.slug = get_hash(self.title)[-10:]
         modified = kwargs.pop("modified", True)
         if modified:
             self.update_time = timezone.now()
 
         if self.status == 'd':
-            self.publish_time =None
+            self.publish_time = None
 
         if self.status == 'p' and not self.publish_time:
             self.publish_time = timezone.now()
@@ -109,15 +145,35 @@ class Comment(BaseModel):
         return self.content[:10]
 
 
-class Counts(BaseModel):
-    """
-    统计博客、分类和标签的数目
-    """
-    blog_nums = models.IntegerField(verbose_name='博客数目', default=0)
-    category_nums = models.IntegerField(verbose_name='分类数目', default=0)
-    tag_nums = models.IntegerField(verbose_name='标签数目', default=0)
-    visit_nums = models.IntegerField(verbose_name='网站访问量', default=0)
+class PhotoGroup(models.Model):
+    name = models.CharField(u'标题', max_length=150, unique=True)
+    cover = models.ImageField(upload_to=PathAndRename("photocover"), verbose_name=u'封面')
+    desc = models.TextField(u'描述', )
+    create_time = models.DateTimeField(u'创建时间', auto_now_add=True)
+    update_time = models.DateTimeField(u'更新时间', auto_now=True)
+    active = models.BooleanField(u'开启', default=True)
 
     class Meta:
-        verbose_name = '数目统计'
-        verbose_name_plural = verbose_name
+        verbose_name = u'相册'
+        verbose_name_plural = u'相册'
+
+    def __str__(self):
+        return self.name
+
+
+class Photo(models.Model):
+    photo = models.ImageField(upload_to=PathAndRename("photo"), verbose_name=u'照片')
+    desc = models.TextField(null=True, blank=True, verbose_name=u'描述')
+    group = models.ForeignKey('PhotoGroup', on_delete=models.CASCADE, blank=True)
+    create_time = models.DateTimeField(u'创建时间', auto_now_add=True)
+    update_time = models.DateTimeField(u'更新时间', auto_now=True)
+
+    class Meta:
+        verbose_name = u'照片'
+        verbose_name_plural = u'照片'
+
+    def view_img(self):
+        return format_html("<img src='/upload/%s' height='200'/>" % self.photo)
+
+    view_img.short_description = '预览'
+    view_img.allow_tags = True

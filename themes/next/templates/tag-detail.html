@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-归档
+{{ tag_name }}
 {% endblock %}
 
 
@@ -10,22 +10,20 @@
     <div id="content" class="content">
         <section id="posts" class="posts-collapse">
             <span class="archive-move-on"></span>
-            <span class="archive-page-counter">非常好! 目前共计 {{ blog_nums }} 篇日志。 继续努力。</span>
 
 
-            {% regroup all_blog.object_list by create_time.year as dates_by_year %}
 
-                {% for year in dates_by_year %}
                     <div class="collection-title">
-            <h2 class="archive-year motion-element" id="archive-year-2017" style="opacity: 1; display: block; transform: translateX(0px);">{{ year.grouper }}</h2>
+            <h2 class="archive-year motion-element" id="archive-year-2017" style="opacity: 1; display: block; transform: translateX(0px);">{{ tag_name }}<small> | 标签</small></h2>
                     </div>
-                    {% for blog in year.list %}
 
-                         <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article" style="opacity: 1; display: block; transform: translateY(0px);">
+            {% for blog in tag_blogs.object_list %}
+
+                <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article" style="opacity: 1; display: block; transform: translateY(0px);">
                     <header class="post-header">
 
                     <h1 class="post-title">
-                        <a class="post-title-link" href="{% url 'blog_code' blog.code %}" itemprop="url">
+                        <a class="post-title-link" href="{% url 'blog_slug' blog.slug %}" itemprop="url">
                             <span itemprop="name">{{ blog.title }}</span>
                          </a>
                     </h1>
@@ -38,12 +36,11 @@
 
                     </header>
                   </article>
-
-                    {% endfor %}
-                {% endfor %}
+            {% endfor %}
 
 
         </section>
+
 
 
 <!--分页展示-->
@@ -51,13 +48,13 @@
     <div class="pageturn">
         <ul class="pagelist">
 
-            {% if all_blog.has_previous %}
-                <li class="long"><a href="?{{ all_blog.previous_page_number.querystring }}">上一页</a></li>
+            {% if tag_blogs.has_previous %}
+                <li class="long"><a href="?{{ tag_blogs.previous_page_number.querystring }}">上一页</a></li>
             {% endif %}
 
-            {% for page in all_blog.pages %}
+            {% for page in tag_blogs.pages %}
             {% if page %}
-                {% ifequal page all_blog.number %}
+                {% ifequal page tag_blogs.number %}
                     <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
                 {% else %}
                      <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
@@ -66,8 +63,8 @@
                 <li class="none"><a href="">...</a></li>
             {% endif %}
             {% endfor %}
-            {% if all_blog.has_next %}
-                <li class="long"><a href="?{{ all_blog.next_page_number.querystring }}">下一页</a></li>
+            {% if tag_blogs.has_next %}
+                <li class="long"><a href="?{{ tag_blogs.next_page_number.querystring }}">下一页</a></li>
             {% endif %}
 
         </ul>
