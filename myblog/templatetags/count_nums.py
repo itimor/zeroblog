@@ -12,7 +12,7 @@ register = template.Library()  # 自定义filter时必须加上
 def count_nums(value):
     d = 0
     if value == 'blog':
-        d = Article.objects.filter(published=True).count()
+        d = Article.objects.filter(status='p').count()
     if value == 'cate':
         d = Category.objects.all().count()
     return d

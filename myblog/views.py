@@ -27,7 +27,7 @@ class IndexView(View):
     """
 
     def get(self, request):
-        all_blog = Article.objects.filter(published=True).order_by('is_top', '-id')
+        all_blog = Article.objects.filter(status='p').order_by('is_top', '-id')
 
         # 分页
         try:
@@ -46,7 +46,7 @@ class ArichiveView(View):
     """
 
     def get(self, request):
-        all_blog = Article.objects.filter(published=True).order_by('-create_time')
+        all_blog = Article.objects.filter(status='p').order_by('-create_time')
         blog_nums = len(all_blog)
 
         # 分页

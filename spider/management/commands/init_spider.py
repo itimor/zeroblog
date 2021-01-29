@@ -8,16 +8,9 @@ from spider.models import *
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        top = Category.objects.create(parent=None, is_root=True, name='爬虫', code='spider')
+        Category.objects.create(parent=None, is_root=True, name='爬虫', code='spider')
 
         self.stdout.write(self.style.SUCCESS('############ 初始化爬虫信息 ###########'))
-        obj = SpiderInfo.objects.create(name='零点财经', code='zcaijing', keyword='', base_url='https://www.zcaijing.com')
-        lingdian = Category.objects.create(parent=top, is_root=True, name=obj.name)
-        Category.objects.create(parent=lingdian, is_root=False, name='零点简报')
-        Category.objects.create(parent=lingdian, is_root=False, name='零点新闻')
-
-        obj = SpiderInfo.objects.create(name='巨潮资讯', code='cninfo', keyword='新能源 汽车',
-                                        base_url='http://www.cninfo.com.cn')
-        Category.objects.create(parent=top, is_root=False, name=obj.name, code=obj.code)
-
+        SpiderInfo.objects.create(name='零点财经', code='zcaijing', keyword='', base_url='https://www.zcaijing.com')
+        SpiderInfo.objects.create(name='巨潮资讯', code='cninfo', keyword='新能源 汽车', base_url='http://www.cninfo.com.cn')
         self.stdout.write(self.style.SUCCESS('初始化完成'))

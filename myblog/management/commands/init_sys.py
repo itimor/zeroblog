@@ -106,9 +106,7 @@ var foo = function (bar) {
 
 console.log(foo(5));
 ```"""
-        Article.objects.create(title='这是你的第一篇markdown文章', content=content, published=True,
-                                   category=category, tags='其他')
-
+        Article.objects.create(title='这是你的第一篇markdown文章', content=content, status='p', category=category, tags='其他')
         self.stdout.write(self.style.SUCCESS('############ 初始化博客统计 ###########'))
         Counts.objects.create(blog_nums=1, category_nums=1, tag_nums=1, visit_nums=0)
 

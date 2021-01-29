@@ -1,6 +1,7 @@
 from django.db import models
 from mdeditor.fields import MDTextField
 from django.utils import timezone
+from django.utils.html import format_html
 from uuslug import slugify
 
 from utils.db import BaseModel
@@ -34,14 +35,22 @@ class Article(BaseModel):
     """
     博客
     """
+    STATUS_CHOICES = {
+        'd': '草稿',
+        'p': '已发布',
+        'w': '撤销',
+    }
+
     title = models.CharField(verbose_name='标题', unique=True, max_length=100)
     code = models.CharField(verbose_name='code', unique=True, blank=True, null=True, max_length=20)
     content = MDTextField(verbose_name='正文', default='')
     click_nums = models.IntegerField(verbose_name='热度', default=0)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='博客类别')
     tags = models.CharField(verbose_name='标签', default="其他", max_length=100)
-    published = models.BooleanField(u'发布', default=True)
+    status = models.CharField(u'状态', max_length=1, choices=tuple(STATUS_CHOICES.items()), default='d')
     is_top = models.BooleanField(u'置顶', default=False)
+    create_time = models.DateTimeField(u'创建时间', auto_now_add=True)
+    update_time = models.DateTimeField(u'更新时间', null=True)
     publish_time = models.DateTimeField(u'发布时间', null=True)
     allow_comments = models.BooleanField('开启评论', default=True)
     source = models.CharField(verbose_name='来源地址', max_length=254, blank=True)
@@ -53,14 +62,33 @@ class Article(BaseModel):
     def __str__(self):
         return self.title
 
+    def colored_status(self):
+        if self.status == 'd':
+            color = 'grey'
+        if self.status == 'p':
+            color = 'green'
+        if self.status == 'w':
+            color = 'red'
+        format_td = format_html(
+            f'<span style="padding:2px;background-color:{color};color:white">{self.STATUS_CHOICES[self.status]}</span>')
+        return format_td
+
+    colored_status.short_description = "状态"
+
     def save(self, *args, **kwargs):
         self.code = get_hash(self.title)[-10:]
         modified = kwargs.pop("modified", True)
         if modified:
             self.update_time = timezone.now()
 
-        if self.published and not self.publish_time:
+        if self.status == 'd':
+            self.publish_time =None
+
+        if self.status == 'p' and not self.publish_time:
             self.publish_time = timezone.now()
+
+        if self.status == 'w':
+            self.update_time = None
 
         super(Article, self).save(*args, **kwargs)
 

@@ -12,7 +12,7 @@ class ArticleRssFeed(Feed):
     link = "/rss/"
 
     def items(self):
-        return Article.objects.filter(published=True).all()
+        return Article.objects.filter(status='p').all()
 
     def item_title(self, item):
         return item.title
