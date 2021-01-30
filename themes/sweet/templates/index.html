@@ -1,0 +1,34 @@
+{% extends "layout/base.html" %}
+{% block title %}
+| 首页
+{% endblock %}
+
+{% block content %}
+
+<div id="main" class="content">
+    <div class="container">
+        <article itemscope="itemscope">
+            <div class="posts-list js-posts">
+                {% for post in all_blog %}
+                    {% include './layout/l_post.html' %}
+<!--                    {% if post.type == 'l' %}-->
+<!--                        {% include './layout/l_post.html' %}-->
+<!--                    {% elif post.type == 'w' %}-->
+<!--                        {% include './layout/w_post.html' %}-->
+<!--                    {% else %}-->
+<!--                        {% include './layout/j_post.html' %}-->
+<!--                    {% endif %}-->
+                {% empty %}
+                    <div class="post no-post">暂时还没有发布的文章！</div>
+                {% endfor %}
+            </div>
+            {% block pagination %}
+                {% if is_paginated %}
+                    {% include './layout/pagination.html' %}
+                {% endif %}
+            {% endblock %}
+        </article>
+    </div>
+</div>
+
+{% endblock %}

@@ -9,7 +9,7 @@
 {% for blog in page.object_list %}
 
     <div>
-        <a href="{% url 'blog_slug' blog.object.slug %}">
+        <a href="{% url 'blog:blog_slug' blog.object.slug %}">
             <h3>{{ forloop.counter }}、{% highlight blog.object.title with query %}</h3>
         </a>
 

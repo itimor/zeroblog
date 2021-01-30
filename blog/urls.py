@@ -18,7 +18,6 @@ from django.contrib import admin
 from django.views.static import serve
 from django.conf.urls.static import static
 
-from myblog.views import IndexView, MySearchView
 from blog import settings
 
 # 修改标题
@@ -28,16 +27,12 @@ admin.AdminSite.site_title = settings.admin_title
 urlpatterns = [
     # 后台
     url(r'^admin/', admin.site.urls),
-    # 首页
-    url(r'^$', IndexView.as_view(), name='index'),
-    # 搜索
-    url(r'^search/', MySearchView(), name='haystack_search'),
     # 博客
-    url(r'^blog/', include('myblog.urls')),
+    url(r'^', include('myblog.urls')),
     # 相册
     url(r'^photo/', include('photo.urls')),
     # 添加静态文件的访问处理函数
-    url(r'^static/(?P<path>.*)/$', serve, {'document_root': settings.STATIC_URL}),
+    url(r'^statics/(?P<path>.*)/$', serve, {'document_root': settings.STATIC_URL}),
     # markdown
     url(r'mdeditor/', include('mdeditor.urls')),
 ]

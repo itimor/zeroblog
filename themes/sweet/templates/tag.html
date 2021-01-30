@@ -1,0 +1,89 @@
+{% extends "layout/base.html" %}
+
+{% block title %}
+| 标签
+{% endblock %}
+
+{% block extra_head %}
+<link href="/statics/css/3dtag.css" rel="stylesheet" type="text/css" media="all"/>
+<style type="text/css">
+    #tag-cloud {
+        width: 640px;
+        height: 480px;
+        margin: 0 auto;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="main" class="content">
+    <div class="container">
+        <section class="post_content" itemscope itemtype="http://schema.org/Article">
+            <header class="post_header">
+                <h1 class="post_title">标签
+                    {% if tag_posts.tag %}
+                    <span>{{tag_posts.tag}}</span>(<a href="/tag/">All</a>)
+                    {% endif %}
+                </h1>
+            </header>
+
+            {% if tag_posts.tag %}
+            <div class="post-Archive">
+                <div id="tags">
+                    <div class='archive-title'>
+                        {% for post in tag_posts.posts %}
+                        <div class='archives'>
+                            <div class="brick">
+                                <a href="{{ post.get_absolute_url }}">{{ post.name }}</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="tags">
+                {% for tag in tag_posts.json_tags %}
+                <a href="/tag/{{ tag.slug }}" class="tag">{{ tag.name }}({{tag.count}})</a>
+                {% endfor %}
+            </div>
+            <div id='tag-cloud'></div>
+            {% endif %}
+        </section>
+    </div>
+</div>
+{% endblock %}
+
+{% block extScriptFile %}
+<script type='text/javascript' src='/statics/js/jquery.min.js'></script>
+<script type='text/javascript' src='/statics/js/jquery.svg3dtagcloud.min.js'></script>
+<script>
+    var tags = {{ tag_posts.json_tags|safe }};
+    var entries = []
+    for(var tag of tags) {
+        entries.push({label: tag.name + '(' + tag.count + ')', url: tag.slug, target: '_top'})
+    }
+    var settings = {
+        entries: entries,
+        width: 640,
+        height: 480,
+        radius: '65%',
+        radiusMin: 75,
+        bgDraw: true,
+        bgColor: '#ffffff',
+        opacityOver: 1.00,
+        opacityOut: 0.05,
+        opacitySpeed: 6,
+        fov: 800,
+        speed: 0.5,
+        fontFamily: 'Oswald, Arial, sans-serif',
+        fontSize: '18',
+        fontColor: '#b170ff',
+        fontWeight: 'bold',//bold
+        fontStyle: 'italic',//italic
+        fontStretch: 'expanded',//wider, narrower, ultra-condensed, extra-condensed, condensed, semi-condensed, semi-expanded, expanded, extra-expanded, ultra-expanded
+        fontToUpperCase: true
+    };
+    $('#tag-cloud').svg3DTagCloud(settings);
+</script>
+{% endblock extScriptFile %}

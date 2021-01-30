@@ -14,11 +14,11 @@
     <link href="/res/css/jquery.fancybox.css" rel="stylesheet" type="text/css">
     <link href="/res/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
-    <link href="/static/css/main.css" rel="stylesheet" type="text/css">
-    <link href="/static/css/extra.css" rel="stylesheet" type="text/css">
+    <link href="/statics/css/main.css" rel="stylesheet" type="text/css">
+    <link href="/statics/css/extra.css" rel="stylesheet" type="text/css">
 
     <link rel="alternate" href="/rss" title="熊叔的冒险屋" type="application/atom+xml">
-    <link rel="shortcut icon" type="image/x-icon" href="/static/image/logo.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/statics/image/logo.ico">
     <link rel="canonical" href="/">
 
 <!--搜索关键词高亮-->
@@ -105,7 +105,7 @@
                             class="menu-item menu-item-active"
                             {% endif %}
                             style="opacity: 1; transform: translateY(0px);">
-                          <a href="{% url 'index' %}" rel="section">
+                          <a href="{% url 'blog:index' %}" rel="section">
                               <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
                             首页
                           </a>
@@ -118,7 +118,7 @@
                             class="menu-item menu-item-active"
                             {% endif %}
                             style="opacity: 1; transform: translateY(0px);">
-                          <a href="{% url 'archives' %}" rel="section">
+                          <a href="{% url 'blog:archives' %}" rel="section">
                               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
                             归档
                           </a>
@@ -131,7 +131,7 @@
                             class="menu-item menu-item-active"
                             {% endif %}
                             style="opacity: 1; transform: translateY(0px);">
-                          <a href="{% url 'categorys' %}" rel="section">
+                          <a href="{% url 'blog:categorys' %}" rel="section">
                               <i class="menu-item-icon fa fa-fw fa-folder-o"></i> <br>
                             分类
                           </a>
@@ -144,7 +144,7 @@
                             class="menu-item menu-item-active"
                             {% endif %}
                             style="opacity: 1; transform: translateY(0px);">
-                          <a href="{% url 'tags' %}" rel="section">
+                          <a href="{% url 'blog:tags' %}" rel="section">
                               <i class="menu-item-icon fa fa-fw fa-tag"></i> <br>
                             标签
                           </a>
@@ -156,7 +156,7 @@
                               <i class="menu-item-icon fa fa-search"></i>
                              </a>
 
-                            <form action="{% url 'haystack_search' %}">
+                            <form action="{% url 'blog:search' %}">
                                 <input id="unit" type="search" name="q" placeholder="搜索...">
                             </form>
 
@@ -182,7 +182,7 @@
                         {% block sidebar %}
                         <section class="site-overview sidebar-panel sidebar-panel-active">
                             <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-                                <img class="site-author-image" itemprop="image" src="/static/image/avatar.png" alt="geerniya">
+                                <img class="site-author-image" itemprop="image" src="/statics/image/avatar.png" alt="geerniya">
                                 <p class="site-author-name" itemprop="name">熊叔の冒险屋</p>
                                 <p class="site-description motion-element" itemprop="description">わが征くは星の大海</p>
                             </div>
@@ -202,7 +202,7 @@
                             </nav>
 
                             <div class="feed-link motion-element">
-                                <a href="{% url 'rss' %}" rel="alternate">
+                                <a href="{% url 'blog:rss' %}" rel="alternate">
                                     <i class="fa fa-rss"></i>
                                     RSS
                                 </a>
@@ -294,12 +294,12 @@
     <script type="text/javascript" src="/res/js/velocity.ui.min.js "></script>
     <script type="text/javascript" src="/res/js/jquery.fancybox.pack.js "></script>
 
-    <script type="text/javascript" src="/static/js/push.js"></script>
-    <script type="text/javascript" src="/static/js/hm.js"></script>
-    <script type="text/javascript" src="/static/js/utils.js "></script>
-    <script type="text/javascript" src="/static/js/motion.js "></script>
-    <script type="text/javascript" src="/static/js/affix.js "></script>
-    <script type="text/javascript" src="/static/js/pisces.js "></script>
+    <script type="text/javascript" src="/statics/js/push.js"></script>
+    <script type="text/javascript" src="/statics/js/hm.js"></script>
+    <script type="text/javascript" src="/statics/js/utils.js "></script>
+    <script type="text/javascript" src="/statics/js/motion.js "></script>
+    <script type="text/javascript" src="/statics/js/affix.js "></script>
+    <script type="text/javascript" src="/statics/js/pisces.js "></script>
 
     <script type="text/javascript" src="/res/js/bootstrap.js "></script>
     <script>
@@ -315,7 +315,7 @@
         var bp = document.createElement('script');
         var curProtocol = window.location.protocol.split(':')[0];
         if (curProtocol === 'https') {
-            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            bp.src = 'https://zz.bdstatics.com/linksubmit/push.js';
         }
         else {
             bp.src = 'http://push.zhanzhang.baidu.com/push.js';

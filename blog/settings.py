@@ -27,7 +27,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ALLOWED_HOSTS = ['*']
 
 # 主题
-THEME = 'next'
+# next 极简 |　sweet 小清新
+THEME = 'sweet'
 
 # Application definition
 
@@ -120,8 +121,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, f'themes/{THEME}/static')]
+STATIC_URL = '/statics/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, f'themes/{THEME}/statics')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 
 MEDIA_URL = '/res/'
@@ -152,3 +153,4 @@ SIMPLEUI_LOGO = '/static/image/logo.ico'
 SIMPLEUI_ANALYSIS = False
 # 不显示 SIMPLEUI_HOME_INFO
 SIMPLEUI_HOME_INFO = False
+

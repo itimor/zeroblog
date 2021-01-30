@@ -1,0 +1,41 @@
+{% extends "layout/base.html" %}
+
+{% block title %}
+| 归档
+{% endblock %}
+
+{% block content %}
+<div id="main" class="content">
+    <div class="container">
+        <section class="post_content" itemscope itemtype="http://schema.org/Article">
+            <header class="post_header">
+                <h1 class="post_title">归档</h1>
+            </header>
+            <div class="post-Archive">
+                <div id="archives">
+                    {% regroup archive_posts by publish_time.year as posts_by_year %}
+                    <div class='archive-title'>
+                        {% for year in posts_by_year %}
+                        <h2 text="{{ year.grouper }}"></h2>
+                            {% regroup year.list by publish_time.month as posts_by_month %}
+                                {% for month in posts_by_month %}
+                                    <h3>{{ month.grouper }}月 ({{month.list | length}})</h3>
+                                    {% for post in month.list %}
+                                        <div class='archives'>
+                                            <div class="brick">
+                                                <a href="{{ post.get_absolute_url }}">
+                                                    <span class="time">{{ post.publish_time |date:'m-d h:m' }}</span>
+                                                    {{ post.name }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

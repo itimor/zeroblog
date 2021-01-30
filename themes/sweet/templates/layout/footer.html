@@ -1,0 +1,49 @@
+<footer id="footer" class="overlay animated from-top">
+    <div class="row footer-info">
+        <div></div>
+        <div class="socialize">
+            {% for social in social_list %}
+            <li class="tooltip">
+                <a title="{{social.name}}" class="socialicon" href="{{social.url}}">
+                    <img alt="{{social.name}}" src="/upload/{{social.cover}}">
+                </a>
+                <div class="tooltip-social">{{social.name}}</div>
+            </li>
+            {% empty %}
+            <li>
+                <a title="weibo" class="socialicon" href="https://weibo.com/u/2646775602">
+                    <img src="/statics/images/svg/weibo.svg">
+                </a>
+            </li>
+            <li>
+                <a title="github" class="socialicon" href="https://github.com/itimor">
+                    <img src="/statics/images/svg/github.svg">
+                </a>
+            </li>
+            <li>
+                <a title="jianshu" class="socialicon" href="https://www.jianshu.com/u/40758c9db703">
+                    <img src="/statics/images/svg/jianshu.svg">
+                </a>
+            </li>
+            {% endfor %}
+        </div>
+        <div></div>
+    </div>
+    <div class="cr">
+        Copyright&copy;<a href="https://github.com/itimor">Itimor</a>
+        Power by <a href="https://www.djangoproject.com/">Django</a>
+    </div>
+    <script type='text/javascript' src='/statics/js/jquery.min.js'></script>
+    <script type='text/javascript' src='/statics/js/plugins.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script src="//cdn.bootcss.com/highlightjs-line-numbers.js/1.1.0/highlightjs-line-numbers.min.js"></script>
+    <script type='text/javascript' src='/statics/js/particles.js'></script>
+    <script type='text/javascript' src='/statics/js/aos.js'></script>
+    <script type='text/javascript' src='/statics/js/jquery.backTotop.js'></script>
+    <script type='text/javascript' src='/statics/js/lightbox.js'></script>
+    <script type='text/javascript' src='/statics/js/modernizr.js'></script>
+    <script type='text/javascript' src='/statics/js/jquery.hoverdir.js'></script>
+    <script type='text/javascript' src='/statics/js/chromagallery.min.js'></script>
+
+    <script type='text/javascript' src='/statics/js/script.js'></script>
+</footer>

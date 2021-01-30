@@ -1,16 +1,16 @@
-import markdown
+# -*- coding: utf-8 -*-
+# author: itimor
 
-from django.shortcuts import render, get_object_or_404
-from django.views import View
 from django.http import HttpResponse
-from django.db.models.aggregates import Count
-from pure_pagination import PageNotAnInteger, Paginator
-from haystack.views import SearchView
+from django.core.exceptions import PermissionDenied
+from django.views.generic import ListView, DetailView
+from myblog.models import Article, Friend
+from utils.pagination import get_pagination
+import markdown
 from taggit.models import Tag
+from pure_pagination import PageNotAnInteger, Paginator
+from haystack.views import SearchView as HaystackSearchView
 
-from blog.settings import HAYSTACK_SEARCH_RESULTS_PER_PAGE
-from myblog.models import *
-from myblog.forms import CommentForm
 
 md = markdown.Markdown(
     safe_mode=True,
@@ -23,197 +23,150 @@ md = markdown.Markdown(
     ])
 
 
-class IndexView(View):
+class BaseMixin(object):
+    def get_context_data(self, **kwargs):
+        context = super(BaseMixin, self).get_context_data(**kwargs)
+        return context
+
+
+class IndexView(BaseMixin, ListView):
     """
     首页
     """
+    template_name = 'index.html'
+    context_object_name = "all_blog"
+    queryset = Article.objects.filter(status='p')
 
-    def get(self, request):
-        all_blog = Article.objects.filter(status='p').order_by('is_top', '-id')
+    def get_context_data(self, **kwargs):
+        context = super(IndexView, self).get_context_data(**kwargs)
 
-        # 分页
-        try:
-            page = request.GET.get('page', 1)
-        except PageNotAnInteger:
-            page = 1
+        # 父类生成的字典中已有 paginator、page_obj、is_paginated 这三个模板变量，
+        paginator = context.get('paginator')
+        page = context.get('page_obj')
+        is_paginated = context.get('is_paginated')
 
-        p = Paginator(all_blog, 5, request=request)
-        all_blog = p.page(page)
-        return render(request, 'index.html', {'all_blog': all_blog})
+        # 调用自己写的 pagination_data 方法获得显示分页导航条需要的数据，见get_pagination()。
+        pagination_data = get_pagination(paginator, page, is_paginated)
+
+        # 将分页导航条的模板变量更新到 context 中，注意 pagination_data 方法返回的也是一个字典。
+        context.update(pagination_data)
+        return context
 
 
-class ArichiveView(View):
+class ArticleDetailView(BaseMixin, DetailView):
     """
-    归档
+    文章详情
     """
+    template_name = "detail.html"
+    context_object_name = "post"
+    queryset = Article.objects.filter(status='p')
 
-    def get(self, request):
-        all_blog = Article.objects.filter(status='p').order_by('-create_time')
-        blog_nums = len(all_blog)
+    def get_object(self, queryset=None):
+        context = super(ArticleDetailView, self).get_object()
 
-        # 分页
+        if context.status != 'p':
+            raise PermissionDenied
+
+        # 阅读数增1
+        context.views += 1
+        context.save(modified=False)
+
+        import re
+        re.sub(r'--more--', '', context.content)
+
+        md = markdown.Markdown(extensions=[
+            'markdown.extensions.extra',
+            'markdown.extensions.codehilite',
+        ])
+
+        context.content = md.convert(context.content)
+
+        return context
+
+    def get_context_data(self, **kwargs):
+        context = super(ArticleDetailView, self).get_context_data(**kwargs)
+        current_post = context.get("object")
+
+        prev_post = None
+        next_post = None
+
         try:
-            page = request.GET.get('page', 1)
-        except PageNotAnInteger:
-            page = 1
+            prev_post = Article.objects.get(status='p', pk=(current_post.id - 1))
+        except Exception as e:
+            print(e)
 
-        if blog_nums < 50:
-            num = 5
-        elif blog_nums < 100:
-            num = 10
-        elif blog_nums < 500:
-            num = 20
+        try:
+            next_post = Article.objects.get(status='p', pk=(current_post.id + 1))
+        except Exception as e:
+            print(e)
+
+        context['prev_post'] = prev_post
+        context['next_post'] = next_post
+        return context
+
+
+class TagView(BaseMixin, ListView):
+    """
+    首页
+    """
+    template_name = 'tag.html'
+    context_object_name = "tag_posts"
+    queryset = Article.objects.filter(status='p')
+
+    def get_queryset(self):
+        tag = self.kwargs.get('tag')
+        json_tags = []
+
+        if tag:
+            context = super(TagView, self).get_queryset().filter(tags__slug=tag)
+            return {'tag': tag, 'posts': context, 'json_tags': json_tags}
         else:
-            num = 30
-        p = Paginator(all_blog, num, request=request)
-        all_blog = p.page(page)
+            from django.db.models import Count
+            context = Tag.objects.all()
+            queryset = context.annotate(num_times=Count('taggit_taggeditem_items'))
+            for tag in queryset:
+                json_tags.append({"name": tag.name, "slug": tag.slug, "count": tag.num_times})
+            return {'json_tags': json_tags}
 
-        return render(request, 'archive.html', {'all_blog': all_blog, 'blog_nums': blog_nums})
 
-
-class ArticleDetailView(View):
+class ArchiveView(BaseMixin, ListView):
     """
-    博客详情页
+    首页
     """
+    template_name = 'archive.html'
+    context_object_name = "archive_posts"
+    queryset = Article.objects.filter(status='p').order_by("-publish_time")
 
-    def get(self, request, blog_slug):
-        blog = get_object_or_404(Article, slug=blog_slug)
-        # 博客点击数+1, 评论数统计
-        blog.views += 1
-        blog.save()
-        # 获取评论内容
-        all_comment = Comment.objects.filter(blog_id=blog.id)
-        comment_nums = all_comment.count()
-        # 将博客内容用markdown显示出来
-        blog.content = md.convert(blog.content)
-        blog.toc = md.toc
-        blog.tags = blog.tags.all()
-        # 实现博客上一篇与下一篇功能
-        has_prev = False
-        has_next = False
-        id_prev = id_next = int(blog.id)
-        blog_id_max = Article.objects.all().order_by('-id').first()
-        id_max = blog_id_max.id
-        blog_prev = None
-        blog_next = None
-        while not has_prev and id_prev >= 1:
-            blog_prev = Article.objects.filter(id=id_prev - 1).first()
-            if not blog_prev:
-                id_prev -= 1
-            else:
-                has_prev = True
-        while not has_next and id_next <= id_max:
-            blog_next = Article.objects.filter(id=id_next + 1).first()
-            if not blog_next:
-                id_next += 1
-            else:
-                has_next = True
-
-        return render(request, 'article-detail.html', {
-            'blog': blog,
-            'blog_prev': blog_prev,
-            'blog_next': blog_next,
-            'has_prev': has_prev,
-            'has_next': has_next,
-            'all_comment': all_comment,
-            'comment_nums': comment_nums
-        })
+    def get_context_data(self, **kwargs):
+        context = super(ArchiveView, self).get_context_data(**kwargs)
+        return context
 
 
-class AddCommentView(View):
+class LinkView(BaseMixin, ListView):
     """
-    评论
+    首页
     """
+    template_name = 'link.html'
+    context_object_name = "posts"
+    queryset = Friend.objects.filter(active=True)
 
-    def post(self, request):
-        comment_form = CommentForm(request.POST)
-        if comment_form.is_valid():
-            comment_form.save()
-            return HttpResponse('{"status": "success"}', content_type='application/json')
-        else:
-            return HttpResponse('{"status": "fail"}', content_type='application/json')
-
-
-class CategoryView(View):
-    """
-    分类
-    """
-
-    def get(self, request):
-        all_category = Category.objects.filter(is_root=True).annotate(number=Count('article'))
-        return render(request, 'categorys.html', {'all_category': all_category})
+    def get_context_data(self, **kwargs):
+        context = super(LinkView, self).get_context_data(**kwargs)
+        return context
 
 
-class CategoryDetaiView(View):
-    """
-    博客分类
-    """
-
-    def get(self, request, category_slug):
-        category = get_object_or_404(Category, slug=category_slug)
-        cate_blogs = category.article_set.all().order_by('is_top', '-id')
-
-        # 分页
-        try:
-            page = request.GET.get('page', 1)
-        except PageNotAnInteger:
-            page = 1
-
-        p = Paginator(cate_blogs, 20, request=request)
-        cate_blogs = p.page(page)
-
-        return render(request, 'category-detail.html', {
-            'cate_blogs': cate_blogs,
-            'category_name': category.name,
-        })
-
-
-class TagView(View):
-    """
-    标签云
-    """
-
-    def get(self, request):
-        all_tag = Tag.objects.all().annotate(number=Count('article'))
-        return render(request, 'tags.html', {'all_tag': all_tag})
-
-
-class TagDetailView(View):
-    """
-    标签下的所有博客
-    """
-
-    def get(self, request, tag_id):
-        tag = get_object_or_404(Tag, id=tag_id)
-        tag_blogs = Article.objects.filter(tags__in=[tag]).order_by('is_top', '-id')
-        print(tag_blogs)
-
-        # 分页
-        try:
-            page = request.GET.get('page', 1)
-        except PageNotAnInteger:
-            page = 1
-
-        p = Paginator(tag_blogs, 20, request=request)
-        tag_blogs = p.page(page)
-        return render(request, 'tag-detail.html', {
-            'tag_blogs': tag_blogs,
-            'tag_name': tag.name,
-        })
-
-
-class MySearchView(SearchView):
+class SearchView(HaystackSearchView):
     """
     复用搜索源码，将其余内容添加进来
     """
 
     def extra_context(self):
-        context = super(MySearchView, self).extra_context()
+        context = super(SearchView, self).extra_context()
         return context
 
     def build_page(self):
         # 分页重写
-        super(MySearchView, self).extra_context()
+        super(SearchView, self).extra_context()
 
         try:
             page_no = int(self.request.GET.get('page', 1))
@@ -228,11 +181,3 @@ class MySearchView(SearchView):
 
         return (paginator, page)
 
-
-# 配置404 500错误页面
-def page_not_found(request):
-    return render(request, '404.html')
-
-
-def page_errors(request):
-    return render(request, '500.html')

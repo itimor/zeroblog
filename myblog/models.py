@@ -2,6 +2,7 @@ from django.db import models
 from mdeditor.fields import MDTextField
 from django.utils import timezone
 from django.utils.html import format_html
+from django.urls import reverse
 from uuslug import slugify
 from taggit.managers import TaggableManager
 from utils.db import BaseModel
@@ -87,6 +88,9 @@ class Article(BaseModel):
         self.views += 1
         self.save(update_fields=['views'])
 
+    def get_absolute_url(self):
+        return reverse('blog:blog_slug', kwargs={'slug': self.slug})
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = get_hash(self.title)[-10:]
@@ -122,3 +126,23 @@ class Comment(BaseModel):
 
     def __str__(self):
         return self.content[:10]
+
+
+class Friend(models.Model):
+    """
+    友情链接
+    """
+    name = models.CharField(u'名称', max_length=100, default='')
+    link = models.URLField(u'链接', default='')
+    cover = models.CharField(u'头像', blank=True, max_length=255)
+    desc = models.TextField(u'描述', default='未添加描述')
+    position = models.SmallIntegerField(u'位置', default=1)
+    active = models.BooleanField(u'激活', default=True)
+
+    class Meta:
+        ordering = ['position']
+        verbose_name = u'友情链接'
+        verbose_name_plural = u'友情链接'
+
+    def __str__(self):
+        return self.name

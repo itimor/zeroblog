@@ -1,0 +1,75 @@
+<header id="masthead" class="overlay animated from-bottom" itemprop="brand">
+    <form class="js-search search-form search-form--modal" method="get" action="{% url 'blog:search' %}" role="search">
+        <div class="search-form__inner">
+            <div>
+                <div id="search-container" class="ajax_search">
+                    <form method="get" id="searchform" action="{% url 'blog:search' %}">
+                        <div class="filter_container">
+                            <input type="text" value="" autocomplete="off" placeholder="search ..." name="search"/>
+                            <ul id="search_filtered" class="search_filtered"></ul>
+                        </div>
+                        <input type="submit" id="searchsubmit" class="searchsubmit" value=""/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="navi" data-aos="fade-down">
+        <div class="bt-nav">
+            <div class="line line1"></div>
+            <div class="line line2"></div>
+            <div class="line line3"></div>
+        </div>
+        <div class="navbar animated fadeInRight">
+            <div class="inner">
+                <nav id="site-navigation" class="main-navigation">
+                    <div id="main-menu" class="main-menu-container">
+                        <div class="menu-menu-container">
+                            <ul id="primary-menu" class="menu">
+                                <li class="menu-item active">
+                                    <a href="/">首页</a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="/tag/">标签</a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="/archive/">归档</a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="/photo/">相册</a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="/link/">友链</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+                <!-- #site-navigation -->
+            </div>
+        </div>
+    </div>
+    <div class="hebin" data-aos="fade-down">
+        <a class=" js-toggle-search"><img src="/statics/images/svg/search.svg"></a>
+    </div>
+    <div class="site-branding text-center">
+        {% if user.is_staff %}
+            <a href="/logout">
+                <figure>
+                    <img class="custom-logo avatar" src="/statics/images/favicon.png"/>
+                </figure>
+            </a>
+            <p style="color: #000;">This is my world</p>
+        {% else %}
+            <a href="/login">
+                <figure>
+                    <img class="custom-logo avatar" src="/statics/images/favicon.png"/>
+                </figure>
+            </a>
+            <p>This is my world</p>
+        {% endif %}
+
+    </div>
+    <!-- .site-branding -->
+
+</header>

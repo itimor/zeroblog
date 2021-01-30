@@ -1,0 +1,26 @@
+{% extends "layout/base.html" %}
+
+{% block title %}
+| {{code}}页面
+{% endblock %}
+
+{% block content %}
+<div id="main" class="content">
+    <div class="container">
+        <section class="post_content">
+            <header class="post_header">
+                <h1 class="post_title">{{msg}}</h1>
+            </header>
+            <div class="links">
+                <h3>这是{{code}}页面</h3>
+                <h3>這是{{code}}頁面</h3>
+                <h3>This is a {{code}} page</h3>
+                <h3>Ceci est une page {{code}}</h3>
+                <h3>これは{{code}}ページです</h3>
+                <h3>Это {{code}} страница</h3>
+                <h3>Esta es una página {{code}}</h3>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

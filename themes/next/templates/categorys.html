@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends "layout/base.html" %}
 {% load leaf_category %}
 {% block title %}
 文章分类
@@ -19,7 +19,7 @@
                 </div>
                 <div class="category-item">
                     {% for category in all_category %}
-                    <h3> <a href="{% url 'category_slug' category.slug %}">{{ category.name }}</a>({{ category.number }})</h3>
+                    <h3> <a href="{% url 'blog:category_slug' category.slug %}">{{ category.name }}</a>({{ category.number }})</h3>
                         {% for node_category in category.id|leaf_category %}
                             <a class="node_category" href="{% url 'category_slug' node_category.slug %}">
                                 {{ node_category.name }}

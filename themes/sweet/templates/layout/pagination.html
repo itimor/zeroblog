@@ -1,0 +1,26 @@
+<div class="pagination">
+    <!--分页展示-->
+    <nav class="pagination">
+        <div class="pageturn">
+            <ul class="pagelist">
+                {% if all_blog.has_previous %}
+                <li class="long"><a href="?{{ all_blog.previous_page_number.querystring }}">上一页</a></li>
+                {% endif %}
+                {% for page in all_blog.pages %}
+                {% if page %}
+                {% ifequal page all_blog.number %}
+                <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                {% else %}
+                <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                {% endifequal %}
+                {% else %}
+                <li class="none"><a href="">...</a></li>
+                {% endif %}
+                {% endfor %}
+                {% if all_blog.has_next %}
+                <li class="long"><a href="?{{ all_blog.next_page_number.querystring }}">下一页</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+</div>

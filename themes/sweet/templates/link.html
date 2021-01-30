@@ -1,0 +1,43 @@
+{% extends "layout/base.html" %}
+
+{% block title %}
+| 友链
+{% endblock %}
+
+{% block content %}
+<div id="main" class="content">
+    <div class="container">
+        <section class="post_content">
+            <header class="post_header">
+                <h1 class="post_title">链接</h1>
+            </header>
+            <div class="links">
+                <h3 class="catalog-title">Life Blog</h3>
+                <div class="catalog-description"></div>
+                <div class="catalog-share">4 items in collection</div>
+                <div class="userItems">
+                    {% for post in posts %}
+                    <div class="userItem">
+                        <div class="userItem--inner">
+                            <div class="userItem-content">
+                                <img alt='' src="/upload/{{post.cover}}" height='64' width='64'/>
+                                <div class="userItem-name">
+                                    <a class="link link--primary" target="_blank">{{post.name}}</a>
+                                </div>
+                                <a href="{{post.link}}">{{post.desc}}</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="userItem">
+                        <div class="userItem--inner">
+                            <p>还没有添加友情链接</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

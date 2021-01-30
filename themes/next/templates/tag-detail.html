@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends "layout/base.html" %}
 
 {% block title %}
 {{ tag_name }}
@@ -23,7 +23,7 @@
                     <header class="post-header">
 
                     <h1 class="post-title">
-                        <a class="post-title-link" href="{% url 'blog_slug' blog.slug %}" itemprop="url">
+                        <a class="post-title-link" href="{% url 'blog:blog_slug' blog.slug %}" itemprop="url">
                             <span itemprop="name">{{ blog.title }}</span>
                          </a>
                     </h1>
