@@ -9,5 +9,4 @@ package-lock.json
 .vscode/
 venv/
 blog.db
-res/
 whoosh_index/
