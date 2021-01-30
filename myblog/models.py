@@ -4,11 +4,8 @@ from django.utils import timezone
 from django.utils.html import format_html
 from uuslug import slugify
 from taggit.managers import TaggableManager
-from taggit.models import TagBase, GenericTaggedItemBase, TaggedItemBase
-
-from utils.storage import PathAndRename
 from utils.db import BaseModel
-from utils.index import get_hash
+from utils.index import get_hash, get_cover
 
 
 class Category(BaseModel):
@@ -20,7 +17,6 @@ class Category(BaseModel):
     is_root = models.BooleanField(default=False, verbose_name='是否是一级分类')
     name = models.CharField(verbose_name='名称', unique=True, max_length=20)
     slug = models.CharField(verbose_name='slug', unique=True, blank=True, null=True, max_length=20)
-    number = models.IntegerField(verbose_name='分类数目', default=1)
 
     class Meta:
         verbose_name = '博客类别'
@@ -35,31 +31,6 @@ class Category(BaseModel):
         super(Category, self).save(*args, **kwargs)
 
 
-class Tag(TagBase):
-    name = models.CharField(verbose_name='名称', unique=True, max_length=20)
-    slug = models.CharField(verbose_name='slug', unique=True, blank=True, null=True, max_length=20)
-
-    class Meta:
-        verbose_name = '博客标签'
-        verbose_name_plural = verbose_name
-
-    def __str__(self):
-        return self.name
-
-    def save(self, *args, **kwargs):
-        if self.slug is None:
-            self.slug = slugify(self.name)
-        super(Tag, self).save(*args, **kwargs)
-
-
-class TagManager(GenericTaggedItemBase, TaggedItemBase):
-    tag = models.ForeignKey(
-        Tag,
-        on_delete=models.CASCADE,
-        related_name="%(app_label)s_%(class)s_items",
-    )
-
-
 class Article(BaseModel):
     """
     博客
@@ -70,13 +41,13 @@ class Article(BaseModel):
         'w': '撤销',
     }
 
-    title = models.CharField(verbose_name='标题', unique=True, max_length=100)
-    cover = models.ImageField(upload_to=PathAndRename("cover"), verbose_name=u'封面')
-    slug = models.CharField(verbose_name='slug', unique=True, blank=True, null=True, max_length=20)
-    content = MDTextField(verbose_name='正文', default='')
-    views = models.PositiveIntegerField(verbose_name='热度', default=0)
+    title = models.CharField('标题', unique=True, max_length=100)
+    cover = models.CharField(u'封面', blank=True, max_length=255)
+    slug = models.CharField('slug', unique=True, blank=True, null=True, max_length=20)
+    content = MDTextField(u'正文', default='')
+    views = models.PositiveIntegerField(u'热度', default=0)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='博客类别')
-    tags = TaggableManager(u'标签', blank=True, through=TagManager)
+    tags = TaggableManager(u'标签', blank=True)
     status = models.CharField(u'状态', max_length=1, choices=tuple(STATUS_CHOICES.items()), default='d')
     is_top = models.BooleanField(u'置顶', default=False)
     create_time = models.DateTimeField(u'创建时间', auto_now_add=True)
@@ -105,14 +76,22 @@ class Article(BaseModel):
 
     colored_status.short_description = "状态"
 
+    def view_cover(self):
+        return format_html("<img src='%s' height='200'/>" % self.cover)
+
+    view_cover.short_description = '封面'
+    view_cover.allow_tags = True
+
     # 阅读了增加的方法。
     def increase_views(self):
         self.views += 1
         self.save(update_fields=['views'])
 
     def save(self, *args, **kwargs):
-        if self.slug is None:
+        if not self.slug:
             self.slug = get_hash(self.title)[-10:]
+        if not self.cover:
+            self.cover = get_cover()
         modified = kwargs.pop("modified", True)
         if modified:
             self.update_time = timezone.now()
@@ -133,8 +112,8 @@ class Comment(BaseModel):
     """
     博客评论
     """
-    name = models.CharField(verbose_name='姓名', max_length=20, default='佚名')
-    content = models.CharField(verbose_name='内容', max_length=300)
+    name = models.CharField(u'姓名', max_length=20, default='佚名')
+    content = models.CharField(u'内容', max_length=300)
     blog = models.ForeignKey(Article, on_delete=models.CASCADE, verbose_name='博客')
 
     class Meta:
@@ -143,37 +122,3 @@ class Comment(BaseModel):
 
     def __str__(self):
         return self.content[:10]
-
-
-class PhotoGroup(models.Model):
-    name = models.CharField(u'标题', max_length=150, unique=True)
-    cover = models.ImageField(upload_to=PathAndRename("photocover"), verbose_name=u'封面')
-    desc = models.TextField(u'描述', )
-    create_time = models.DateTimeField(u'创建时间', auto_now_add=True)
-    update_time = models.DateTimeField(u'更新时间', auto_now=True)
-    active = models.BooleanField(u'开启', default=True)
-
-    class Meta:
-        verbose_name = u'相册'
-        verbose_name_plural = u'相册'
-
-    def __str__(self):
-        return self.name
-
-
-class Photo(models.Model):
-    photo = models.ImageField(upload_to=PathAndRename("photo"), verbose_name=u'照片')
-    desc = models.TextField(null=True, blank=True, verbose_name=u'描述')
-    group = models.ForeignKey('PhotoGroup', on_delete=models.CASCADE, blank=True)
-    create_time = models.DateTimeField(u'创建时间', auto_now_add=True)
-    update_time = models.DateTimeField(u'更新时间', auto_now=True)
-
-    class Meta:
-        verbose_name = u'照片'
-        verbose_name_plural = u'照片'
-
-    def view_img(self):
-        return format_html("<img src='/upload/%s' height='200'/>" % self.photo)
-
-    view_img.short_description = '预览'
-    view_img.allow_tags = True

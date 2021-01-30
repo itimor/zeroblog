@@ -1,6 +1,6 @@
 from django.contrib import admin
 from blog.settings import admin_title
-from myblog.models import Article, Category, Tag, Comment, TagManager
+from myblog.models import Article, Category, Comment
 from django.utils import timezone
 
 
@@ -10,12 +10,12 @@ class ArticleAdmin(admin.ModelAdmin):
                     'publish_time']
     list_filter = ['status', 'is_top', 'publish_time', 'views']
     fieldsets = (
-        ("基础信息", {'fields': ['title', 'slug', 'tags']}),
-        ("状态", {'fields': ['status', 'category', 'is_top', 'allow_comments']}),
+        ("基础", {'fields': ['title', 'view_cover']}),
+        ("状态", {'fields': [('tags', 'slug'), ('status', 'is_top'), ('category', 'allow_comments')]}),
         ("内容", {'fields': ['content']})
     )
-    readonly_fields = ['slug']
-    exclude = ['publish_time']
+    readonly_fields = ['slug', 'view_cover']
+    exclude = ['publish_time', 'view_cover']
     search_fields = ['title', 'slug']
     ordering = ['-create_time', 'status', 'is_top', 'publish_time']
     list_per_page = 20
@@ -48,21 +48,8 @@ class ArticleAdmin(admin.ModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug', 'number', 'parent', 'is_root']
+    list_display = ['name', 'slug', 'parent', 'is_root']
     search_fields = ['name', 'slug']
-
-
-class TagManagerInline(admin.StackedInline):
-    model = TagManager
-
-
-@admin.register(Tag)
-class TagAdmin(admin.ModelAdmin):
-    inlines = [TagManagerInline]
-    list_display = ["name", "slug"]
-    ordering = ["name", "slug"]
-    search_fields = ["name"]
-    prepopulated_fields = {"slug": ["name"]}
 
 
 @admin.register(Comment)

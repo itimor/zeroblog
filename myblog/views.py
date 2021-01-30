@@ -3,6 +3,7 @@ import markdown
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 from django.http import HttpResponse
+from django.db.models.aggregates import Count
 from pure_pagination import PageNotAnInteger, Paginator
 from haystack.views import SearchView
 from taggit.models import Tag
@@ -68,40 +69,6 @@ class ArichiveView(View):
         all_blog = p.page(page)
 
         return render(request, 'archive.html', {'all_blog': all_blog, 'blog_nums': blog_nums})
-
-
-class TagView(View):
-    """
-    标签云
-    """
-
-    def get(self, request):
-        all_tag = Tag.objects.all()
-        return render(request, 'tags.html', {'all_tag': all_tag})
-
-
-class TagDetailView(View):
-    """
-    标签下的所有博客
-    """
-
-    def get(self, request, tag_slug):
-        tag = get_object_or_404(Tag, slug=tag_slug)
-        tag_blogs = Article.objects.filter(tags__slug__in=[tag_slug]).order_by('is_top', '-id')
-        print(tag_blogs)
-
-        # 分页
-        try:
-            page = request.GET.get('page', 1)
-        except PageNotAnInteger:
-            page = 1
-
-        p = Paginator(tag_blogs, 20, request=request)
-        tag_blogs = p.page(page)
-        return render(request, 'tag-detail.html', {
-            'tag_blogs': tag_blogs,
-            'tag_name': tag.name,
-        })
 
 
 class ArticleDetailView(View):
@@ -173,7 +140,7 @@ class CategoryView(View):
     """
 
     def get(self, request):
-        all_category = Category.objects.filter(is_root=True).order_by('-number')
+        all_category = Category.objects.filter(is_root=True).annotate(number=Count('article'))
         return render(request, 'categorys.html', {'all_category': all_category})
 
 
@@ -198,6 +165,40 @@ class CategoryDetaiView(View):
         return render(request, 'category-detail.html', {
             'cate_blogs': cate_blogs,
             'category_name': category.name,
+        })
+
+
+class TagView(View):
+    """
+    标签云
+    """
+
+    def get(self, request):
+        all_tag = Tag.objects.all().annotate(number=Count('article'))
+        return render(request, 'tags.html', {'all_tag': all_tag})
+
+
+class TagDetailView(View):
+    """
+    标签下的所有博客
+    """
+
+    def get(self, request, tag_id):
+        tag = get_object_or_404(Tag, id=tag_id)
+        tag_blogs = Article.objects.filter(tags__in=[tag]).order_by('is_top', '-id')
+        print(tag_blogs)
+
+        # 分页
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+
+        p = Paginator(tag_blogs, 20, request=request)
+        tag_blogs = p.page(page)
+        return render(request, 'tag-detail.html', {
+            'tag_blogs': tag_blogs,
+            'tag_name': tag.name,
         })
 
 

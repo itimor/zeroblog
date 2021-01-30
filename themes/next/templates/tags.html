@@ -20,7 +20,7 @@
                 <div class="tag-cloud-tags">
 
                     {% for tag in all_tag %}
-                        <a href="{% url 'tag_slug' tag.slug %}"
+                        <a href="{% url 'tag_id' tag.id %}"
 
                            {% if tag.number <= 2 %}
                                 style="font-size: 12.5px; color: #999"

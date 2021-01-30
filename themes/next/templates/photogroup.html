@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}
+| 照片
+{% endblock %}
+
+{% block content %}
+<div class="content-wrap">
+    <div id="content" class="content">
+        <div id="posts" class="posts-expand">
+            <header class="post_header">
+                <h2 class="post-title" itemprop="name headline">相册</h2>
+            </header>
+            <div class="photoItems">
+                <ul id="da-thumbs" class="da-thumbs">
+                    {% for photogroup in photogroups %}
+                    <li>
+                        <a href="/photo/photo/{{ photogroup.name }}/" class="b-link-stripe b-animate-go thickbox">
+                            <img src="{{ photogroup.cover }}" width="250" height="250" alt=""/>
+                            <div>
+                                <h5>{{ photogroup.name }}</h5>
+                                <span>{{ photogroup.desc }}</span>
+                            </div>
+                        </a>
+                    </li>
+                    {% empty %}
+                        <div class="category">
+                            <span>你还没有建立相册，啥图片都没有</span>
+                        </div>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="comments" id="comments">
+        <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    </div>
+
+</div>
+{% endblock %}

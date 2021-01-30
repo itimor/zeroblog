@@ -113,13 +113,13 @@
                         </li>
 
                         <li
-                            {% if request.path|slice:"8" == '/archive' %}
+                            {% if request.path|slice:"8" == '/archives' %}
                             class="menu-item menu-item-home menu-item-active"
                             {% else %}
                             class="menu-item menu-item-active"
                             {% endif %}
                             style="opacity: 1; transform: translateY(0px);">
-                          <a href="{% url 'archive' %}" rel="section">
+                          <a href="{% url 'archives' %}" rel="section">
                               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
                             归档
                           </a>
@@ -146,8 +146,8 @@
                             {% endif %}
                             style="opacity: 1; transform: translateY(0px);">
                           <a href="{% url 'tags' %}" rel="section">
-                              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
-                            标签云
+                              <i class="menu-item-icon fa fa-fw fa-tag"></i> <br>
+                            标签
                           </a>
                         </li>
 
@@ -190,13 +190,13 @@
                             <nav class="site-state motion-element">
                                 <div class="site-state-item site-state-posts">
                                     <a href="/admin" target='_blank'>
-                                        <span class="site-state-item-name">博客后台</span>
+                                        <span class="site-state-item-name">后台</span>
                                     </a>
                                 </div>
 
                                 <div class="site-state-item site-state-categories">
-                                    <a href="/">
-                                        <span class="site-state-item-name">爬虫后台</span>
+                                    <a href="/photo">
+                                        <span class="site-state-item-name">相册</span>
                                     </a>
                                 </div>
 

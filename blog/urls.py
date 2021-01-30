@@ -34,6 +34,8 @@ urlpatterns = [
     url(r'^search/', MySearchView(), name='haystack_search'),
     # 博客
     url(r'^blog/', include('myblog.urls')),
+    # 相册
+    url(r'^photo/', include('photo.urls')),
     # 添加静态文件的访问处理函数
     url(r'^static/(?P<path>.*)/$', serve, {'document_root': settings.STATIC_URL}),
     # markdown

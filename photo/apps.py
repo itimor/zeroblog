@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class MyblogConfig(AppConfig):
-    name = 'myblog'
-    verbose_name = '博客管理'
+    name = 'photo'
+    verbose_name = '相册管理'

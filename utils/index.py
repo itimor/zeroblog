@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # author: itimor
 
+import requests
 import hashlib
 from hashlib import sha1
 
@@ -17,6 +18,13 @@ def get_hash(str, salt=None):  # salt 盐
     return sh.hexdigest()
 
 
+def get_cover():
+    url = 'https://source.unsplash.com/random/600x800'
+    session = requests.Session()
+    r = session.get(url)
+    return r.url
+
+
 def gen_md5(str):
     md5 = hashlib.md5()
     # 实例化md5加密方法
@@ -29,16 +37,16 @@ def gen_md5(str):
 def gen_markdown_table(header, header_code, data):
     n = len(header)
     lines = []
-    ## 表头部分
+    # 表头部分
     lines += ["{}".format(' | '.join(header))]
 
-    ## 分割线
+    # 分割线
     line = ''
     for i in range(n):
         line += "{}".format(' -- |')
     lines += [line.rstrip(' | ')]
 
-    ## 数据部分
+    # 数据部分
     for d in data:
         line = []
         for i in header_code:
@@ -57,5 +65,5 @@ if __name__ == '__main__':
     #     {'name': 'cc', 'sex': 3, 'tel': 33},
     # ]
     # p = gen_markdown_table(header, header_code, data)
-    p = get_hash('你好')[-7:]
+    p = get_cover()
     print(p)
