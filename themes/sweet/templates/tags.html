@@ -22,7 +22,7 @@
             <header class="post_header">
                 <h1 class="post_title">标签
                     {% if tag_posts.tag %}
-                    <span>{{tag_posts.tag}}</span>(<a href="/tag/">All</a>)
+                    <span>{{tag_posts.tag}}</span>(<a href="{% url 'blog:tags' %}">All</a>)
                     {% endif %}
                 </h1>
             </header>
@@ -34,7 +34,7 @@
                         {% for post in tag_posts.posts %}
                         <div class='archives'>
                             <div class="brick">
-                                <a href="{{ post.get_absolute_url }}">{{ post.name }}</a>
+                                <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
                             </div>
                         </div>
                         {% endfor %}
@@ -43,8 +43,8 @@
             </div>
             {% else %}
             <div class="tags">
-                {% for tag in tag_posts.json_tags %}
-                <a href="/tag/{{ tag.slug }}" class="tag">{{ tag.name }}({{tag.count}})</a>
+                {% for tag in tag_posts.posts %}
+                <a href="{% url 'blog:tag-detail' tag.id %}" class="tag">{{ tag.name }}({{tag.number}})</a>
                 {% endfor %}
             </div>
             <div id='tag-cloud'></div>

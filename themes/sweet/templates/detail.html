@@ -1,6 +1,6 @@
 {% extends "layout/base.html" %}
 {% block title %}
-| {{ post.name }}
+| {{ post.title }}
 {% endblock %}
 
 {% block content %}
@@ -8,13 +8,7 @@
     <div class="container">
         <section class="post_content">
             <header class="post_header">
-                <h1 class="post_title">{{ post.name }}
-                    {% if user.is_staff %}
-                    <a href="/admin/blog/article/{{ post.id }}/change/"><img src="/statics/images/svg/edit.svg"
-                                                                             width="20" height="20"></a>
-                    <!--<a href="/post/edit/{{ post.id }}"><img src="/statics/images/svg/edit.svg" width="20" height="20"></a>-->
-                    {% endif %}
-                </h1>
+                <h1 class="post_title">{{ post.title }}</h1>
             </header>
             <div class="post-body">
                 {% autoescape off %}
@@ -26,7 +20,7 @@
                 <div class="split__title">
                     <time>{{ post.publish_time|date:'Y-m-d' }} |</time>
                     {% for tag in post.tags.all %}
-                    <a href="/tag/{{tag.name}}" class="tag">{{tag.name}}</a>
+                    <a href="/tag/{{tag.id}}" class="tag">{{tag.name}}</a>
                     {% empty %}
                     <a class="tag">未设置标签</a>
                     {% endfor %}
@@ -48,7 +42,7 @@
                             <li class="comment even thread-even depth-1" id="li-comment-">
                                 <div class="comment_body contents">
                                     <div class="profile">
-                                        <a href=""><img src="/statics/images/avatar.png"
+                                        <a href=""><img src="/res/sys/avatar.png"
                                                         class="gravatar" alt="小布丁"></a>
                                     </div>
                                     <div class="main shadow">
@@ -56,7 +50,7 @@
                                             <section class="commeta">
                                                 <div class="shang">
                                                     <h4 class="author"><a href="" target="_blank"><img
-                                                            src="/statics/images/avatar.png"
+                                                            src="/res/sys/avatar.png"
                                                             class="gravatarsmall" alt="小布丁">小布丁</a></h4>
                                                 </div>
                                             </section>
@@ -96,7 +90,7 @@
                             <p style="display: none;"><input type="hidden" id="ak_js" name="ak_js" value="87"/></p>
                             <div class="comment-form-info">
                                 <div class="real-time-gravatar"><img id="real-time-gravatar"
-                                                                     src="/statics/images/avatar.png"
+                                                                     src="/res/sys/avatar.png"
                                                                      alt="gravatar头像"/>
                                 </div>
                                 <p class="input-row">
@@ -122,13 +116,13 @@
             <div class="preview">
                 {% if prev_post %}
                 {% if prev_post.cover %}
-                <div class="pull-left featuredImg" style="background-image:url(/upload/{{ prev_post.cover }});"></div>
+                <div class="pull-left featuredImg" style="background-image:url({{ prev_post.cover }});"></div>
                 {% else %}
-                <div class="pull-left featuredImg" style="background-image:url('/statics/images/empty.png');"></div>
+                <div class="pull-left featuredImg" style="background-image:url('/res/sys/empty.png');"></div>
                 {% endif %}
-                <a class="pull-left preview-content bold" href="{{ prev_post.get_absolute_url }}"><span>{{ prev_post.name }}</span></a>
+                <a class="pull-left preview-content bold" href="{{ prev_post.get_absolute_url }}"><span>{{ prev_post.title }}</span></a>
                 {% else %}
-                <div class="pull-left featuredImg" style="background-image:url('/statics/images/empty.png');"></div>
+                <div class="pull-left featuredImg" style="background-image:url('/res/sys/empty.png');"></div>
                 <a class="pull-left preview-content bold" href="#"><span>拜托！泥垢了</span></a>
                 {% endif %}
             </div>
@@ -138,13 +132,13 @@
             <div class="preview">
                 {% if next_post %}
                 {% if next_post.cover %}
-                <div class="pull-right featuredImg" style="background-image:url(/upload/{{ next_post.cover }});"></div>
+                <div class="pull-right featuredImg" style="background-image:url({{ next_post.cover }});"></div>
                 {% else %}
-                <div class="pull-right featuredImg" style="background-image:url('/statics/images/empty.png');"></div>
+                <div class="pull-right featuredImg" style="background-image:url('/res/sys/empty.png');"></div>
                 {% endif %}
-                <a class="pull-right preview-content bold" href="{{ next_post.get_absolute_url }}"><span>{{ next_post.name }}</span></a>
+                <a class="pull-right preview-content bold" href="{{ next_post.get_absolute_url }}"><span>{{ next_post.title }}</span></a>
                 {% else %}
-                <div class="pull-right featuredImg" style="background-image:url('/statics/images/empty.png');"></div>
+                <div class="pull-right featuredImg" style="background-image:url('/res/sys/empty.png');"></div>
                 <a class="pull-right preview-content bold" href="#"><span>哼！我也是有底线的</span></a>
                 {% endif %}
             </div>

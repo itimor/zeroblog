@@ -83,13 +83,8 @@ class Article(BaseModel):
     view_cover.short_description = '封面'
     view_cover.allow_tags = True
 
-    # 阅读了增加的方法。
-    def increase_views(self):
-        self.views += 1
-        self.save(update_fields=['views'])
-
     def get_absolute_url(self):
-        return reverse('blog:blog_slug', kwargs={'slug': self.slug})
+        return reverse('blog:blog_detail', kwargs={'slug': self.slug})
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -100,14 +95,11 @@ class Article(BaseModel):
         if modified:
             self.update_time = timezone.now()
 
-        if self.status == 'd':
+        if self.status in ['d', 'w']:
             self.publish_time = None
 
         if self.status == 'p' and not self.publish_time:
             self.publish_time = timezone.now()
-
-        if self.status == 'w':
-            self.update_time = None
 
         super(Article, self).save(*args, **kwargs)
 

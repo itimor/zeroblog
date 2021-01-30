@@ -144,11 +144,10 @@ HAYSTACK_CONNECTIONS = {
 HAYSTACK_SEARCH_RESULTS_PER_PAGE = 5
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
-## simple ui 配置
 # 标题
-admin_title = '一起去冒险吧！勇士'
+admin_title = '熊叔の冒险屋'
 # logo
-SIMPLEUI_LOGO = '/static/image/logo.ico'
+SIMPLEUI_LOGO = '/res/sys/logo.ico'
 # 不收集分析信息不收集分析信息
 SIMPLEUI_ANALYSIS = False
 # 不显示 SIMPLEUI_HOME_INFO

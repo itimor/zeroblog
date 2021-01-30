@@ -18,15 +18,15 @@ urlpatterns = [
     # 首页
     url(r'^$', IndexView.as_view(), name='index'),
     url(r'^archives/$', ArchiveView.as_view(), name='archives'),
-    url(r'^detail/(?P<blog_slug>\w+).html$', ArticleDetailView.as_view(), name='blog_slug'),
+    url(r'^detail/(?P<slug>\w+).html$', ArticleDetailView.as_view(), name='blog_detail'),
     # url(r'^add_comment/$', AddCommentView.as_view(), name='add_comment'),
     url(r'^rss/$', ArticleRssFeed(), name='rss'),
     url(r'^tags/$', TagView.as_view(), name='tags'),
-    url(r'^tag/(?P<tag>\w+)', TagView.as_view(), name="tag-detail"),
+    url(r'^tag/(?P<tag_id>\d+)', TagView.as_view(), name="tag-detail"),
     # url(r'^tag/(?P<tag_id>\d+)/$', TagDetailView.as_view(), name='tag_id'),
     # url(r'^categorys/$', CategoryView.as_view(), name='categorys'),
     # url(r'^category/(?P<category_slug>[\w,-]+)/$', CategoryDetaiView.as_view(), name='category_slug'),
-    url(r'^link/', LinkView.as_view(), name="link"),
+    url(r'^links/', LinkView.as_view(), name="link"),
     # 搜索
     url(r'^search/', SearchView(), name='search'),
 ]

@@ -9,7 +9,7 @@
     <div class="container">
         <section class="post_content" itemscope itemtype="http://schema.org/Article">
             <header class="post_header">
-                <h1 class="post_title">归档</h1>
+                <h1 class="post_title">时间线</h1>
             </header>
             <div class="post-Archive">
                 <div id="archives">
@@ -25,7 +25,7 @@
                                             <div class="brick">
                                                 <a href="{{ post.get_absolute_url }}">
                                                     <span class="time">{{ post.publish_time |date:'m-d h:m' }}</span>
-                                                    {{ post.name }}
+                                                    {{ post.title }}
                                                 </a>
                                             </div>
                                         </div>

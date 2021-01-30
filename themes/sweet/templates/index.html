@@ -9,23 +9,14 @@
     <div class="container">
         <article itemscope="itemscope">
             <div class="posts-list js-posts">
-                {% for post in all_blog %}
+                {% for post in posts %}
                     {% include './layout/l_post.html' %}
-<!--                    {% if post.type == 'l' %}-->
-<!--                        {% include './layout/l_post.html' %}-->
-<!--                    {% elif post.type == 'w' %}-->
-<!--                        {% include './layout/w_post.html' %}-->
-<!--                    {% else %}-->
-<!--                        {% include './layout/j_post.html' %}-->
-<!--                    {% endif %}-->
                 {% empty %}
                     <div class="post no-post">暂时还没有发布的文章！</div>
                 {% endfor %}
             </div>
             {% block pagination %}
-                {% if is_paginated %}
-                    {% include './layout/pagination.html' %}
-                {% endif %}
+            {% include './layout/pagination.html' %}
             {% endblock %}
         </article>
     </div>

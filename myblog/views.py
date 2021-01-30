@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 # author: itimor
 
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.core.exceptions import PermissionDenied
 from django.views.generic import ListView, DetailView
+from django.db.models import Count
 from myblog.models import Article, Friend
-from utils.pagination import get_pagination
+from utils.paginations import get_pagination
 import markdown
 from taggit.models import Tag
 from pure_pagination import PageNotAnInteger, Paginator
 from haystack.views import SearchView as HaystackSearchView
-
+from blog.settings import HAYSTACK_SEARCH_RESULTS_PER_PAGE
 
 md = markdown.Markdown(
     safe_mode=True,
@@ -34,22 +36,18 @@ class IndexView(BaseMixin, ListView):
     首页
     """
     template_name = 'index.html'
-    context_object_name = "all_blog"
+    context_object_name = "posts"
     queryset = Article.objects.filter(status='p')
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
+        try:
+            page = self.request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 5
 
-        # 父类生成的字典中已有 paginator、page_obj、is_paginated 这三个模板变量，
-        paginator = context.get('paginator')
-        page = context.get('page_obj')
-        is_paginated = context.get('is_paginated')
-
-        # 调用自己写的 pagination_data 方法获得显示分页导航条需要的数据，见get_pagination()。
-        pagination_data = get_pagination(paginator, page, is_paginated)
-
-        # 将分页导航条的模板变量更新到 context 中，注意 pagination_data 方法返回的也是一个字典。
-        context.update(pagination_data)
+        page_data = get_pagination(self.queryset, len(self.queryset), request=self.request)
+        context['page_data'] = page_data
         return context
 
 
@@ -70,35 +68,33 @@ class ArticleDetailView(BaseMixin, DetailView):
         # 阅读数增1
         context.views += 1
         context.save(modified=False)
-
-        import re
-        re.sub(r'--more--', '', context.content)
-
-        md = markdown.Markdown(extensions=[
-            'markdown.extensions.extra',
-            'markdown.extensions.codehilite',
-        ])
-
         context.content = md.convert(context.content)
-
         return context
 
     def get_context_data(self, **kwargs):
         context = super(ArticleDetailView, self).get_context_data(**kwargs)
         current_post = context.get("object")
 
+        # 实现博客上一篇与下一篇功能
+        has_prev = False
+        has_next = False
+        id_prev = id_next = int(current_post.id)
+        blog_id_max = Article.objects.all().order_by('-id').first()
+        id_max = blog_id_max.id
         prev_post = None
         next_post = None
-
-        try:
-            prev_post = Article.objects.get(status='p', pk=(current_post.id - 1))
-        except Exception as e:
-            print(e)
-
-        try:
-            next_post = Article.objects.get(status='p', pk=(current_post.id + 1))
-        except Exception as e:
-            print(e)
+        while not has_prev and id_prev >= 1:
+            prev_post = Article.objects.filter(id=id_prev - 1).first()
+            if not prev_post:
+                id_prev -= 1
+            else:
+                has_prev = True
+        while not has_next and id_next <= id_max:
+            next_post = Article.objects.filter(id=id_next + 1).first()
+            if not next_post:
+                id_next += 1
+            else:
+                has_next = True
 
         context['prev_post'] = prev_post
         context['next_post'] = next_post
@@ -106,33 +102,22 @@ class ArticleDetailView(BaseMixin, DetailView):
 
 
 class TagView(BaseMixin, ListView):
-    """
-    首页
-    """
-    template_name = 'tag.html'
+    template_name = 'tags.html'
     context_object_name = "tag_posts"
     queryset = Article.objects.filter(status='p')
 
     def get_queryset(self):
-        tag = self.kwargs.get('tag')
-        json_tags = []
-
-        if tag:
-            context = super(TagView, self).get_queryset().filter(tags__slug=tag)
-            return {'tag': tag, 'posts': context, 'json_tags': json_tags}
+        tag_id = self.kwargs.get('tag_id')
+        if tag_id:
+            tag = get_object_or_404(Tag, id=tag_id)
+            context = Article.objects.filter(tags__in=[tag]).order_by('is_top', '-id')
+            return {'tag': tag, 'posts': context}
         else:
-            from django.db.models import Count
-            context = Tag.objects.all()
-            queryset = context.annotate(num_times=Count('taggit_taggeditem_items'))
-            for tag in queryset:
-                json_tags.append({"name": tag.name, "slug": tag.slug, "count": tag.num_times})
-            return {'json_tags': json_tags}
+            context = Tag.objects.all().annotate(number=Count('article'))
+            return {'posts': context}
 
 
 class ArchiveView(BaseMixin, ListView):
-    """
-    首页
-    """
     template_name = 'archive.html'
     context_object_name = "archive_posts"
     queryset = Article.objects.filter(status='p').order_by("-publish_time")
@@ -143,10 +128,7 @@ class ArchiveView(BaseMixin, ListView):
 
 
 class LinkView(BaseMixin, ListView):
-    """
-    首页
-    """
-    template_name = 'link.html'
+    template_name = 'links.html'
     context_object_name = "posts"
     queryset = Friend.objects.filter(active=True)
 
@@ -180,4 +162,3 @@ class SearchView(HaystackSearchView):
         page = paginator.page(page_no)
 
         return (paginator, page)
-

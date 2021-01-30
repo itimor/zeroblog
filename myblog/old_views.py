@@ -54,7 +54,7 @@ def pagination(request, all_blog, page):
         num = 30
     p = Paginator(all_blog, num, request=request)
     posts = p.page(page)
-    context_data = {'all_blog': posts, 'blog_nums': blog_nums}
+    context_data = {'posts': posts, 'blog_nums': blog_nums}
     return context_data
 
 
@@ -84,7 +84,7 @@ class ArticleDetailView(View):
         blog = get_object_or_404(Article, slug=blog_slug)
         # 博客点击数+1, 评论数统计
         blog.views += 1
-        blog.save()
+        blog.save(modified=False)
         # 获取评论内容
         all_comment = Comment.objects.filter(blog_id=blog.id)
         comment_nums = all_comment.count()
@@ -178,7 +178,7 @@ class TagView(View):
     """
 
     def get(self, request):
-        all_tag = Tag.objects.all().annotate(number=Count('article'))
+        all_tag = Tag.objects.all().annotate(number=Count('taggit_taggeditem_items'))
         return render(request, 'tags.html', {'all_tag': all_tag})
 
 
@@ -190,7 +190,6 @@ class TagDetailView(View):
     def get(self, request, tag_id):
         tag = get_object_or_404(Tag, id=tag_id)
         tag_blogs = Article.objects.filter(tags__in=[tag]).order_by('is_top', '-id')
-        print(tag_blogs)
 
         # 分页
         try:

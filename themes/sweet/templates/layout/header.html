@@ -30,16 +30,16 @@
                                     <a href="/">首页</a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="/tag/">标签</a>
+                                    <a href="/tags/">标签</a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="/archive/">归档</a>
+                                    <a href="/archives/">时间线</a>
                                 </li>
                                 <li class="menu-item">
                                     <a href="/photo/">相册</a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="/link/">友链</a>
+                                    <a href="/links/">友链</a>
                                 </li>
                             </ul>
                         </div>
@@ -53,23 +53,12 @@
         <a class=" js-toggle-search"><img src="/statics/images/svg/search.svg"></a>
     </div>
     <div class="site-branding text-center">
-        {% if user.is_staff %}
-            <a href="/logout">
-                <figure>
-                    <img class="custom-logo avatar" src="/statics/images/avatar.png"/>
-                </figure>
-            </a>
-            <p style="color: #000;">This is my world</p>
-        {% else %}
-            <a href="/login">
-                <figure>
-                    <img class="custom-logo avatar" src="/statics/images/avatar.png"/>
-                </figure>
-            </a>
-            <p>This is my world</p>
-        {% endif %}
-
+        <a href="/">
+            <figure>
+                <img class="custom-logo avatar" src="/res/sys/avatar.png"/>
+            </figure>
+        </a>
+        <p style="color: #000;">我的征途是星辰大海</p>
     </div>
     <!-- .site-branding -->
-
 </header>
