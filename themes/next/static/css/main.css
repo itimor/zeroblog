@@ -691,14 +691,14 @@ pre .javascript .function {
 .page-home .post-type-quote blockquote::before,
 .page-post-detail .post-type-quote blockquote::before {
   top: -20px;
-  background-image: url("../images/quote-l.svg");
+  background-image: url("/res/sys/quote-l.svg");
   border-top: 1px solid #ccc;
 }
 .blockquote-center::after,
 .page-home .post-type-quote blockquote::after,
 .page-post-detail .post-type-quote blockquote::after {
   bottom: -20px;
-  background-image: url("../images/quote-r.svg");
+  background-image: url("/res/sys/quote-r.svg");
   border-bottom: 1px solid #ccc;
   background-position: 100% 8px;
 }

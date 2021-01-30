@@ -35,7 +35,7 @@ NexT.utils = NexT.$u = {
 
   lazyLoadPostsImages: function () {
     $('#posts').find('img').lazyload({
-      placeholder: '/images/loading.gif',
+      placeholder: '/res/sys/loading.svg',
       effect: 'fadeIn'
     });
   },
