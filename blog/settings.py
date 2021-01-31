@@ -28,11 +28,12 @@ ALLOWED_HOSTS = ['*']
 
 # 主题
 # next 极简 |　sweet 小清新
-THEME = 'sweet'
+THEME = 'next'
 
 # Application definition
 
 INSTALLED_APPS = [
+    # 'simpleui',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

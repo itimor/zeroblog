@@ -15,8 +15,8 @@
                 <ul id="da-thumbs" class="da-thumbs">
                     {% for photogroup in photogroups %}
                     <li>
-                        <a href="/photo/photo/{{ photogroup.name }}/" class="b-link-stripe b-animate-go thickbox">
-                            <img src="/upload/{{ photogroup.cover }}" width="250" height="250" alt=""/>
+                        <a href="{% url 'photo:photogroup-detail' photogroup.id %}" class="b-link-stripe b-animate-go thickbox">
+                            <img src="{{ photogroup.cover }}" width="250" height="250" alt=""/>
                             <div>
                                 <h5>{{ photogroup.name }}</h5>
                                 <span>{{ photogroup.desc }}</span>

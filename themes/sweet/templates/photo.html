@@ -1,7 +1,7 @@
 {% extends "layout/base.html" %}
 
 {% block title %}
-| 相册
+| {{photo_group}}
 {% endblock %}
 
 {% block content %}
@@ -12,7 +12,7 @@
                 <div class="photo-content">
                     <div id="xxoo" class="chroma-gallery">
                         {% for photo in photos %}
-                        <img src="/upload/{{photo.photo}}" alt="{{photo.desc}}" data-largesrc="/upload/{{photo.photo}}">
+                        <img src="/res/{{photo.photo}}" alt="{{photo.desc}}" data-largesrc="/res/{{photo.photo}}">
                         {% empty %}
                         <img src="/statics/images/thumbs/1.jpg" alt="大街" data-largesrc="/statics/images/thumbs/1.jpg">
                         <img src="/statics/images/thumbs/2.jpg" alt="长河" data-largesrc="/statics/images/thumbs/2.jpg">
@@ -43,7 +43,7 @@
                     {% else %}
                     <div class="pull-left featuredImg" style="background-image:url('/statics/images/empty.png');"></div>
                     {% endif %}
-                    <a class="pull-left preview-content bold" href="/photo/photo/{{ prev_post.name }}/"><span>{{ prev_post.name }}</span></a>
+                    <a class="pull-left preview-content bold" href="/res/photo/{{ prev_post.name }}/"><span>{{ prev_post.name }}</span></a>
                     {% else %}
                     <div class="pull-left featuredImg" style="background-image:url('/statics/images/empty.png');"></div>
                     <a class="pull-left preview-content bold" href="#"><span>海底月是天上月</span></a>

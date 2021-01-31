@@ -1,23 +1,20 @@
 {% extends "layout/base.html" %}
 {% load custom_markdown %}
 {% block title %}
-零度杀手，熊叔的星辰大海
+| 首页
 {% endblock %}
 
 {% block content %}
 <div class="content-wrap">
     <div id="content" class="content">
-
         <section id="posts" class="posts-expand">
-
-            {% for blog in all_blog.object_list %}
-
+            {% for post in object_list %}
             <div class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article" style="opacity: 1; display: block; transform: translateY(0px);">
 
                 <header class="post-header">
                     <h1 class="post-title" itemprop="name headline">
-                        <a class="post-title-link" href="{% url 'blog:blog_slug' blog.slug %}" itemprop="url">
-                            {{ blog.title }}
+                        <a class="post-title-link" href="{{ post.get_absolute_url }}" itemprop="url">
+                            {{ post.title }}
                         </a>
                     </h1>
 
@@ -28,7 +25,7 @@
                             </span>
                             <span class="post-meta-item-text">发表于</span>
                             <time title="Post created" itemprop="dateCreated datePublished" datetime="#">
-                            {{ blog.create_time|date:'Y-m-d' }}
+                            {{ post.create_time|date:'Y-m-d' }}
                             </time>
                         </span>
 
@@ -39,8 +36,8 @@
                             </span>
                             <span class="post-meta-item-text">分类于</span>
                             <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                                <a href="{% url 'blog:category_slug' blog.category.slug %}" itemprop="url" rel="index">
-                                    <span itemprop="name">{{ blog.category.name }}</span>
+                                <a href="{% url 'blog:category-detail' post.category.id %}" itemprop="url" rel="index">
+                                    <span itemprop="name">{{ post.category.name }}</span>
                                 </a>
                             </span>
                         </span>
@@ -51,23 +48,19 @@
                                 <i class="fa fa-eye"></i>
                             </span>
                             <span class="post-meta-item-text">热度</span>
-                            <span itemprop="name">{{ blog.views }}°C</span>
+                            <span itemprop="name">{{ post.views }}°C</span>
                         </span>
                     </div>
                 </header>
 
 
                 <div class="post-body" itemprop="articleBody">
-                    {{ blog.content|custom_markdown_summary }}
-                    <!--noindex-->
+                    {{ post.content|custom_markdown_summary }}
                     <div class="post-button text-center">
-                        <a class="btn" href="{% url 'blog:blog_slug' blog.slug %}" rel="contents">
+                        <a class="btn" href="{{ post.get_absolute_url }}" rel="contents">
                             阅读全文 »
                         </a>
                     </div>
-                    <!--/noindex-->
-
-
                 </div>
 
                 <footer class="post-footer">
@@ -82,7 +75,6 @@
         {% block pagination %}
         {% include './layout/pagination.html' %}
         {% endblock %}
-
     </div>
 
 </div>

@@ -18,7 +18,7 @@ class PhotoGroup(models.Model):
 
     class Meta:
         verbose_name = u'相册'
-        verbose_name_plural = u'相册'
+        verbose_name_plural = verbose_name
 
     def __str__(self):
         return self.name
@@ -41,7 +41,7 @@ class Photo(models.Model):
 
     class Meta:
         verbose_name = u'照片'
-        verbose_name_plural = u'照片'
+        verbose_name_plural = verbose_name
 
     def view_img(self):
         return format_html("<img src='/res/%s' height='200'/>" % self.photo)

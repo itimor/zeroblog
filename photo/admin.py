@@ -8,6 +8,7 @@ from photo.models import Photo, PhotoGroup
 @admin.register(Photo)
 class PhotoAdmin(admin.ModelAdmin):
     model = Photo
+    list_display = ['group', 'photo', 'desc']
     fields = ['group', 'photo', ('desc', 'view_img')]
     readonly_fields = ['view_img']
     exclude = ['view_img']

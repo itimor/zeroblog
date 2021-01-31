@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.core.exceptions import PermissionDenied
 from django.views.generic import ListView, DetailView
 from django.db.models import Count
-from myblog.models import Article, Friend
+from myblog.models import Article, Category, Friend
 from utils.paginations import get_pagination
 import markdown
 from taggit.models import Tag
@@ -36,7 +36,7 @@ class IndexView(BaseMixin, ListView):
     首页
     """
     template_name = 'index.html'
-    context_object_name = "posts"
+    context_object_name = "blog_posts"
     queryset = Article.objects.filter(status='p')
 
     def get_context_data(self, **kwargs):
@@ -45,8 +45,7 @@ class IndexView(BaseMixin, ListView):
             page = self.request.GET.get('page', 1)
         except PageNotAnInteger:
             page = 5
-
-        page_data = get_pagination(self.queryset, len(self.queryset), request=self.request)
+        page_data = get_pagination(self.queryset, page, request=self.request)
         context['page_data'] = page_data
         return context
 
@@ -55,7 +54,7 @@ class ArticleDetailView(BaseMixin, DetailView):
     """
     文章详情
     """
-    template_name = "detail.html"
+    template_name = "article-detail.html"
     context_object_name = "post"
     queryset = Article.objects.filter(status='p')
 
@@ -106,15 +105,49 @@ class TagView(BaseMixin, ListView):
     context_object_name = "tag_posts"
     queryset = Article.objects.filter(status='p')
 
-    def get_queryset(self):
-        tag_id = self.kwargs.get('tag_id')
+    def get_context_data(self, **kwargs):
+        context = super(TagView, self).get_context_data(**kwargs)
+        tag_id = self.kwargs.get('id')
         if tag_id:
             tag = get_object_or_404(Tag, id=tag_id)
-            context = Article.objects.filter(tags__in=[tag]).order_by('is_top', '-id')
-            return {'tag': tag, 'posts': context}
+            queryset = Article.objects.filter(tags__in=[tag]).order_by('is_top', '-id')
+            try:
+                page = self.request.GET.get('page', 1)
+            except PageNotAnInteger:
+                page = 5
+            page_data = get_pagination(queryset, page, request=self.request)
+            context['page_data'] = page_data
+            context['tag'] = tag
         else:
-            context = Tag.objects.all().annotate(number=Count('article'))
-            return {'posts': context}
+            queryset = Tag.objects.all().annotate(number=Count('article'))
+        context['object_list'] = queryset
+        return context
+
+
+class CategoryView(BaseMixin, ListView):
+    template_name = 'categorys.html'
+    context_object_name = "category_posts"
+    queryset = Article.objects.filter(status='p')
+
+    def get_context_data(self, **kwargs):
+        context = super(CategoryView, self).get_context_data(**kwargs)
+        print(context)
+        category_slug = self.kwargs.get('slug')
+
+        if category_slug:
+            category = get_object_or_404(Category, slug=category_slug)
+            queryset = Article.objects.filter(category__slug=category_slug).order_by('is_top', '-id')
+            try:
+                page = self.request.GET.get('page', 1)
+            except PageNotAnInteger:
+                page = 5
+            page_data = get_pagination(queryset, page, request=self.request)
+            context['page_data'] = page_data
+            context['category'] = category
+        else:
+            queryset = Tag.objects.all().annotate(number=Count('article'))
+        context['object_list'] = queryset
+        return context
 
 
 class ArchiveView(BaseMixin, ListView):
@@ -129,7 +162,7 @@ class ArchiveView(BaseMixin, ListView):
 
 class LinkView(BaseMixin, ListView):
     template_name = 'links.html'
-    context_object_name = "posts"
+    context_object_name = "links_posts"
     queryset = Friend.objects.filter(active=True)
 
     def get_context_data(self, **kwargs):

@@ -1,7 +1,7 @@
 {% extends "layout/base.html" %}
 
 {% block title %}
-相册
+| 相册
 {% endblock %}
 
 {% block content %}
@@ -15,11 +15,11 @@
                 <ul id="da-thumbs" class="da-thumbs">
                     {% for photogroup in photogroups %}
                     <li>
-                        <a href="/photo/photo/{{ photogroup.name }}/" class="b-link-stripe b-animate-go thickbox">
+                        <a href="{% url 'photo:photogroup-detail' photogroup.id %}" class="b-link-stripe b-animate-go thickbox">
                             <img src="{{ photogroup.cover }}" width="250" height="250" alt=""/>
                             <div>
                                 <h5>{{ photogroup.name }}</h5>
-                                <span>{{ photogroup.desc }}</span>
+                                <h6 style="color: grey">{{ photogroup.desc }}</h6>
                             </div>
                         </a>
                     </li>

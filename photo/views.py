@@ -29,15 +29,14 @@ class PhotoView(ListView):
     queryset = Photo.objects.all()
 
     def get_queryset(self):
-        group = self.kwargs.get('group')
-        context = super(PhotoView, self).get_queryset().filter(group__name=group)
+        group_id = self.kwargs.get('group_id')
+        context = super(PhotoView, self).get_queryset().filter(group__id=group_id)
         return context
 
     def get_context_data(self, **kwargs):
         context = super(PhotoView, self).get_context_data(**kwargs)
 
-        group = self.kwargs.get('group')
-        group_id = PhotoGroup.objects.get(name=group).id
+        group_id = self.kwargs.get('group_id')
 
         prev_post = None
         next_post = None
@@ -52,7 +51,7 @@ class PhotoView(ListView):
         except Exception as e:
             print(e)
 
-        context['photo_group'] = group
+        context['photo_group'] = group_id
         context['prev_post'] = prev_post
         context['next_post'] = next_post
         return context

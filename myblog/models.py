@@ -84,7 +84,7 @@ class Article(BaseModel):
     view_cover.allow_tags = True
 
     def get_absolute_url(self):
-        return reverse('blog:blog_detail', kwargs={'slug': self.slug})
+        return reverse('blog:blog-detail', kwargs={'slug': self.slug})
 
     def save(self, *args, **kwargs):
         if not self.slug:
