@@ -1,5 +1,4 @@
 from django.contrib import admin
-from blog.settings import admin_title
 from myblog.models import Article, Category, Comment, Friend
 from django.utils import timezone
 

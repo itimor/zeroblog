@@ -32,7 +32,7 @@ urlpatterns = [
     # 相册
     url(r'^photo/', include('photo.urls')),
     # 添加静态文件的访问处理函数
-    url(r'^statics/(?P<path>.*)/$', serve, {'document_root': settings.STATIC_URL}),
+    url(r'^statics/(?P<path>.*)/$', serve, {'document_root': settings.STATIC_ROOT}),
     # markdown
     url(r'mdeditor/', include('mdeditor.urls')),
 ]
@@ -40,9 +40,14 @@ urlpatterns = [
 if settings.DEBUG:
     # static files (images, css, javascript, etc.)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += url(r'^statics/(?P<path>.*)/$', serve, {'document_root': settings.STATIC_URL}),
+else:
+    urlpatterns += url(r'^statics/(?P<path>.*)/$', serve, {'document_root': settings.STATIC_ROOT}),
 
-# 配置全局404页面
-hander404 = 'myblog.views.page_not_found'
+from myblog.error_views import bad_request, permission_denied, page_not_found, server_error
 
-# 配置全局505页面
-hander505 = 'myblog.views.page_errors'
+# 定义错误跳转页面
+handler400 = bad_request
+handler403 = permission_denied
+handler404 = page_not_found
+handler500 = server_error

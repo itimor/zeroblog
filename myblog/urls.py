@@ -5,13 +5,6 @@ from django.conf.urls import url
 
 from myblog.views import *
 from myblog.feeds import ArticleRssFeed
-from myblog.error_views import bad_request, permission_denied, page_not_found, server_error
-
-# 定义错误跳转页面
-handler400 = bad_request
-handler403 = permission_denied
-handler404 = page_not_found
-handler500 = server_error
 
 app_name = 'blog'
 urlpatterns = [
@@ -25,7 +18,7 @@ urlpatterns = [
     url(r'^category/(?P<slug>[\w-]+)', CategoryView.as_view(), name="category-detail"),
     # url(r'^add_comment/$', AddCommentView.as_view(), name='add_comment'),
     url(r'^rss/$', ArticleRssFeed(), name='rss'),
-    url(r'^links/', LinkView.as_view(), name="link"),
+    url(r'^links/$', LinkView.as_view(), name="link"),
     # 搜索
     url(r'^search/', SearchView(), name='search'),
 ]

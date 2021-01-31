@@ -28,7 +28,7 @@ ALLOWED_HOSTS = ['*']
 
 # 主题
 # next 极简 |　sweet 小清新
-THEME = 'sweet'
+THEME = 'next'
 
 # Application definition
 
@@ -65,7 +65,7 @@ ROOT_URLCONF = 'blog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, f'themes/{THEME}/templates'), ],
+        'DIRS': [os.path.join(BASE_DIR, 'themes', THEME, 'templates'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
