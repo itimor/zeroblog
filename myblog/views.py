@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 # author: itimor
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.core.exceptions import PermissionDenied
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 from django.db.models import Count
 from myblog.models import Article, Category, Friend
-from utils.paginations import get_pagination
+from utils.pagination import get_pagination
 import markdown
 from taggit.models import Tag
 from pure_pagination import PageNotAnInteger, Paginator
 from haystack.views import SearchView as HaystackSearchView
 from blog.settings import HAYSTACK_SEARCH_RESULTS_PER_PAGE
+from myblog.forms import CommentForm
 
 md = markdown.Markdown(
     safe_mode=True,
@@ -45,6 +46,7 @@ class IndexView(BaseMixin, ListView):
             page = self.request.GET.get('page', 1)
         except PageNotAnInteger:
             page = 5
+
         page_data = get_pagination(self.queryset, page, request=self.request)
         context['page_data'] = page_data
         return context
@@ -68,6 +70,7 @@ class ArticleDetailView(BaseMixin, DetailView):
         context.views += 1
         context.save(modified=False)
         context.content = md.convert(context.content)
+        context.toc = md.toc
         return context
 
     def get_context_data(self, **kwargs):
@@ -94,7 +97,6 @@ class ArticleDetailView(BaseMixin, DetailView):
                 id_next += 1
             else:
                 has_next = True
-
         context['prev_post'] = prev_post
         context['next_post'] = next_post
         return context
@@ -115,7 +117,9 @@ class TagView(BaseMixin, ListView):
                 page = self.request.GET.get('page', 1)
             except PageNotAnInteger:
                 page = 5
+            print(page)
             page_data = get_pagination(queryset, page, request=self.request)
+            print(page_data.object_list)
             context['page_data'] = page_data
             context['tag'] = tag
         else:
@@ -131,7 +135,6 @@ class CategoryView(BaseMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(CategoryView, self).get_context_data(**kwargs)
-        print(context)
         category_slug = self.kwargs.get('slug')
 
         if category_slug:
@@ -145,7 +148,8 @@ class CategoryView(BaseMixin, ListView):
             context['page_data'] = page_data
             context['category'] = category
         else:
-            queryset = Tag.objects.all().annotate(number=Count('article'))
+            queryset = Category.objects.all().annotate(number=Count('article'))
+
         context['object_list'] = queryset
         return context
 
@@ -168,6 +172,20 @@ class LinkView(BaseMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(LinkView, self).get_context_data(**kwargs)
         return context
+
+
+class AddCommentView(BaseMixin, CreateView):
+    """
+    评论
+    """
+
+    def get_context_data(self,  **kwargs):
+        comment_form = CommentForm(self.request.POST)
+        if comment_form.is_valid():
+            comment_form.save()
+            return HttpResponse('{"status": "success"}', content_type='application/json')
+        else:
+            return HttpResponse('{"status": "fail"}', content_type='application/json')
 
 
 class SearchView(HaystackSearchView):
@@ -193,5 +211,4 @@ class SearchView(HaystackSearchView):
 
         paginator = Paginator(self.results, HAYSTACK_SEARCH_RESULTS_PER_PAGE, request=self.request)
         page = paginator.page(page_no)
-
         return (paginator, page)

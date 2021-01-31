@@ -108,9 +108,11 @@ class Comment(BaseModel):
     """
     博客评论
     """
-    name = models.CharField(u'姓名', max_length=20, default='佚名')
-    content = models.CharField(u'内容', max_length=300)
     blog = models.ForeignKey(Article, on_delete=models.CASCADE, verbose_name='博客')
+    active = models.BooleanField(u'激活', default=True)
+    name = models.CharField(u'姓名', max_length=20, default='佚名')
+    email = models.EmailField(u'邮箱', max_length=20, default='pony@qq.com')
+    content = models.TextField(u'内容')
 
     class Meta:
         verbose_name = '博客评论'

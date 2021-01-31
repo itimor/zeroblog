@@ -11,32 +11,36 @@
         <div id="posts" class="posts-expand">
 
             {% if tag %}
-                                    <header class="post-header">
-            <h2 class="archive-year motion-element" id="archive-year" style="opacity: 1; display: block; transform: translateX(0px);">{{ tag.name }}<small> | 标签</small></h2>
-                                        </header>
-             {% for post in object_list %}
+            <header class="post-header">
+                <h2 class="archive-year motion-element" id="archive-year"
+                    style="opacity: 1; display: block; transform: translateX(0px);">{{ tag.name }}<small> | 标签</small>
+                </h2>
+            </header>
+            {% for post in page_data.object_list %}
 
-                <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article" style="opacity: 1; display: block; transform: translateY(0px);">
-                    <header class="post-header">
+            <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article"
+                     style="opacity: 1; display: block; transform: translateY(0px);">
+                <header class="post-header">
 
                     <h1 class="post-title">
-                        <a class="post-title-link" href="{% url 'blog:blog-detail' post.slug %}" itemprop="url">
+                        <a class="post-title-link" href="{% post.get_absolute_url %}" itemprop="url">
                             <span itemprop="name">{{ post.title }}</span>
-                         </a>
+                        </a>
                     </h1>
 
                     <div class="post-meta">
-                        <time class="post-time" itemprop="dateCreated" datetime="2017-09-01T20:05:18+08:00" content="2017-09-01">
-                    {{ post.create_time|date:"m-d" }}
+                        <time class="post-time" itemprop="dateCreated" datetime="2017-09-01T20:05:18+08:00"
+                              content="2017-09-01">
+                            {{ post.create_time|date:"m-d" }}
                         </time>
-                      </div>
+                    </div>
 
-                    </header>
-                  </article>
+                </header>
+            </article>
             {% endfor %}
-                    {% block pagination %}
-                    {% include './layout/pagination.html' %}
-                    {% endblock %}
+            {% block pagination %}
+            {% include './layout/pagination.html' %}
+            {% endblock %}
             {% else %}
             <header class="post-header">
                 <h2 class="post-title" itemprop="name headline">标签</h2>
@@ -49,25 +53,25 @@
                 <div class="tag-cloud-tags">
 
                     {% for tag in object_list %}
-                        <a href="{% url 'blog:tag-detail' tag.id %}"
+                    <a href="{% url 'blog:tag-detail' tag.id %}"
 
-                           {% if tag.number <= 2 %}
-                                style="font-size: 12.5px; color: #999"
-                           {% elif tag.number <= 5 %}
-                                style="font-size: 15px; color: #666"
-                           {% elif tag.number <= 10 %}
-                                style="font-size: 20px; color: #444"
-                           {% elif tag.number <= 20 %}
-                                style="font-size: 25px; color: #222"
-                           {% elif tag.number <= 50 %}
-                                style="font-size: 30px; color: #111"
-                           {% else %}
-                                style="font-size: 35px; color: #000"
-                           {% endif %}>
+                       {% if tag.number <= 2 %}
+                        style="font-size: 12.5px; color: #999"
+                        {% elif tag.number <= 5 %}
+                        style="font-size: 15px; color: #666"
+                        {% elif tag.number <= 10 %}
+                        style="font-size: 20px; color: #444"
+                        {% elif tag.number <= 20 %}
+                        style="font-size: 25px; color: #222"
+                        {% elif tag.number <= 50 %}
+                        style="font-size: 30px; color: #111"
+                        {% else %}
+                        style="font-size: 35px; color: #000"
+                        {% endif %}>
 
-                        {{ tag.name }}
+                    {{ tag.name }}
 
-                        <span>({{ tag.number }})</span>
+                    <span>({{ tag.number }})</span>
                     </a>
                     {% endfor %}
 

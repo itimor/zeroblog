@@ -1,6 +1,6 @@
 from django.contrib import admin
 from blog.settings import admin_title
-from myblog.models import Article, Category, Comment
+from myblog.models import Article, Category, Comment, Friend
 from django.utils import timezone
 
 
@@ -54,5 +54,11 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['name', 'blog', 'content', 'create_time']
-    search_fields = ['blog', 'content']
+    list_display = ['name', 'email', 'blog', 'active', 'create_time']
+    fields = ['name', 'email', 'active', 'blog', 'content']
+    search_fields = ['name', 'blog', 'content']
+
+
+@admin.register(Friend)
+class FriendAdmin(admin.ModelAdmin):
+    list_display = ('name', 'link', 'position', 'active')

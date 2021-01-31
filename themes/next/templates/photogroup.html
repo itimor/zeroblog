@@ -15,7 +15,8 @@
                 <ul id="da-thumbs" class="da-thumbs">
                     {% for photogroup in photogroups %}
                     <li>
-                        <a href="{% url 'photo:photogroup-detail' photogroup.id %}" class="b-link-stripe b-animate-go thickbox">
+                        <a href="{% url 'photo:photogroup-detail' photogroup.id %}"
+                           class="b-link-stripe b-animate-go thickbox">
                             <img src="{{ photogroup.cover }}" width="250" height="250" alt=""/>
                             <div>
                                 <h5>{{ photogroup.name }}</h5>
@@ -24,9 +25,9 @@
                         </a>
                     </li>
                     {% empty %}
-                        <div class="category">
-                            <span>你还没有建立相册，啥图片都没有</span>
-                        </div>
+                    <div class="category">
+                        <span>你还没有建立相册，啥图片都没有</span>
+                    </div>
                     {% endfor %}
                 </ul>
             </div>

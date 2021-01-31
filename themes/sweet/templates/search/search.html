@@ -1,62 +1,46 @@
 {% extends "layout/base.html" %}
+{% load custom_markdown %}
 
-{% load highlight %}
-
+{% block title %}
+| 搜索
+{% endblock %}
 
 {% block content %}
-<div class="content-wrap">
-
-{% for blog in page.object_list %}
-
-    <div>
-        <a href="{% url 'blog:blog_slug' blog.object.slug %}">
-            <h3>{{ forloop.counter }}、{% highlight blog.object.title with query %}</h3>
-        </a>
-
-        <div style="word-wrap: break-word">
-            {% highlight blog.object.content with query %}
-        </div>
-
-
-        {% if forloop.counter == page.object_list|length %}
-            {% else %}
-            <hr>
-        {% endif %}
+<div id="main" class="content">
+    <div class="container">
+        <section class="post_content">
+            <header class="post_header">
+                <h1 class="post_title">搜索 <span>"{{request.GET.q}}"</span></h1>
+            </header>
+            <div class="posts-list js-posts">
+                {% for post in page.object_list %}
+                <div class="post post-layout-list" data-aos="fade-up">
+                    <div class="postnormal review">
+                        <div class="search_post">
+                            <h3>{{ forloop.counter }}、
+                                <a href="{{ post.object.get_absolute_url }}" class="search_title">
+                                    {{post.object.title}}
+                                </a>
+                            </h3>
+                            <div class="entry-content">
+                                {{post.object.content|custom_markdown_summary}}
+                            </div>
+                            {% if forloop.counter == page.object_list|length %}
+                            {% else %}
+                            <hr>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="no-post">没有搜索到相关内容，请重新搜</div>
+                {% endfor %}
+            </div>
+            {% block pagination %}
+            {% include 'layout/pagination.html' %}
+            {% endblock %}
+            </article>
+        </section>
     </div>
-{% empty %}
-    <div class="no-post">没有搜索到相关内容，请重新搜索</div>
-{% endfor %}
-
-
-
-          <!--分页展示-->
-<nav class="pagination">
-    <div class="pageturn">
-        <ul class="pagelist">
-
-        {% if page.has_previous %}
-            <li class="long"><a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">上一页</a></li>
-        {% endif %}
-
-         {% for index in page.pages %}
-            {% if index %}
-                {% ifequal index page.number %}
-                    <li class="active"><a href="?q={{ query }}&amp;page={{ index }}">{{ index }}</a></li>
-                {% else %}
-                     <li><a href="?q={{ query }}&amp;page={{ index }}" class="page">{{ index }}</a></li>
-                {% endifequal %}
-            {% else %}
-         <li class="none"><a href="">...</a></li>
-        {% endif %}
-        {% endfor %}
-        {% if page.has_next %}
-            <li class="long"><a href="?q={{ query }}&amp;page={{ page.next_page_number }}">下一页</a></li>
-        {% endif %}
-
-        </ul>
-    </div>
-</nav>
-
-
 </div>
 {% endblock %}

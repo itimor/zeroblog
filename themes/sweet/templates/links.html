@@ -12,11 +12,11 @@
                 <h1 class="post_title">链接</h1>
             </header>
             <div class="links">
-                <h3 class="catalog-title">Life Blog</h3>
+                <h3 class="catalog-title">可爱的小家伙们</h3>
                 <div class="catalog-description"></div>
-                <div class="catalog-share">4 items in collection</div>
+                <div class="catalog-share">共收录{{object_list|length}}位</div>
                 <div class="userItems">
-                    {% for post in posts %}
+                    {% for post in object_list %}
                     <div class="userItem">
                         <div class="userItem--inner">
                             <div class="userItem-content">
@@ -29,11 +29,9 @@
                         </div>
                     </div>
                     {% empty %}
-                    <div class="userItem">
-                        <div class="userItem--inner">
-                            <p>还没有添加友情链接</p>
+                        <div>
+                            <p>你还没有添加友链</p>
                         </div>
-                    </div>
                     {% endfor %}
                 </div>
             </div>

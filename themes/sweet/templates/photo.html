@@ -8,10 +8,13 @@
 <div id="main" class="content">
     <div class="container">
         <section class="post_content">
+            <header class="post_header">
+                <h2 class="post-title" itemprop="name headline">{{photo_group.name}}</h2>
+            </header>
             <div class="photoItems">
                 <div class="photo-content">
                     <div id="xxoo" class="chroma-gallery">
-                        {% for photo in photos %}
+                        {% for photo in object_list %}
                         <img src="/res/{{photo.photo}}" alt="{{photo.desc}}" data-largesrc="/res/{{photo.photo}}">
                         {% empty %}
                         <img src="/statics/images/thumbs/1.jpg" alt="大街" data-largesrc="/statics/images/thumbs/1.jpg">

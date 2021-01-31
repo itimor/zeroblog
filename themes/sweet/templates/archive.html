@@ -13,7 +13,7 @@
             </header>
             <div class="post-Archive">
                 <div id="archives">
-                    {% regroup archive_posts by publish_time.year as posts_by_year %}
+                    {% regroup object_list by publish_time.year as posts_by_year %}
                     <div class='archive-title'>
                         {% for year in posts_by_year %}
                         <h2 text="{{ year.grouper }}"></h2>

@@ -8,7 +8,6 @@ document.body.addEventListener('touchstart', function () {
                 $('.js-toggle-search').on('click', function () {
                     $('.js-search').toggleClass('is-visible');
                 });
-
                 $('.js-gallery').find('a').each(function () {
                     if ($(this).children('img').length) {
                         $(this).attr('rel', 'gallery');

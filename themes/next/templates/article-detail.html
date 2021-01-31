@@ -7,7 +7,7 @@
 {% block sidebar %}
 <div class="post-toc">
     <h5>文章目录</h5>
-    {{ blog.toc|safe }}
+    {{ post.toc|safe }}
 </div>
 {% endblock %}
 
@@ -16,13 +16,14 @@
 <div class="content-wrap">
     <div id="content" class="content">
         <div id="posts" class="posts-expand">
-            <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article" style="opacity: 1; display: block; transform: translateY(0px);">
+            <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article"
+                     style="opacity: 1; display: block; transform: translateY(0px);">
 
-            <header class="post-header">
+                <header class="post-header">
 
-                <h1 class="post-title" itemprop="name headline">{{ post.title }}</h1>
+                    <h1 class="post-title" itemprop="name headline">{{ post.title }}</h1>
 
-                <div class="post-meta">
+                    <div class="post-meta">
                     <span class="post-time">
                         <span class="post-meta-item-icon">
                             <i class="fa fa-calendar-o"></i>
@@ -33,7 +34,7 @@
                         </time>
                   </span>
 
-                    <span class="post-category">
+                        <span class="post-category">
 
                         <span class="post-meta-divider">|</span>
                         <span class="post-meta-item-icon">
@@ -46,8 +47,8 @@
                             </a>
                         </span>
                     </span>
-                {% if post.allow_comments %}
-                    <span class="post-comments-count">
+                        {% if post.allow_comments %}
+                        <span class="post-comments-count">
                         <span class="post-meta-divider">|</span>
                         <span class="post-meta-item-icon">
                             <i class="fa fa-comment-o"></i>
@@ -56,68 +57,70 @@
                             <span class="post-comments-count join-count" itemprop="commentCount"></span>
                         </a>
                     </span>
-                {% endif %}
-                </div>
-            </header>
-
-            <div class="post-body" itemprop="articleBody">
-                {{ post.content|safe }}
-            </div>
-
-
-            <div>
-                <div style="padding: 10px 0; margin: 10px auto; width: 90%; text-align: center;">
-<!--                <div>觉得不错，支持一下！</div>-->
-<!--                <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById(&#39;QR&#39;); if (qr.style.display === &#39;none&#39;) {qr.style.display=&#39;block&#39;;} else {qr.style.display=&#39;none&#39;}">-->
-<!--                <span>👍</span>-->
-<!--                </button>-->
-<!--                    <div id="QR" style="display: none;">-->
-<!--                        <div id="wechat" style="display: inline-block">-->
-<!--                          <a href="/static/image/weixin.jpg" class="fancybox" rel="group"><img id="wechat_qr" src="/static/image/weixin.jpg" alt="geerniya WeChat Pay"></a>-->
-<!--                          <p>微信打赏</p>-->
-<!--                        </div>-->
-<!--                        <div id="alipay" style="display: inline-block">-->
-<!--                          <a href="/static/image/zhifubao.jpg" class="fancybox" rel="group"><img id="alipay_qr" src="/static/image/zhifubao.jpg" alt="geerniya Alipay"></a>-->
-<!--                          <p>支付宝打赏</p>-->
-<!--                        </div>-->
-<!--                    </div>-->
-            </div>
-            </div>
-
-            <footer class="post-footer">
-
-                <div class="post-tags">
-                    {% for tag in post.tags.all %}
-                    <a href="{% url 'blog:tag-detail' tag.id %}" class="tag">{{tag.name}}</a>
-                    {% empty %}
-                    <a class="tag">未设置标签</a>
-                    {% endfor %}
-                </div>
-
-                <div class="post-nav">
-                    <div class="post-nav-next post-nav-item">
-                        {% if prev_post %}
-                        <a href="{% url 'blog:blog-detail' prev_post.slug %}" rel="prev" title="{{ prev_post.title }}">
-                            <i class="fa fa-chevron-left"></i> {{ prev_post.title }}
-                        </a>
-                        {% else %}
-                        <a href="#"><span>拜托！泥垢了</span></a>
                         {% endif %}
                     </div>
+                </header>
 
-                    <span class="post-nav-divider"></span>
+                <div class="post-body" itemprop="articleBody">
+                    {{ post.content|safe }}
+                </div>
 
-                    <div class="post-nav-prev post-nav-item">
-                        {% if next_post %}
-                        <a href="{% url 'blog:blog-detail' next_post.slug %}" rel="next" title="{{ next_post.title }}">
-                            {{ next_post.title }} <i class="fa fa-chevron-right"></i>
-                        </a>
-                        {% else %}
-                        <a href="#"><span>哼！我也是有底线的</span></a>
-                        {% endif %}
+
+                <div>
+                    <div style="padding: 10px 0; margin: 10px auto; width: 90%; text-align: center;">
+                        <!--                <div>觉得不错，支持一下！</div>-->
+                        <!--                <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById(&#39;QR&#39;); if (qr.style.display === &#39;none&#39;) {qr.style.display=&#39;block&#39;;} else {qr.style.display=&#39;none&#39;}">-->
+                        <!--                <span>👍</span>-->
+                        <!--                </button>-->
+                        <!--                    <div id="QR" style="display: none;">-->
+                        <!--                        <div id="wechat" style="display: inline-block">-->
+                        <!--                          <a href="/static/image/weixin.jpg" class="fancybox" rel="group"><img id="wechat_qr" src="/static/image/weixin.jpg" alt="geerniya WeChat Pay"></a>-->
+                        <!--                          <p>微信打赏</p>-->
+                        <!--                        </div>-->
+                        <!--                        <div id="alipay" style="display: inline-block">-->
+                        <!--                          <a href="/static/image/zhifubao.jpg" class="fancybox" rel="group"><img id="alipay_qr" src="/static/image/zhifubao.jpg" alt="geerniya Alipay"></a>-->
+                        <!--                          <p>支付宝打赏</p>-->
+                        <!--                        </div>-->
+                        <!--                    </div>-->
                     </div>
                 </div>
-            </footer>
+
+                <footer class="post-footer">
+
+                    <div class="post-tags">
+                        {% for tag in post.tags.all %}
+                        <a href="{% url 'blog:tag-detail' tag.id %}" class="tag">{{tag.name}}</a>
+                        {% empty %}
+                        <a class="tag">未设置标签</a>
+                        {% endfor %}
+                    </div>
+
+                    <div class="post-nav">
+                        <div class="post-nav-next post-nav-item">
+                            {% if prev_post %}
+                            <a href="{% url 'blog:blog-detail' prev_post.slug %}" rel="prev"
+                               title="{{ prev_post.title }}">
+                                <i class="fa fa-chevron-left"></i> {{ prev_post.title }}
+                            </a>
+                            {% else %}
+                            <a href="#"><span>拜托！泥垢了</span></a>
+                            {% endif %}
+                        </div>
+
+                        <span class="post-nav-divider"></span>
+
+                        <div class="post-nav-prev post-nav-item">
+                            {% if next_post %}
+                            <a href="{% url 'blog:blog-detail' next_post.slug %}" rel="next"
+                               title="{{ next_post.title }}">
+                                {{ next_post.title }} <i class="fa fa-chevron-right"></i>
+                            </a>
+                            {% else %}
+                            <a href="#"><span>哼！我也是有底线的</span></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </footer>
             </article>
         </div>
 
@@ -129,16 +132,16 @@
     <div id="comment"></div>
     {% if blog.allow_comments %}
     <form class="comment-form" id="jsStayForm">
-      <div class="form-group">
-        <label class="name">名字:  </label>
-        <input name="name" type="text" class="form-name" id="js-name" placeholder="不超过20个字">
+        <div class="form-group">
+            <label class="name">名字: </label>
+            <input name="name" type="text" class="form-name" id="js-name" placeholder="不超过20个字">
 
-      </div>
-      <div class="form-group">
-        <label class="comment">评论:</label>
-        <textarea name="content" class="form-control" id="js-content" rows="5" placeholder="不超过300个字"></textarea>
+        </div>
+        <div class="form-group">
+            <label class="comment">评论:</label>
+            <textarea name="content" class="form-control" id="js-content" rows="5" placeholder="不超过300个字"></textarea>
 
-      </div>
+        </div>
         <input name="blog" type="hidden" id="js-name" value="{{ blog.id }}">
         <p class="error company-tips" id="jsCompanyTips"></p>
 
@@ -146,29 +149,30 @@
     </form>
 
     <div class="#">
-    <ul class="comment-list">
+        <ul class="comment-list">
 
-        {% for comment in all_comment %}
+            {% for comment in all_comment %}
             <li class="comment-item">
-            <hr class="the-line"  />
+                <hr class="the-line"/>
                 <span class="nickname">{{ comment.name }} - </span>
                 <time class="submit-date"
-                      datetime="{{ comment.create_time }}">{{ comment.create_time|date:"Y/m/d   h:m" }}</time>
-                <p class="floor">{{ forloop.counter }} #  </p>
+                      datetime="{{ comment.create_time }}">{{ comment.create_time|date:"Y/m/d h:m" }}
+                </time>
+                <p class="floor">{{ forloop.counter }} # </p>
                 <div style="word-wrap: break-word">
-                        {{ comment.content }}
+                    {{ comment.content }}
                 </div>
 
             </li>
-        {% empty %}
+            {% empty %}
             暂无评论
-        {% endfor %}
+            {% endfor %}
 
-    </ul>
+        </ul>
     </div>
-{% else %}
-   评论关闭
-{% endif %}
+    {% else %}
+    评论关闭
+    {% endif %}
 </div>
 {% endblock %}
 
@@ -220,5 +224,6 @@ $(document).ready(function () {
         stickyNav();
     });
 });
+
 </script>
 {% endblock %}

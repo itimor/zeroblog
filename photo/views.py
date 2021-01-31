@@ -4,7 +4,7 @@
 import os
 import datetime
 import json
-
+from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, View
 from photo.models import Photo, PhotoGroup
 from django.views.decorators.csrf import csrf_exempt
@@ -37,6 +37,7 @@ class PhotoView(ListView):
         context = super(PhotoView, self).get_context_data(**kwargs)
 
         group_id = self.kwargs.get('group_id')
+        photo_group = get_object_or_404(PhotoGroup, id=group_id)
 
         prev_post = None
         next_post = None
@@ -51,7 +52,7 @@ class PhotoView(ListView):
         except Exception as e:
             print(e)
 
-        context['photo_group'] = group_id
+        context['photo_group'] = photo_group
         context['prev_post'] = prev_post
         context['next_post'] = next_post
         return context

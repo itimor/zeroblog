@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 {% load count_nums %}
 {% load static %}
-<html class="theme-next pisces use-motion" lang="zh-Hans"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
-<meta name="keywords" content="博客，熊叔，星辰大海">
-<meta name="description" content="博客，熊叔，星辰大海">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="keywords" content="博客，熊叔，星辰大海">
+    <meta name="description" content="博客，熊叔，星辰大海">
 
     <link href="/statics/css/jquery.fancybox.css" rel="stylesheet" type="text/css">
     <link href="/statics/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -20,14 +22,16 @@
     <link rel="shortcut icon" type="image/x-icon" href="/res/sys/logo.ico">
     <link rel="canonical" href="/">
 
-<!--搜索关键词高亮-->
-<style>
+    <!--搜索关键词高亮-->
+    <style>
     span.highlighted {
         color: red;
     }
-</style>
 
-<script type="text/javascript" id="hexo.configurations">
+
+    </style>
+
+    <script type="text/javascript" id="hexo.configurations">
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
@@ -47,280 +51,46 @@
       labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
     }
   };
-</script>
+
+
+    </script>
     <title>
         熊叔の冒险屋
         {% block title %}
         {% endblock %}
     </title>
 
-<style type="text/css">.fancybox-margin{margin-right:17px;}</style>
-<style type="text/css">.fancybox-margin{margin-right:17px;}</style></head>
+    <style type="text/css">.fancybox-margin{margin-right:17px;}</style>
+    <style type="text/css">.fancybox-margin{margin-right:17px;}</style>
+</head>
 
 <body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-    <div class="container one-collumn sidebar-position-leftpage-home">
-        <div class="headband"></div>
-
-        <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
-            <div class="header-inner">
-                <div class="site-meta ">
-                    <div class="custom-logo-site-title">
-                        <a href="/" class="brand" rel="start" style="opacity: 1;">
-                            <span class="logo-line-before"><i></i></span>
-                            <span class="site-title" style="opacity: 1; top: 0px;">熊叔の冒险屋</span>
-                            <span class="logo-line-after"><i></i></span>
-                        </a>
-                    </div>
-                    <p class="site-subtitle">我的征途是星辰大海</p>
-                 </div>
-
-                <div class="site-nav-toggle">
-                  <button>
-                    <span class="btn-bar"></span>
-                    <span class="btn-bar"></span>
-                    <span class="btn-bar"></span>
-                  </button>
-                </div>
-
-                <nav class="site-nav">
-                    <ul id="menu" class="menu">
-                        <li
-                            {% if request.path == '/' %}
-                            class="menu-item menu-item-home menu-item-active"
-                            {% else %}
-                            class="menu-item menu-item-active"
-                            {% endif %}
-                            style="opacity: 1; transform: translateY(0px);">
-                          <a href="{% url 'blog:index' %}" rel="section">
-                              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
-                            首页
-                          </a>
-                        </li>
-
-                        <li
-                            {% if request.path|slice:"8" == '/archives' %}
-                            class="menu-item menu-item-home menu-item-active"
-                            {% else %}
-                            class="menu-item menu-item-active"
-                            {% endif %}
-                            style="opacity: 1; transform: translateY(0px);">
-                          <a href="{% url 'blog:archives' %}" rel="section">
-                              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
-                            归档
-                          </a>
-                        </li>
-
-                        <li
-                            {% if request.path|slice:"5" == '/categorys' %}
-                            class="menu-item menu-item-home menu-item-active"
-                            {% else %}
-                            class="menu-item menu-item-active"
-                            {% endif %}
-                            style="opacity: 1; transform: translateY(0px);">
-                          <a href="{% url 'blog:categorys' %}" rel="section">
-                              <i class="menu-item-icon fa fa-fw fa-folder-o"></i> <br>
-                            分类
-                          </a>
-                        </li>
-
-                        <li
-                            {% if request.path|slice:"8" == '/tags' %}
-                            class="menu-item menu-item-home menu-item-active"
-                            {% else %}
-                            class="menu-item menu-item-active"
-                            {% endif %}
-                            style="opacity: 1; transform: translateY(0px);">
-                          <a href="{% url 'blog:tags' %}" rel="section">
-                              <i class="menu-item-icon fa fa-fw fa-tag"></i> <br>
-                            标签
-                          </a>
-                        </li>
-
-                        <li class="menu-item menu-item-archives" style="opacity: 1; transform: translateY(0px);">
-
-                             <a href="/#search" id="search" rel="section">
-                              <i class="menu-item-icon fa fa-search"></i>
-                             </a>
-
-                            <form action="{% url 'blog:search' %}">
-                                <input id="unit" type="search" name="q" placeholder="搜索...">
-                            </form>
-
-                        </li>
-                    </ul>
-                </nav>
-
-            </div>
-        </header>
-
-        <main id="main" class="main">
-            <div class="main-inner">
-                <div class="sidebar-toggle">
-                    <div class="sidebar-toggle-line-wrap">
-                        <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-                        <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-                        <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-                    </div>
-                </div>
-
-                <aside id="sidebar" class="sidebar" style="margin-top: 302px; display: block;">
-                    <div class="sidebar-inner">
-                        {% block sidebar %}
-                        <section class="site-overview sidebar-panel sidebar-panel-active">
-                            <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-                                <img class="site-author-image" itemprop="image" src="/res/sys/avatar.png" alt="geerniya">
-                                <p class="site-author-name" itemprop="name">熊叔の冒险屋</p>
-                                <p class="site-description motion-element" itemprop="description">わが征くは星の大海</p>
-                            </div>
-                            <nav class="site-state motion-element">
-                                <div class="site-state-item site-state-posts">
-                                    <a href="/admin" target='_blank'>
-                                        <span class="site-state-item-name">后台</span>
-                                    </a>
-                                </div>
-
-                                <div class="site-state-item site-state-categories">
-                                    <a href="/photo">
-                                        <span class="site-state-item-name">相册</span>
-                                    </a>
-                                </div>
-
-                            </nav>
-
-                            <div class="feed-link motion-element">
-                                <a href="{% url 'blog:rss' %}" rel="alternate">
-                                    <i class="fa fa-rss"></i>
-                                    RSS
-                                </a>
-                            </div>
-
-                            <div class="links-of-author motion-element">
-                                <span class="links-of-author-item">
-                                        <a href="https://github.com/itimor" target="_blank" title="GitHub">
-                                            <i class="fa fa-fw fa-github"></i>
-                                            GitHub
-                                        </a>
-                                  </span>
-
-                                <span class="links-of-author-item">
-                                    <a href="https://www.jianshu.com/u/40758c9db703" target="_blank" title="简书">
-                                        <i class="fa fa-book"></i>
-                                        简书
-                                    </a>
-                                </span>
-
-                            </div>
-
-                            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
-                                <div class="links-of-blogroll-title">
-                                    <i class="fa fa-link"></i>
-                                    友情链接
-                                </div>
-                                <ul class="links-of-blogroll-list">
-
-                                    <li class="links-of-blogroll-item">
-                                        <a href="https://pvp.qq.com/" title="荣耀" target="_blank">为了理想</a>
-                                    </li>
-
-                                    <li class="links-of-blogroll-item">
-                                        <a href="https://www.baidu.com/s?wd=%E5%A6%82%E4%BD%95%E8%BF%9B%E5%85%A5%E5%AF%8C%E5%A9%86%E7%9A%84%E5%86%85%E5%BF%83%E4%B8%96%E7%95%8C" title="梦想" target="_blank">一个追梦人</a>
-                                    </li>
-
-                                </ul>
-                              </div>
-
-                      </section>
-                      {% endblock %}
-                    </div>
-                </aside>
-
-
-        {% block content %}
-
-        {% endblock %}
-
-
-            </div>
-        </main>
-
-        <footer id="footer" class="footer">
-            <div class="footer-inner">
-                <div class="copyright">
-                     ©  2014 ~
-                    <span id="endyear" itemprop="copyrightYear">2018</span>
-                    <span class="with-love">
-                        <i class="fa fa-heart" style="color: #fc6423"></i>
-                    </span>
-                    <span class="author" itemprop="copyrightHolder">熊叔</span>
-                </div>
-                <div class="powered-by">
-                    天ICP备168168518号-8
-                </div>
-                <div class="theme-info">
-                    Supported by <a href="https://www.youtiao.com/">今日油条</a>
-                </div>
-            </div>
-        </footer>
-
-        <div class="back-to-top">
-          <i class="fa fa-arrow-up"></i>
+<div class="container one-collumn sidebar-position-leftpage-home">
+    <div class="headband"></div>
+    {% block header %}
+    {% include './header.html' %}
+    {% endblock %}
+    <main id="main" class="main">
+        <div class="main-inner">
+            {% block aside %}
+            {% include './aside.html' %}
+            {% endblock %}
+            {% block content %} {% endblock %}
         </div>
+    </main>
+
+    <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
     </div>
 
+</div>
 
-    <script type="text/javascript">
-      if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-        window.Promise = null;
-      }
-    </script>
-    <script type="text/javascript" src="/statics/js/index.js"></script>
-    <script type="text/javascript" src="/statics/js/fastclick.min.js"></script>
-    <script type="text/javascript" src="/statics/js/jquery.lazyload.js "></script>
-    <script type="text/javascript" src="/statics/js/velocity.min.js "></script>
-    <script type="text/javascript" src="/statics/js/velocity.ui.min.js "></script>
-    <script type="text/javascript" src="/statics/js/jquery.fancybox.pack.js "></script>
-<!--    <script type="text/javascript" src="/statics/js/push.js"></script>-->
-<!--    <script type="text/javascript" src="/statics/js/hm.js"></script>-->
-    <script type="text/javascript" src="/statics/js/utils.js "></script>
-    <script type="text/javascript" src="/statics/js/motion.js "></script>
-    <script type="text/javascript" src="/statics/js/affix.js "></script>
-    <script type="text/javascript" src="/statics/js/pisces.js "></script>
-    <script type="text/javascript" src="/statics/js/bootstrap.js "></script>
-    <script>
-      var cloudTieConfig = {
-        url: document.location.href,
-        sourceId: "",
-        productKey: "35099139b61244da8d227be2d3dedbbd",
-        target: "cloud-tie-wrapper"
-      };
-    </script>
-    <script>
-    (function(){
-        var bp = document.createElement('script');
-        var curProtocol = window.location.protocol.split(':')[0];
-        if (curProtocol === 'https') {
-            bp.src = 'https://zz.bdstatics.com/linksubmit/push.js';
-        }
-        else {
-            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-        }
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(bp, s);
-    })();
-    (function(){
-        var date=new Date;
-        var year=date.getFullYear();
-        document.getElementById('endyear').innerText = year;
-    })();
-    </script>
-
-{% block content_js %}
-
+{% block footer %}
+{% include './footer.html' %}
 {% endblock %}
 
-
-
-
-
-</body></html>
+{% block content_js %}
+{% endblock %}
+</body>
+</html>

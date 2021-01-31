@@ -32,7 +32,7 @@ class Command(BaseCommand):
 ## h2 标题
 ### h3 标题
 #### h4 标题
-![狗子](/statics/images/logo.ico)
+![狗子](/res/sys/logo.ico)
 ## 水平线
 ___
 ---

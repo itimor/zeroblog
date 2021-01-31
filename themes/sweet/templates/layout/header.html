@@ -5,7 +5,7 @@
                 <div id="search-container" class="ajax_search">
                     <form method="get" id="searchform" action="{% url 'blog:search' %}">
                         <div class="filter_container">
-                            <input type="text" value="" autocomplete="off" placeholder="search ..." name="search"/>
+                            <input type="text" value="" autocomplete="off" placeholder="search ..." name="q"/>
                             <ul id="search_filtered" class="search_filtered"></ul>
                         </div>
                         <input type="submit" id="searchsubmit" class="searchsubmit" value=""/>

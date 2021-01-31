@@ -21,17 +21,17 @@
         <section class="post_content" itemscope itemtype="http://schema.org/Article">
             <header class="post_header">
                 <h1 class="post_title">标签
-                    {% if tag_posts.tag %}
-                    <span>{{tag_posts.tag}}</span>(<a href="{% url 'blog:tags' %}">All</a>)
+                    {% if tag %}
+                    <span>{{tag}}</span>(<a href="{% url 'blog:tags' %}">All</a>)
                     {% endif %}
                 </h1>
             </header>
 
-            {% if tag_posts.tag %}
+            {% if tag %}
             <div class="post-Archive">
                 <div id="tags">
                     <div class='archive-title'>
-                        {% for post in tag_posts.posts %}
+                        {% for post in page_data.object_list %}
                         <div class='archives'>
                             <div class="brick">
                                 <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
@@ -43,7 +43,7 @@
             </div>
             {% else %}
             <div class="tags">
-                {% for tag in tag_posts.posts %}
+                {% for tag in object_list %}
                 <a href="{% url 'blog:tag-detail' tag.id %}" class="tag">{{ tag.name }}({{tag.number}})</a>
                 {% endfor %}
             </div>
