@@ -37,7 +37,7 @@
                             </span>
                             <span class="post-meta-item-text">分类于</span>
                             <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                                <a href="{% url 'blog:category-detail' post.category.id %}" itemprop="url" rel="index">
+                                <a href="{% url 'blog:category-detail' post.category.slug %}" itemprop="url" rel="index">
                                     <span itemprop="name">{{ post.category.name }}</span>
                                 </a>
                             </span>

@@ -36,6 +36,7 @@
         <div class="comment-area">
             <section class="comments">
                 <div class="comments-main">
+                    {% if post.allow_comments %}
                     <div class="comments-list">
                         <a class="comments-list-title"><span>30</span> 条评论</a>
                         <ul class="commentwrap">
@@ -103,8 +104,13 @@
                             </div>
                         </form>
                     </div>
+                    {% else %}
+                    <a>评论关闭</a>
+                {% endif %}
                 </div>
+
             </section>
+
         </div>
     </div>
 </div>

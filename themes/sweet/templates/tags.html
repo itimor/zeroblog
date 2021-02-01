@@ -58,10 +58,10 @@
 <script type='text/javascript' src='/statics/js/jquery.min.js'></script>
 <script type='text/javascript' src='/statics/js/jquery.svg3dtagcloud.min.js'></script>
 <script>
-    var tags = {{ tag_posts.json_tags|safe }};
+    var tags = {{ tags_cloud|safe }}
     var entries = []
     for(var tag of tags) {
-        entries.push({label: tag.name + '(' + tag.count + ')', url: tag.slug, target: '_top'})
+        entries.push({label: tag.name + '(' + tag.number + ')', url: tag.id, target: '_top'})
     }
     var settings = {
         entries: entries,

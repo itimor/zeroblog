@@ -9,6 +9,7 @@ from django.db.models import Count
 from myblog.models import Article, Category, Friend
 from utils.pagination import get_pagination
 import markdown
+import json
 from taggit.models import Tag
 from pure_pagination import PageNotAnInteger, Paginator
 from haystack.views import SearchView as HaystackSearchView
@@ -117,13 +118,12 @@ class TagView(BaseMixin, ListView):
                 page = self.request.GET.get('page', 1)
             except PageNotAnInteger:
                 page = 5
-            print(page)
             page_data = get_pagination(queryset, page, request=self.request)
-            print(page_data.object_list)
             context['page_data'] = page_data
             context['tag'] = tag
         else:
             queryset = Tag.objects.all().annotate(number=Count('article'))
+            context['tags_cloud'] = json.dumps(list(queryset.values('id', 'name', 'number')))
         context['object_list'] = queryset
         return context
 

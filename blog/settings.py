@@ -28,7 +28,7 @@ ALLOWED_HOSTS = ['*']
 
 # 主题
 # next 极简 |　sweet 小清新
-THEME = 'next'
+THEME = 'sweet'
 
 # Application definition
 

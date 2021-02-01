@@ -1,37 +1,36 @@
 <!DOCTYPE html>
-{% load count_nums %}
 {% load static %}
+
 <html class="theme-next pisces use-motion" lang="zh-Hans">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta http-equiv="Cache-Control" content="no-transform">
     <meta http-equiv="Cache-Control" content="no-siteapp">
     <meta name="keywords" content="博客，熊叔，星辰大海">
-    <meta name="description" content="博客，熊叔，星辰大海">
+    <meta name="description" content="博客，熊叔的冒险屋">
 
     <link href="/statics/css/jquery.fancybox.css" rel="stylesheet" type="text/css">
     <link href="/statics/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="{% static 'css/main.css' %}" rel="stylesheet" type="text/css">
+    <link href="/statics/css/main.css" rel="stylesheet" type="text/css">
     <link href="/statics/css/extra.css" rel="stylesheet" type="text/css">
 
     <link rel="alternate" href="/rss" title="熊叔的冒险屋" type="application/atom+xml">
     <link rel="shortcut icon" type="image/x-icon" href="/res/sys/logo.ico">
     <link rel="canonical" href="/">
 
-    <!--搜索关键词高亮-->
-    <style>
+<!--搜索关键词高亮-->
+<style>
     span.highlighted {
         color: red;
     }
+    .fancybox-margin{
+        margin-right:17px;
+    }
+</style>
 
-
-    </style>
-
-    <script type="text/javascript" id="hexo.configurations">
+<script type="text/javascript" id="hexo.configurations">
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
@@ -51,22 +50,22 @@
       labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
     }
   };
+    if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+        window.Promise = null;
+    }
+</script>
 
+<title>
+    {% block title %}
+    失乐园
+    {% endblock %}
+</title>
 
-    </script>
-    <title>
-        熊叔の冒险屋
-        {% block title %}
-        {% endblock %}
-    </title>
-
-    <style type="text/css">.fancybox-margin{margin-right:17px;}</style>
-    <style type="text/css">.fancybox-margin{margin-right:17px;}</style>
 </head>
 
-<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+    <body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-<div class="container one-collumn sidebar-position-leftpage-home">
+    <div class="container one-collumn sidebar-position-leftpage-home">
     <div class="headband"></div>
     {% block header %}
     {% include './header.html' %}
@@ -79,18 +78,27 @@
             {% block content %} {% endblock %}
         </div>
     </main>
+    <script type="text/javascript" src="/statics/js/index.js"></script>
+    <script type="text/javascript" src="/statics/js/fastclick.min.js"></script>
+    <script type="text/javascript" src="/statics/js/jquery.lazyload.js "></script>
+    <script type="text/javascript" src="/statics/js/velocity.min.js "></script>
+    <script type="text/javascript" src="/statics/js/velocity.ui.min.js "></script>
+    <script type="text/javascript" src="/statics/js/jquery.fancybox.pack.js "></script>
+    <script type="text/javascript" src="/statics/js/utils.js "></script>
+    <script type="text/javascript" src="/statics/js/motion.js "></script>
+    <script type="text/javascript" src="/statics/js/affix.js "></script>
+    <script type="text/javascript" src="/statics/js/pisces.js "></script>
+    <script type="text/javascript" src="/statics/js/bootstrap.js "></script>
+        {% block content_js %}
+        {% endblock %}
 
-    <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
+        {% block footer %}
+        {% include './footer.html' %}
+        {% endblock %}
+
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+        </div>
     </div>
-
-</div>
-
-{% block footer %}
-{% include './footer.html' %}
-{% endblock %}
-
-{% block content_js %}
-{% endblock %}
 </body>
 </html>
