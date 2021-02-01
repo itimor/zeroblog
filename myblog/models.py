@@ -140,3 +140,8 @@ class Friend(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.cover:
+            self.cover = get_cover()
+        super(Friend, self).save(*args, **kwargs)

@@ -109,4 +109,8 @@ console.log(foo(5));
 ```"""
         blog = Article.objects.create(title='这是你的第一篇markdown文章', content=content, status='p', category=category)
         blog.tags.add("其他")
+        Friend.objects.create(name='贪狼', link='www.google.com', desc='满堂花醉三千客', position=1)
+        Friend.objects.create(name='破军', link='www.sina.com', desc='一剑霜寒十四州', position=2)
+        Friend.objects.create(name='巨门', link='www.jianshu.com', desc='桃李春风一杯酒', position=3)
+        Friend.objects.create(name='廉贞', link='www.baidu.com', desc='业余江湖十年灯', position=4)
         self.stdout.write(self.style.SUCCESS('初始化完成'))
