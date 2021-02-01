@@ -18,8 +18,8 @@ def get_hash(str, salt=None):  # salt 盐
     return sh.hexdigest()
 
 
-def get_cover():
-    url = 'https://source.unsplash.com/random/600x800'
+def get_cover(w=600, h=800):
+    url = f'https://source.unsplash.com/random/{w}x{h}'
     session = requests.Session()
     r = session.get(url)
     return r.url

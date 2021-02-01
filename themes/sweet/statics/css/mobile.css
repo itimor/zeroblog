@@ -61,7 +61,7 @@
     }
 
     .bt-nav.scrolled {
-        background-image: url("../images/favicon.png");
+        background-image: url("/res/sys/logo.png");
         background-size: 40px 40px;
         border-radius: 50%;
         width: 40px;

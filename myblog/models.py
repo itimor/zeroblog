@@ -90,7 +90,7 @@ class Article(BaseModel):
         if not self.slug:
             self.slug = get_hash(self.title)[-10:]
         if not self.cover:
-            self.cover = get_cover()
+            self.cover = get_cover(140, 200)
         modified = kwargs.pop("modified", True)
         if modified:
             self.update_time = timezone.now()
@@ -143,5 +143,5 @@ class Friend(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.cover:
-            self.cover = get_cover()
+            self.cover = get_cover(64, 64)
         super(Friend, self).save(*args, **kwargs)
